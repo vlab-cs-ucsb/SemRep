@@ -32,6 +32,8 @@
 //#include "Literal.h"
 //#include "StringAnalyzer.h"
 
+#include "DepGraph.h"
+
 using namespace std;
 
 void testReplaceCharWithString(){
@@ -1247,28 +1249,10 @@ void testTransitionRelation(){
 }
 
 int main(int argc, char *argv[]) {
-//    testTransitionRelation();
-//    testProjectExpBin();
-// testProjection();
-    //	testLength1();
-//        testIcse2();
-//    testReplaceHeavy();
-//    testIcse2Reverse();
-//    testEscapeCharsInMinCut();
-//    testIcse3();
-//    testmincut();
-//	testmaps();
-//    icseExample();
-//    testIcse2();
-//    testIcsepre1();
-//     testIcsepre2();
-    testReplaceCharWithString();
-//    testPreReplaceCharWithString();
-//    testReplaceHeavy();
-//    testRE();
-//    const char *argv_[] = {"", "-t"};
-//	main_test(2, argv_);
-//    icseSnipeGallarey();
-	cout << "!!!Tests passed :)!!!" << endl; // prints !!!Hello World!!!
+
+	DepGraph dep = DepGraph::parseDotFile("/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot");
+
+
+
 	return 0;
 }

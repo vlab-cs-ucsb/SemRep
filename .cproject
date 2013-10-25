@@ -31,7 +31,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/DFA}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/Mem}&quot;"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.other.other.812916848" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.other.other.812916848" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1186439143" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1261577201" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
@@ -53,12 +53,14 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/DFA/.libs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/Mem/.libs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/strangerlib/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/lib"/>
 								</option>
 								<option id="gnu.cpp.link.option.libs.439633849" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="monamem"/>
 									<listOptionValue builtIn="false" value="monadfa"/>
 									<listOptionValue builtIn="false" value="monabdd"/>
 									<listOptionValue builtIn="false" value="strangerlib"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="boost_regex"/>
 								</option>
 								<option id="gnu.cpp.link.option.flags.104580434" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.462254442" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
@@ -132,6 +134,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/DFA/.libs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/Mem/.libs}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/strangerlib/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/lib"/>
 								</option>
 								<option id="gnu.cpp.link.option.libs.1445647568" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="&quot;${workspace_loc:/strangerlib/Debug/libstrangerlib.so}&quot;"/>

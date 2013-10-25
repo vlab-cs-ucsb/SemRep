@@ -19,9 +19,10 @@
 #include <algorithm>
 #include <exception>
 #include <stdexcept>
-#include <regex>
 #include <fstream>
 #include <sstream>
+
+#include <boost/regex.hpp>
 
 struct NodeLessThan : public std::binary_function<const DepGraphNode*, const DepGraphNode*, bool> {
     bool operator() (const DepGraphNode* pN1,const DepGraphNode* pN2) const
@@ -130,6 +131,10 @@ public:
     void dumpDot(string fname);
     void sort(DepGraph& origGraph);
 
+    DepGraphUninitNode* findInputNode(string name);
+
+    std::string label;
+    std::string labelloc;
 private:
 	// map from a node to *the same* node;
 	    // necessary due to the usual limitation of java.util.Set
@@ -158,9 +163,6 @@ private:
 	    static int currentID;
 	    static int currentSccID;
 	    static int currentOrder;
-    
-    std::string label;
-    std::string labelloc;
 
 	    void sccVisit(DepGraphNode* v, NodesList stack,
 	            std::map<const DepGraphNode*,int> dfsnum,
