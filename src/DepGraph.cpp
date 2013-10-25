@@ -126,11 +126,18 @@ DepGraphUninitNode* DepGraph::findInputNode(string name){
 						if (o != NULL ){
 							cout << "var name: " << o->getName() << endl;
 							boost::smatch sm;
-							boost::regex regxGraphLabel("^\\s*label=\"(.+)\";$");
-						}
-
-						if (o != NULL && o->getName() == name){
-							return uninitNode;
+							boost::regex regxGraphLabel(".*(" + name + ").*");
+							try {
+								if (boost::regex_match(o->getName(), sm, regxGraphLabel)) {
+										return uninitNode;
+								}
+								else {
+									throw invalid_argument("error parsing variable name");
+								}
+							} catch (exception const &e) {
+						        cerr << "Cannot handle var name: " << o->getName() << ". Following exception happened:\n" << e.what();
+						        exit(EXIT_FAILURE);
+						    }
 						}
 					}
 				}
