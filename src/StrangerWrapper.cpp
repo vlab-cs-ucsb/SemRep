@@ -1251,7 +1251,7 @@ void testTransitionRelation(){
 int main(int argc, char *argv[]) {
 
 	DepGraph dep = DepGraph::parseDotFile("/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot");
-
+	DepGraphUninitNode* uninit = dep.findInputNode("form_frame_name");
 
 
 	return 0;

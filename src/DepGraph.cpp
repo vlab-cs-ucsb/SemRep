@@ -115,14 +115,28 @@ UninitNodesList DepGraph::getUninitNodes() {
 }
 
 DepGraphUninitNode* DepGraph::findInputNode(string name){
-	DepGraphUninitNode* retMe;
 	    for (auto nodePair : nodes){
 	   		DepGraphUninitNode* uninitNode = dynamic_cast<DepGraphUninitNode*>(nodePair.second);
 			if (uninitNode != NULL) {
-				DepGraphNode* inputNode =
+				NodesList preds = this->getPredecessors(uninitNode);
+				for (NodesListIterator it = preds.begin(); it != preds.end();it++ ) {
+					DepGraphNormalNode* varNode = dynamic_cast<DepGraphNormalNode*>(*it);
+					if (varNode != NULL) {
+						Variable* o = dynamic_cast<Variable*>(varNode->getPlace());
+						if (o != NULL ){
+							cout << "var name: " << o->getName() << endl;
+							boost::smatch sm;
+							boost::regex regxGraphLabel("^\\s*label=\"(.+)\";$");
+						}
+
+						if (o != NULL && o->getName() == name){
+							return uninitNode;
+						}
+					}
+				}
 			}
 		}
-		return retMe
+		return NULL;
 }
 
 DepGraph DepGraph::getInputRelevantGraph(DepGraphNode* inputNode) {
