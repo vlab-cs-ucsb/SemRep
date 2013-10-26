@@ -1256,6 +1256,9 @@ int main(int argc, char *argv[]) {
 	if (uninit != NULL) {
 		cout << "found!" << endl;
 		cout << uninit->getID() << endl;
+
+		DepGraph test = dep.getInputRelevantGraph(uninit);
+		cout << test.toDot() << endl;
 	}
 
 	return 0;

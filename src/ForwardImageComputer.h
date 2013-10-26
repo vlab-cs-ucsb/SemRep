@@ -42,6 +42,17 @@ public:
                                   StrangerAutomaton* intersectionAuto,
                                   DepGraphNode* inputNode,
                                   AnalysisResult& fwAnalysisResult);
+    AnalysisResult doInitialBackwardAnalysis(DepGraph& origDepGraph,
+                                                            DepGraph& inputDepGraph,
+                                                            /*SccNodes& sccNodes,*/
+                                                             NodesList& sortedNodes,
+                                                            StrangerAutomaton* intersectionAuto,
+                                                            const AnalysisResult& fwAnalysisResult);
+    void doInitialBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph& origDepGraph,
+                                   AnalysisResult& bwAnalysisResult,
+                                   const AnalysisResult& fwAnalysisResult,
+                                    DepGraphNode* node,
+                                   bool fixPoint);
     AnalysisResult doBackwardAnalysis(DepGraph& origDepGraph, DepGraph& inputDepGraph,
                                       /*SccNodes& sccNodes,*/
                                       NodesList& sortedNodes,
@@ -52,6 +63,10 @@ public:
                                    const AnalysisResult& fwAnalysisResult,
                                    DepGraphNode* node,
                                    bool multiTrack);
+    StrangerAutomaton* makeBackwardAutoForInitialRestrictOP( DepGraphOpNode* opNode,
+    			 DepGraphNode* childNode,
+    			AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint);
+
     StrangerAutomaton* makeBackwardAutoForOpChild(DepGraphOpNode* opNode,
                                                                         DepGraphNode* childNode,
                                                   AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint);

@@ -1463,6 +1463,140 @@ StrangerAutomaton* ForwardImageComputer::makeAutoForOp(DepGraphOpNode* opNode, A
 //	}
 //
 //	// ********************************************************************************
+AnalysisResult ForwardImageComputer::doInitialBackwardAnalysis(DepGraph& origDepGraph,
+                                                        DepGraph& inputDepGraph,
+                                                        /*SccNodes& sccNodes,*/
+                                                         NodesList& sortedNodes,
+                                                        StrangerAutomaton* intersectionAuto,
+                                                        const AnalysisResult& fwAnalysisResult) {
+
+    AnalysisResult bwAnalysisResult;
+	//TODO inittialize the backward analysis lattice to phi (bottom value)
+	bwAnalysisResult[inputDepGraph.getRoot()->getID()] = StrangerAutomaton::makeAnyString(inputDepGraph.getRoot()->getID());
+	// skip root as we have already
+	// decorated the root with the intersection automaton
+	NodesListConstIterator it = ++sortedNodes.begin();
+	while (it != sortedNodes.end()) {
+		 DepGraphNode* node = (DepGraphNode*) *it;
+		// if an SCC node then do the fix point computation
+//			if (node instanceof DepGraphSccNode) {
+//				DepGraphSccNode sccNode = (DepGraphSccNode) node;
+//				 doBackwardFixPointComputationForSCC(inputDepGraph,
+//				 origDepGraph, backwardDeco, forwardDeco, sccNode, sccNodes);
+//			} else {// a regular node in the graph
+			doBackwardNodeComputation(inputDepGraph, origDepGraph, bwAnalysisResult, fwAnalysisResult, node, false);
+
+			// the following check for emptiness is only an assertion for debugging purposes
+			//if (backwardDeco.get(node).checkEmptiness())
+			//	throw new StrangerStringAnalysisException("SNH: and empty automaton in backward analysis." << endl;
+			//debugAuto(backwardDeco.get(node));
+			//perfInfo.printInfo();
+//			}
+		 ++it;
+		//debugMemoryUsage();
+		//debug("--------------------------", 2);
+	}
+	return bwAnalysisResult;
+}
+void ForwardImageComputer::doInitialBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph& origDepGraph,
+                               AnalysisResult& bwAnalysisResult,
+                               const AnalysisResult& fwAnalysisResult,
+                                DepGraphNode* node,
+                               bool fixPoint){
+
+	debug(stringbuilder() << "doNodeComputaion for node: " << node->getID(), 2);
+	NodesList predecessos = origDepGraph.getPredecessors(node);
+	NodesList successors = origDepGraph.getSuccessors(node);
+	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
+	DepGraphNormalNode* normalNode = NULL;
+	// Note that node can not be SCC as we deal with scc in fixed point
+	// computaion
+	if (dynamic_cast< DepGraphNormalNode*>(node)
+			|| dynamic_cast< DepGraphUninitNode*>(node)
+			|| dynamic_cast< DepGraphOpNode*>(node)) {
+		if (predecessos.empty()) {
+			// this should be root which we already processed at the
+			// beginning node. This only happens if root is in an scc
+			// and here we do not deal with sccs
+			if ((normalNode = dynamic_cast< DepGraphNormalNode*>(node))) {
+				TacPlace* place = normalNode->getPlace();
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: node " << node->getID()
+						<< " does not have predecessors. " << place << ", "
+						<< normalNode->getFileName() << ","
+						<< normalNode->getOrigLineNo());
+			} else
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: node " << node->getID()
+						<< " does not have predecessors.\n");
+		// if node is literal then assign value regardless of backward analysis
+		} else if (successors.size() == 0 && (normalNode = dynamic_cast< DepGraphNormalNode*>(node))){
+			TacPlace* place = normalNode->getPlace();
+			if (dynamic_cast<Literal*>(place)) {
+				newAuto = StrangerAutomaton::makeString(place->toString(), node->getID());
+			} else {
+				// this case should not happen any longer (now that
+				// we have "uninit" nodes, see below)
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: " << place << ", " << normalNode->getFileName() << "," <<
+						normalNode->getOrigLineNo());
+			}
+		} else {
+
+			fwAnalysisResult[node->getID()] = StrangerAutomaton::makeAnyString(node->getID());
+			StrangerAutomaton* forwardAuto = fwAnalysisResult.find(node->getID())->second;
+
+			for (NodesListIterator it = predecessos.begin(); it != predecessos.end(); ++it) {
+				 DepGraphNode* pred = *it;
+				StrangerAutomaton* predAuto = NULL;
+				if (pred == node) {
+					// TODO: check if this is true
+					// a simple loop, can be ignored
+					continue;
+				} else if (dynamic_cast< DepGraphNormalNode*>(pred)) {
+					predAuto = bwAnalysisResult.find(pred->getID())->second;
+//						// if doing fix point computation then first time backward is null
+//						if (fixPoint && pred.getSccID() == node.getSccID() && predAuto.isEmpty())
+//							predAuto = forwardDeco.get(pred);
+
+				} else if (dynamic_cast< DepGraphOpNode*>(pred)) {
+					predAuto = this->makeBackwardAutoForOpChild(
+							dynamic_cast< DepGraphOpNode*>(pred), node, bwAnalysisResult, fwAnalysisResult,
+							origDepGraph, fixPoint);
+				}
+
+				if (predAuto == NULL)
+					throw StrangerStringAnalysisException("SNH");
+
+//					if(check_emptiness(predAuto)) continue;
+
+				if (newAuto == NULL) {
+					// newAuto = succAuto; // cloning not necessary here
+					// debug(node.getID() + " = " + succAuto.getID());
+					// newAuto.setID(node.getID()); // for debugging only
+					newAuto = predAuto->clone(node->getID()); // this is
+															// better for
+															// debugging
+				} else {
+					tempAuto = newAuto;
+					newAuto = newAuto->union_(predAuto, node->getID());
+					delete tempAuto;
+				}
+			}
+			// intersect the value from predecessors with the value from forward analysis
+			tempAuto = newAuto;
+			newAuto = newAuto->intersect(forwardAuto, node->getID());
+			delete tempAuto;
+
+		}
+	} else { // node is not NormalNode or UninitNode or OpNode
+		throw new StrangerStringAnalysisException("SNH");
+	}
+
+	if (newAuto == NULL) {
+		throw new StrangerStringAnalysisException("SNH");
+	}
+
+	bwAnalysisResult[node->getID()] = newAuto;
+	debug("--------------------------", 2);
+}
 
 AnalysisResult ForwardImageComputer::doBackwardAnalysis(DepGraph& origDepGraph,
                                                         DepGraph& inputDepGraph,
@@ -1477,32 +1611,32 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis(DepGraph& origDepGraph,
 //		for (DepGraphNode node: origDepGraph.getNodes()){
 //			backwardDeco.put(node, StrangerAutomaton::makePhi(node.getID()));
 //		}
-		bwAnalysisResult[inputDepGraph.getRoot()->getID()] = intersectionAuto;
-		// skip root as we have already
-		// decorated the root with the intersection automaton
-		NodesListConstIterator it = ++sortedNodes.begin();
-		while (it != sortedNodes.end()) {
-			 DepGraphNode* node = (DepGraphNode*) *it;
-			// if an SCC node then do the fix point computation
+	bwAnalysisResult[inputDepGraph.getRoot()->getID()] = intersectionAuto;
+	// skip root as we have already
+	// decorated the root with the intersection automaton
+	NodesListConstIterator it = ++sortedNodes.begin();
+	while (it != sortedNodes.end()) {
+		 DepGraphNode* node = (DepGraphNode*) *it;
+		// if an SCC node then do the fix point computation
 //			if (node instanceof DepGraphSccNode) {
 //				DepGraphSccNode sccNode = (DepGraphSccNode) node;
 //				 doBackwardFixPointComputationForSCC(inputDepGraph,
 //				 origDepGraph, backwardDeco, forwardDeco, sccNode, sccNodes);
 //			} else {// a regular node in the graph
-				doBackwardNodeComputation(inputDepGraph, origDepGraph, bwAnalysisResult, fwAnalysisResult, node, false);
+			doBackwardNodeComputation(inputDepGraph, origDepGraph, bwAnalysisResult, fwAnalysisResult, node, false);
 
-				// the following check for emptiness is only an assertion for debugging purposes
-				//if (backwardDeco.get(node).checkEmptiness())
-				//	throw new StrangerStringAnalysisException("SNH: and empty automaton in backward analysis." << endl;
-				//debugAuto(backwardDeco.get(node));
-				//perfInfo.printInfo();
+			// the following check for emptiness is only an assertion for debugging purposes
+			//if (backwardDeco.get(node).checkEmptiness())
+			//	throw new StrangerStringAnalysisException("SNH: and empty automaton in backward analysis." << endl;
+			//debugAuto(backwardDeco.get(node));
+			//perfInfo.printInfo();
 //			}
-             ++it;
-			//debugMemoryUsage();
-			//debug("--------------------------", 2);
-		}
-		return bwAnalysisResult;
+		 ++it;
+		//debugMemoryUsage();
+		//debug("--------------------------", 2);
 	}
+	return bwAnalysisResult;
+}
 
 //	// ********************************************************************************
 void ForwardImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph& origDepGraph,
@@ -1609,6 +1743,57 @@ void ForwardImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, De
 		debug("--------------------------", 2);
 
 	}
+
+
+//	// ********************************************************************************
+StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForInitialRestrictOP( DepGraphOpNode* opNode,
+			 DepGraphNode* childNode,
+			AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint) {
+
+		StrangerAutomaton* retMe = NULL;
+
+		string opName = opNode->getName();
+
+		NodesList successors = depGraph.getSuccessors(opNode);
+
+		if (successors.size() < 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict child error");
+		}
+
+		StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
+
+
+		DepGraphNode* subjectNode = successors[1];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* complementNode = successors[2];
+
+		if (childNode->equals(subjectNode)){
+			DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(*patternNode);
+			if (pNode != NULL) {
+				Literal* lit = dynamic_cast<Literal*>(pNode->getPlace());
+				if (lit != NULL){
+					//TODO remove ^,$ and slashes
+					StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(lit->getLiteralValue(), true, patternNode->getID());
+				}
+			}
+
+			retMe = opAuto;
+
+		} else if (childNode->equals(patternNode)){
+			//TODO: backward for match is the same as forward
+			// prereplace value for pattern node (match node) can not be computed currently
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of replace (" << opNode->getID() << ") represents match pattern and we can not compute prereplace for it.\n");
+
+		} else if (!childNode->equals(complementNode)){
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of replace (" << opNode->getID() << ") is its successor.\n");
+		}
+		else
+			// note that both forward and backward analysisi do not handle replace where the replace value is
+			// not a literal (constant) but a variable (automaton)
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of replace (" << opNode->getID() << ") has automoatn replace value and we only handle literal replace values.\n");
+		return retMe;
+
+}
 
 //	// ********************************************************************************
 StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild( DepGraphOpNode* opNode,
@@ -1787,7 +1972,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild( DepGraphOpN
 			return retMe;
 		}
 
-		 }
+}
 //	// ********************************************************************************
 //
 string ForwardImageComputer::getLiteralValue( DepGraphNode* node) {
