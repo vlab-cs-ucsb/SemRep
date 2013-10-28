@@ -1773,6 +1773,12 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForInitialRestrictOP( D
 				Literal* lit = dynamic_cast<Literal*>(pNode->getPlace());
 				if (lit != NULL){
 					//TODO remove ^,$ and slashes
+					string regString = lit->getLiteralValue();
+					if (regString.find_first_of('/') == 0 &&
+							regString.find_last_of('/') == (regString.length() -1)) {
+						regString = regString.substr( 1,regString.length()-2);
+					}
+
 					StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(lit->getLiteralValue(), true, patternNode->getID());
 				}
 			}
