@@ -1502,6 +1502,7 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph
 			throw new StrangerStringAnalysisException("SNH: cannot handle node type");
 		}
 	}
+
 	cout << "Processing after first restrict" << endl;
 	if (rit != sortedNodes.rend()) { // if it is not NULL it can't be the last node, now continue analysis with the rest of the nodes
 
@@ -1772,7 +1773,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as pattern node");
 			}
 			string regString = patternLit->getLiteralValue();
-			cout << "__vlab_restrict pattern" << regString << endl;
+			cout << "__vlab_restrict pattern " << regString << endl;
 
 			if (regString.find_first_of('/') == 0 &&
 					regString.find_last_of('/') == (regString.length() -1) ) {
@@ -1787,7 +1788,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 				regString = "/.*(" + regString + ").*/";
 			}
 
-			cout << "__vlab_restrict modified pattern" << regString << endl;
+			cout << "__vlab_restrict modified pattern " << regString << endl;
 			//TODO need to fix regex creation
 			StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
 //			StrangerAutomaton* regx = StrangerAutomaton::makeAnyString(10000);

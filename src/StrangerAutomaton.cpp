@@ -301,7 +301,7 @@ StrangerAutomaton* StrangerAutomaton::makeCharRange(char from, char to) {
  * */
 StrangerAutomaton* StrangerAutomaton::makeAnyString(int id) {
     debug(stringbuilder() << id <<  " = makeAnyString()");
-    
+
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfaAllStringASCIIExceptReserveWords(NUM_ASCII_TRACKS, indices_main);//" << id << " = makeAnyString()");
     
     StrangerAutomaton* retMe = new StrangerAutomaton(
@@ -502,8 +502,9 @@ StrangerAutomaton* StrangerAutomaton::optional() {
  */
 StrangerAutomaton* StrangerAutomaton::kleensStar(int id) {
     debug(stringbuilder() << id <<  " = kleensStar("  << this->ID <<  ") -- start");
-    
+
     StrangerAutomaton* temp = this->closure(this->ID);
+
     StrangerAutomaton* retMe = temp->unionWithEmptyString(id);
     delete temp;
     debug(stringbuilder() << id <<  " = kleensStar("  << this->ID <<  ") -- end");
@@ -532,7 +533,7 @@ StrangerAutomaton* StrangerAutomaton::kleensStar() {
  */
 StrangerAutomaton* StrangerAutomaton::kleensStar(StrangerAutomaton* otherAuto, int id) {
     debug(stringbuilder() << id <<  " = kleensStar(" << otherAuto->ID << ")");
-    
+
     StrangerAutomaton* retMe = otherAuto->kleensStar(id);
     {
         retMe->setID(id);
@@ -561,17 +562,16 @@ StrangerAutomaton* StrangerAutomaton::kleensStar(StrangerAutomaton* otherAuto) {
 StrangerAutomaton* StrangerAutomaton::closure(int id) {
     debug(stringbuilder() << id <<  " = closure("  << this->ID <<  ")");
     
-    if (isTop() || isBottom()) return this->clone(id);
+//    if (isTop() || isBottom()) return this->clone(id);
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_closure_extrabit(M["<< this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//"<<id << " = closure("  << this->ID <<  ")");
     perfInfo.numOfClosure++;
     long start = PerfInfo::currentTimeMillis();
-    
+
     StrangerAutomaton* retMe = new StrangerAutomaton(
                                                      dfa_closure_extrabit(this->dfa,
                                                                           num_ascii_track,
                                                                           indices_main));
-    
     long stop = PerfInfo::currentTimeMillis();
     perfInfo.closureTime += (stop - start);
     
@@ -637,24 +637,26 @@ StrangerAutomaton* StrangerAutomaton::repeat(unsigned min, int id) {
         retMe = this->closure(id);
     else {
         StrangerAutomaton* temp = this->closure(id);
-        StrangerAutomaton* unionAuto = NULL;
-        // repeat from 0 to min - 1
-        for (int i = 1; i < min; i++){
-            //				if (i == 0)
-            //					retMe = makeEmptyString(id);
-            int j = i;
-            StrangerAutomaton* orig = this;
-            retMe = this;
-            while (--j > 0)
-                retMe = retMe->concatenate(orig, this->ID);
-            if (i == 1)
-                unionAuto = retMe->clone(id);
-            else
-                unionAuto = unionAuto->union_(retMe, id);
+
+        StrangerAutomaton* unionAuto = this->clone(id);
+        StrangerAutomaton* concatAuto = this->clone(id);
+        for (unsigned int i = 2; i < min; i++) {
+        	StrangerAutomaton* tempConcat = concatAuto;
+			concatAuto = tempConcat->concatenate(this,id);
+			delete tempConcat;
+
+			StrangerAutomaton* tempUnion = unionAuto;
+			unionAuto = tempUnion->union_(concatAuto, id);
+			delete tempUnion;
         }
+
+        StrangerAutomaton* complement = unionAuto->complement(id);
+        retMe = temp->intersect(complement);
         
-        // if min grater than one then it is closure minus lower concats
-        retMe = temp->intersect(unionAuto->complement());
+        delete complement;
+        delete concatAuto;
+        delete unionAuto;
+        delete temp;
     }
     debug(stringbuilder() << id <<  " = repeate(" << min << ","  << this->ID <<  ") -- end");
     {
@@ -692,42 +694,48 @@ StrangerAutomaton* StrangerAutomaton::repeat(unsigned min, unsigned max, int id)
     debug(stringbuilder() << id <<  " = repeate(" << min << ", " << max << ", " << this->ID << ") -- start");
     
     StrangerAutomaton* retMe = NULL;
-    if (min > max || (min == 0 && max == 0))
+    if (min > max) {
         retMe = makePhi(id);
-    else {
-        //			max -= min;
-        //			else {
-        // TODO: I think we should clone here
-        StrangerAutomaton* unionAuto = NULL;
-        for (int i = min; i <= max; i++){
-            if (i == 0)
-                //						retMe = makeEmptyString(id);
-                continue;
-            int j = i;
-            StrangerAutomaton* orig = this;
-            retMe = this;
-            while (--j > 0)
-                retMe = retMe->concatenate(orig, this->ID);
-            if (i == min || (min == 0 && i == 1))
-                unionAuto = retMe->clone(id);
-            else
-                unionAuto = unionAuto->union_(retMe, id);
-        }
-        //			}
-        retMe = unionAuto->clone();
-        
-        
-        //			while (max-- > 0) {
-        //				roundAuto = roundAuto->concatenate(roundAuto, this->ID);
-        //				retMe = retMe->union(roundAuto, id);
-        //			}
     }
-    
+    else {
+        StrangerAutomaton* unionAuto = NULL;
+        StrangerAutomaton* concatAuto = NULL;
+
+        // handle min
+        if ( min == 0) { // {min, max} where min is 0
+        	unionAuto = makeEmptyString(id);
+        	concatAuto = makeEmptyString(id);
+        } else { 								   	// {min, max} where min > 0
+        	concatAuto = this->clone(id);			// {min, max} where min = 1
+            for (unsigned int i = 2; i <= min; i++) { 		// {min, max} where min > 1
+            	StrangerAutomaton* tempConcat = concatAuto;
+				concatAuto = tempConcat->concatenate(this,id);
+				delete tempConcat;
+            }
+            unionAuto = concatAuto->clone(id);
+        }
+
+        // handle min + 1, max
+    	for (unsigned int i = min + 1; i <= max; i++){
+    		StrangerAutomaton* tempConcat = concatAuto;
+    		concatAuto = tempConcat->concatenate(this,id);
+    		delete tempConcat;
+
+    		StrangerAutomaton* tempUnion = unionAuto;
+    		unionAuto = tempUnion->union_(concatAuto, id);
+    		delete tempUnion;
+    	}
+
+    	delete concatAuto;
+    	retMe = unionAuto;
+    }
+
     debug(stringbuilder() << id <<  " = repeate(" <<  min << ", " << max << ", " << this->ID << ") -- end");
     {
         retMe->setID(id);
         retMe->debugAutomaton();
     }
+
     return retMe;
 }
 
@@ -1841,15 +1849,6 @@ bool StrangerAutomaton::checkInclusion(StrangerAutomaton* otherAuto) {
 bool StrangerAutomaton::checkEquivalence(StrangerAutomaton* otherAuto, int id1, int id2) {
     std::string debugStr = stringbuilder() << "checkEquivalence("  << this->ID <<  ", " << otherAuto->ID << ") = ";
     
-    if ((this->isTop() && otherAuto->isTop()) || (this->isBottom() && otherAuto->isBottom())){
-        debug(stringbuilder() << debugStr << "true");
-        return true;
-    }
-    else if (this->isTop() || this->isBottom() || otherAuto->isTop() || otherAuto->isBottom()){
-        debug(stringbuilder() << debugStr << "false");
-        return false;
-    }
-    
     debugToFile(stringbuilder() << "check_equivalence(M[" << this->autoTraceID << "],M["<< otherAuto->autoTraceID  << "], NUM_ASCII_TRACKS, indices_main);//check_equivalence("  << this->ID <<  ", " << otherAuto->ID << ")");
     int result = check_equivalence(this->dfa,
                                    otherAuto->dfa, num_ascii_track,
@@ -1917,8 +1916,7 @@ bool StrangerAutomaton::checkEmptiness() {
     std::string debugStr = stringbuilder() << "checkEmptiness("  << this->ID <<  ") = ";
     
     debugToFile(stringbuilder() << "check_emptiness(M[" << this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//check_emptiness("  << this->ID <<  ")");
-    int result = check_emptiness(this->dfa, num_ascii_track,
-                                 indices_main);
+    int result = check_emptiness(this->dfa, num_ascii_track, indices_main);
     {
         debug(stringbuilder() << debugStr << (result == 0 ? false : true));
     }
@@ -1951,8 +1949,8 @@ bool StrangerAutomaton::isEmpty() {
  * @return
  */
 bool StrangerAutomaton::checkEmptyString() {
-    if (this->isBottom() || this->isTop())
-        return false;
+//    if (this->isBottom() || this->isTop())
+//        return false;
     debugToFile(stringbuilder() << "checkEmptyString(M[" << this->autoTraceID << "]);//checkEmptyString("  << this->ID <<  ")");
     if (::checkEmptyString(this->dfa) == 1)
         return true;
