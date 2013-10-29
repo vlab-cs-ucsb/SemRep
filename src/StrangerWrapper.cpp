@@ -1249,8 +1249,7 @@ void testTransitionRelation(){
 
 }
 
-int main(int argc, char *argv[]) {
-
+StrangerAutomaton* extractValidationPatch(string filename, string input_field_name) {
 	DepGraph dep = DepGraph::parseDotFile("/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot");
 	DepGraphUninitNode* uninit = dep.findInputNode("form_frame_name");
 
@@ -1267,10 +1266,22 @@ int main(int argc, char *argv[]) {
 
 		ForwardImageComputer::staticInit();
 		ForwardImageComputer analyzer;
-		analyzer.doInitialBackwardAnalysis(dep, inputDephGraph, sortedNodes);
 
-
+		AnalysisResult validationExtraction = analyzer.doBackwardAnalysis_ValidationPhase(dep, inputDephGraph, sortedNodes);
+		StrangerAutomaton* nVPatch = validationExtraction[uninit->getID()];
+		StrangerAutomaton* vPatch = nVPatch->complement(uninit->getID());
+		delete nVPatch;
+		cout << "\t***VALIDATION PATCH IS CREATED" << endl;
+		return vPatch;
 	}
+	return NULL;
+}
+
+int main(int argc, char *argv[]) {
+
+
+	StrangerAutomaton* validationPatch = extractValidationPatch("/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot", "form_frame_name");
+
 
 	return 0;
 }

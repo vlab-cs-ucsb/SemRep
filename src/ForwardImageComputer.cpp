@@ -22,12 +22,12 @@ ForwardImageComputer::~ForwardImageComputer() {
 
 int ForwardImageComputer::numOfProcessedNodes = 0;
 bool ForwardImageComputer::initialized = false;
-int ForwardImageComputer::debugLevel = 1;
 /**
  * 1- prints the dot format for result automatons
  * 2- prints the MONA internal states for result automatons
  */
 int ForwardImageComputer::autoDebugLevel = 1;
+int ForwardImageComputer::debugLevel = 1;
 PerfInfo ForwardImageComputer::perfInfo;
 
 //static
@@ -1471,7 +1471,7 @@ StrangerAutomaton* ForwardImageComputer::makeAutoForOp(DepGraphOpNode* opNode, A
  * 2- Union negation of all restrict functions, (in case third parameter is true, you do not need to negate since it is already negated)
  * 3- If there are some other ops after first restrict, do pre-image computation for them and intersect result.
  */
-AnalysisResult ForwardImageComputer::doInitialBackwardAnalysis(DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes) {
+AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes) {
 	AnalysisResult bwValidationPatchResult;
 
 	// initially all nodes are bottom
@@ -1508,7 +1508,7 @@ AnalysisResult ForwardImageComputer::doInitialBackwardAnalysis(DepGraph& origDep
 		while ( ++rit != sortedNodes.rend()) {
 			DepGraphNode* node = (DepGraphNode*)(*rit);
 			cout << "\tProcessing node ID: " << node->getID() << endl;
-			doInitialBackwardNodeComputation(origDepGraph, inputDepGraph, bwValidationPatchResult, node);
+			doBackwardNodeComputation_ValidationPhase(origDepGraph, inputDepGraph, bwValidationPatchResult, node);
 		}
 
 	} else {
@@ -1517,8 +1517,12 @@ AnalysisResult ForwardImageComputer::doInitialBackwardAnalysis(DepGraph& origDep
 
 	return bwValidationPatchResult;
 }
-
-void ForwardImageComputer::doInitialBackwardNodeComputation(DepGraph& origDepGraph, DepGraph& inputDepGraph,
+//TODO implementing now
+/**
+ * Do the computation for a node
+ * Get the predecessors, and compute the pre-image based on those
+ */
+void ForwardImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph,
                                AnalysisResult& bwAnalysisResult, DepGraphNode* node) {
 
 	debug(stringbuilder() << "doInitialBackwardNodeComputaion for node: " << node->getID(), 2);
@@ -1526,7 +1530,7 @@ void ForwardImageComputer::doInitialBackwardNodeComputation(DepGraph& origDepGra
 	NodesList successors = origDepGraph.getSuccessors(node);
 	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
 	DepGraphNormalNode* normalNode = NULL;
-
+	cout << "predecessors of node " << node->getID() << ": size: " << predecessors.size() << endl;
 	if (dynamic_cast< DepGraphNormalNode*>(node) || dynamic_cast< DepGraphUninitNode*>(node) || dynamic_cast< DepGraphOpNode*>(node)) {
 		if (predecessors.empty()) {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: node " << node->getID() << " does not have predecessors. ");
@@ -1539,114 +1543,49 @@ void ForwardImageComputer::doInitialBackwardNodeComputation(DepGraph& origDepGra
 						normalNode->getOrigLineNo());
 			}
 		} else {
-			//TODO implementing now
+
+			for (NodesListIterator it = predecessors.begin(); it != predecessors.end(); ++it) {
+				DepGraphNode* pred = *it;
+				StrangerAutomaton* predAuto = NULL;
+				if (pred == node) {
+					// ignore simple self loop (check correctness)
+					continue;
+				} else if (dynamic_cast< DepGraphNormalNode*>(pred)) {
+					predAuto = bwAnalysisResult.find( pred->getID() )->second;
+				} else if (dynamic_cast< DepGraphOpNode*>(pred)) {
+					predAuto = this->makeBackwardAutoForOpChild_ValidationPhase(dynamic_cast< DepGraphOpNode*>(pred), node, bwAnalysisResult, origDepGraph);
+				}
+
+				if (predAuto == NULL) {
+					throw StrangerStringAnalysisException("SNH: Predecessor Auto is Null!!");
+				}
+
+				if (newAuto == NULL) {
+					newAuto = predAuto->clone(node->getID());
+				} else {
+					tempAuto = newAuto;
+					newAuto = newAuto->union_(predAuto, node->getID());
+					delete tempAuto;
+					delete predAuto;
+				}
+			}
+
 		}
 
 	} else {
 		throw new StrangerStringAnalysisException("SNH: cannot handle node type");
 	}
 
-}
-
-void ForwardImageComputer::doInitialBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph& origDepGraph,
-                               AnalysisResult& bwAnalysisResult,
-                               const AnalysisResult& fwAnalysisResult,
-                                DepGraphNode* node,
-                               bool fixPoint){
-
-	debug(stringbuilder() << "doNodeComputaion for node: " << node->getID(), 2);
-	NodesList predecessos = origDepGraph.getPredecessors(node);
-	NodesList successors = origDepGraph.getSuccessors(node);
-	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
-	DepGraphNormalNode* normalNode = NULL;
-	// Note that node can not be SCC as we deal with scc in fixed point
-	// computaion
-	if (dynamic_cast< DepGraphNormalNode*>(node)
-			|| dynamic_cast< DepGraphUninitNode*>(node)
-			|| dynamic_cast< DepGraphOpNode*>(node)) {
-		if (predecessos.empty()) {
-			// this should be root which we already processed at the
-			// beginning node. This only happens if root is in an scc
-			// and here we do not deal with sccs
-			if ((normalNode = dynamic_cast< DepGraphNormalNode*>(node))) {
-				TacPlace* place = normalNode->getPlace();
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: node " << node->getID()
-						<< " does not have predecessors. " << place << ", "
-						<< normalNode->getFileName() << ","
-						<< normalNode->getOrigLineNo());
-			} else
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: node " << node->getID()
-						<< " does not have predecessors.\n");
-		// if node is literal then assign value regardless of backward analysis
-		} else if (successors.size() == 0 && (normalNode = dynamic_cast< DepGraphNormalNode*>(node))){
-			TacPlace* place = normalNode->getPlace();
-			if (dynamic_cast<Literal*>(place)) {
-				newAuto = StrangerAutomaton::makeString(place->toString(), node->getID());
-			} else {
-				// this case should not happen any longer (now that
-				// we have "uninit" nodes, see below)
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: " << place << ", " << normalNode->getFileName() << "," <<
-						normalNode->getOrigLineNo());
-			}
-		} else {
-
-//			fwAnalysisResult[node->getID()] = StrangerAutomaton::makeAnyString(node->getID());
-			StrangerAutomaton* forwardAuto = fwAnalysisResult.find(node->getID())->second;
-
-			for (NodesListIterator it = predecessos.begin(); it != predecessos.end(); ++it) {
-				 DepGraphNode* pred = *it;
-				StrangerAutomaton* predAuto = NULL;
-				if (pred == node) {
-					// TODO: check if this is true
-					// a simple loop, can be ignored
-					continue;
-				} else if (dynamic_cast< DepGraphNormalNode*>(pred)) {
-					predAuto = bwAnalysisResult.find(pred->getID())->second;
-//						// if doing fix point computation then first time backward is null
-//						if (fixPoint && pred.getSccID() == node.getSccID() && predAuto.isEmpty())
-//							predAuto = forwardDeco.get(pred);
-
-				} else if (dynamic_cast< DepGraphOpNode*>(pred)) {
-					predAuto = this->makeBackwardAutoForOpChild(
-							dynamic_cast< DepGraphOpNode*>(pred), node, bwAnalysisResult, fwAnalysisResult,
-							origDepGraph, fixPoint);
-				}
-
-				if (predAuto == NULL)
-					throw StrangerStringAnalysisException("SNH");
-
-//					if(check_emptiness(predAuto)) continue;
-
-				if (newAuto == NULL) {
-					// newAuto = succAuto; // cloning not necessary here
-					// debug(node.getID() + " = " + succAuto.getID());
-					// newAuto.setID(node.getID()); // for debugging only
-					newAuto = predAuto->clone(node->getID()); // this is
-															// better for
-															// debugging
-				} else {
-					tempAuto = newAuto;
-					newAuto = newAuto->union_(predAuto, node->getID());
-					delete tempAuto;
-				}
-			}
-			// intersect the value from predecessors with the value from forward analysis
-			tempAuto = newAuto;
-			newAuto = newAuto->intersect(forwardAuto, node->getID());
-			delete tempAuto;
-
-		}
-	} else { // node is not NormalNode or UninitNode or OpNode
-		throw new StrangerStringAnalysisException("SNH");
-	}
-
 	if (newAuto == NULL) {
-		throw new StrangerStringAnalysisException("SNH");
+		throw new StrangerStringAnalysisException("SNH: pre-image is NULL");
 	}
 
 	bwAnalysisResult[node->getID()] = newAuto;
 	debug("--------------------------", 2);
+
 }
+
+
 
 AnalysisResult ForwardImageComputer::doBackwardAnalysis(DepGraph& origDepGraph,
                                                         DepGraph& inputDepGraph,
@@ -1795,76 +1734,122 @@ void ForwardImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, De
 	}
 
 
-//	// ********************************************************************************
-StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForInitialRestrictOP( DepGraphOpNode* opNode,
-			 DepGraphNode* childNode,
-			AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint) {
+/**
+ * Do pre-image computation for validation patch
+ */
+StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPhase( DepGraphOpNode* opNode,
+			 DepGraphNode* childNode, AnalysisResult& bwAnalysisResult, DepGraph& depGraph) {
 
-		StrangerAutomaton* retMe = NULL;
+	cout << "operation function is called" << endl;
+	StrangerAutomaton* retMe = NULL;
+	NodesList successors = depGraph.getSuccessors(opNode);
+	StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
+	string opName = opNode->getName();
 
-		string opName = opNode->getName();
+	if (!opNode->isBuiltin()) {
+		// __vlab_restrict
+        if (opName.find("__vlab_restrict") == string::npos) {
+        	throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not builtin function.\n");
+        }
 
-		NodesList successors = depGraph.getSuccessors(opNode);
-
-		if (successors.size() < 3) {
-			throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict child error");
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments");
 		}
 
-		StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
-		StrangerAutomaton* restrictAuto;
-
+		cout << "Handling __vlab_restrict validation phase" << endl;
 		DepGraphNode* subjectNode = successors[1];
 		DepGraphNode* patternNode = successors[0];
 		DepGraphNode* complementNode = successors[2];
 
 		if (childNode->equals(subjectNode)){
 			DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
-			if (pNode != NULL) {
-				Literal* lit = dynamic_cast<Literal*>(pNode->getPlace());
-				if (lit != NULL){
-					string regString = lit->getLiteralValue();
-//					string regString = "/^baki$/";
-					cout << regString << endl;
-
-					if (regString.find_first_of('/') == 0 &&
-							regString.find_last_of('/') == (regString.length() -1) ) {
-						regString = regString.substr( 1,regString.length()-1);
-					}
-
-					if(regString.find_first_of('^') == 0 &&
-							regString.find_last_of('$') == (regString.length() -1)){
-						regString = "/" + regString.substr( 1,regString.length()-1) + "/";
-					}
-					else {
-						regString = "/.*(" + regString + ").*/";
-					}
-					cout << regString << endl;
-
-					StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
-					restrictAuto = opAuto->union_(regx->complement(patternNode->getID()),childNode->getID());
-
-
-				}
+			if (pNode == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find pattern node");
 			}
 
-			retMe = restrictAuto;
+			Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
+			if (patternLit == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as pattern node");
+			}
+			string regString = patternLit->getLiteralValue();
+			cout << "__vlab_restrict pattern" << regString << endl;
 
-		} else if (childNode->equals(patternNode)){
-			//TODO: backward for match is the same as forward
-			// prereplace value for pattern node (match node) can not be computed currently
-			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of replace (" << opNode->getID() << ") represents match pattern and we can not compute prereplace for it.\n");
+			if (regString.find_first_of('/') == 0 &&
+					regString.find_last_of('/') == (regString.length() -1) ) {
+				regString = regString.substr( 1,regString.length()-2);
+			}
 
-		} else if (!childNode->equals(complementNode)){
-			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of replace (" << opNode->getID() << ") is its successor.\n");
+			if(regString.find_first_of('^') == 0 &&
+					regString.find_last_of('$') == (regString.length() -1)){
+				regString = "/" + regString.substr( 1,regString.length()-2) + "/";
+			}
+			else {
+				regString = "/.*(" + regString + ").*/";
+			}
+
+			cout << "__vlab_restrict modified pattern" << regString << endl;
+			//TODO need to fix regex creation
+			StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
+//			StrangerAutomaton* regx = StrangerAutomaton::makeAnyString(10000);
+//			cout << "!!!!regex is created" << endl;
+
+			DepGraphNormalNode* cNode = dynamic_cast<DepGraphNormalNode*>(complementNode);
+			if (cNode == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find complement node");
+			}
+
+			Literal* complementLit = dynamic_cast<Literal*>(cNode->getPlace());
+			if (complementLit == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as complement node");
+			}
+
+			string complementString = complementLit->getLiteralValue();
+			if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
+				StrangerAutomaton* complementAuto = regx->complement(patternNode->getID());
+				retMe = opAuto->union_(complementAuto, childNode->getID());
+				delete complementAuto;
+			} else {
+				retMe = opAuto->union_(regx, childNode->getID());
+			}
+
+			delete regx;
+			return retMe;
+
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path, check implementation: .\n");
 		}
-		else
-			// note that both forward and backward analysisi do not handle replace where the replace value is
-			// not a literal (constant) but a variable (automaton)
-			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of replace (" << opNode->getID() << ") has automoatn replace value and we only handle literal replace values.\n");
+	} else if (opName == ".") {
+		// CONCAT
+		throw StrangerStringAnalysisException( "SNH: concats are not handled until we really need " + opNode->getID());
+	} else if (opName == "addslashes") {
+		// only has one parameter ==>  string addslashes  ( string $str  )
+		StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(opNode->getID());
+		StrangerAutomaton* forward = StrangerAutomaton::addslashes(sigmaStar, opNode->getID());
+		StrangerAutomaton* intersection = opAuto->intersect(forward, childNode->getID());
+		retMe = StrangerAutomaton::pre_addslashes(intersection, childNode->getID());
+		delete sigmaStar;
+		delete forward;
+		delete intersection;
 		return retMe;
+	} else if (opName == "trim" ) {
+		// only has one parameter ==>  string trim  ( string $str  )
+		StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(opNode->getID());
+		StrangerAutomaton* forward = sigmaStar->trimSpaces(opNode->getID());
+		StrangerAutomaton* intersection = opAuto->intersect(forward, childNode->getID());
+		retMe = intersection->preTrimSpaces(childNode->getID());
+		delete sigmaStar;
+		delete forward;
+		delete intersection;
+		return retMe;
+		return opAuto->preTrimSpaces(childNode->getID());
+
+	} else {
+		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
+	}
+
+	return NULL;
 
 }
-
 //	// ********************************************************************************
 StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild( DepGraphOpNode* opNode,
 			 DepGraphNode* childNode,
@@ -1874,7 +1859,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild( DepGraphOpN
 
 		string opName = opNode->getName();
 
-		 NodesList successors = depGraph.getSuccessors(opNode);
+		NodesList successors = depGraph.getSuccessors(opNode);
 
 		StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
 		// if doing fix point computation then first time backward is NULL

@@ -42,17 +42,12 @@ public:
                                   StrangerAutomaton* intersectionAuto,
                                   DepGraphNode* inputNode,
                                   AnalysisResult& fwAnalysisResult);
-    AnalysisResult doInitialBackwardAnalysis(DepGraph& origDepGraph,
+    AnalysisResult doBackwardAnalysis_ValidationPhase(DepGraph& origDepGraph,
                                                                 DepGraph& inputDepGraph,
                                                                  NodesList& sortedNodes);
-    void doInitialBackwardNodeComputation(DepGraph& origDepGraph, DepGraph& inputDepGraph,
+    void doBackwardNodeComputation_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph,
                                    AnalysisResult& bwAnalysisResult,
                                     DepGraphNode* node);
-    void doInitialBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph& origDepGraph,
-                                   AnalysisResult& bwAnalysisResult,
-                                   const AnalysisResult& fwAnalysisResult,
-                                    DepGraphNode* node,
-                                   bool fixPoint);
     AnalysisResult doBackwardAnalysis(DepGraph& origDepGraph, DepGraph& inputDepGraph,
                                       /*SccNodes& sccNodes,*/
                                       NodesList& sortedNodes,
@@ -63,9 +58,9 @@ public:
                                    const AnalysisResult& fwAnalysisResult,
                                    DepGraphNode* node,
                                    bool multiTrack);
-    StrangerAutomaton* makeBackwardAutoForInitialRestrictOP( DepGraphOpNode* opNode,
+    StrangerAutomaton* makeBackwardAutoForOpChild_ValidationPhase( DepGraphOpNode* opNode,
     			 DepGraphNode* childNode,
-    			AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint);
+    			AnalysisResult& bwAnalysisResult, DepGraph& depGraph);
 
     StrangerAutomaton* makeBackwardAutoForOpChild(DepGraphOpNode* opNode,
                                                                         DepGraphNode* childNode,
