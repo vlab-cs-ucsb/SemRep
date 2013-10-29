@@ -1465,7 +1465,7 @@ StrangerAutomaton* ForwardImageComputer::makeAutoForOp(DepGraphOpNode* opNode, A
 //	// ********************************************************************************
 
 /**
- * TODO implementing now
+ *
  * Initial Pre-Image computation for validation check
  * 1- Start from first __vlab_restrict function
  * 2- Union negation of all restrict functions, (in case third parameter is true, you do not need to negate since it is already negated)
@@ -1532,12 +1532,14 @@ void ForwardImageComputer::doInitialBackwardNodeComputation(DepGraph& origDepGra
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: node " << node->getID() << " does not have predecessors. ");
 		} else if (successors.empty() && (normalNode = dynamic_cast< DepGraphNormalNode*>(node))) {
 			TacPlace* place = normalNode->getPlace();
-			if (dynamic_cast<Literal*>(place)) {
+			if (dynamic_cast<Literal*>(place)) { // assuming we have literals other than uninit node
 				newAuto = StrangerAutomaton::makeString(place->toString(), node->getID());
 			} else {
 				throw StrangerStringAnalysisException(stringbuilder() << "(Unhandled node type with 0 successors) SNH: " << place << ", " << normalNode->getFileName() << "," <<
 						normalNode->getOrigLineNo());
 			}
+		} else {
+			//TODO implementing now
 		}
 
 	} else {
