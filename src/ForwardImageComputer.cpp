@@ -1508,7 +1508,6 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph
 
 		while ( ++rit != sortedNodes.rend()) {
 			DepGraphNode* node = (DepGraphNode*)(*rit);
-			cout << "\tProcessing node ID: " << node->getID() << endl;
 			doBackwardNodeComputation_ValidationPhase(origDepGraph, inputDepGraph, bwValidationPatchResult, node);
 		}
 
@@ -1518,7 +1517,7 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph
 
 	return bwValidationPatchResult;
 }
-//TODO implementing now
+
 /**
  * Do the computation for a node
  * Get the predecessors, and compute the pre-image based on those
@@ -1531,7 +1530,7 @@ void ForwardImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& o
 	NodesList successors = origDepGraph.getSuccessors(node);
 	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
 	DepGraphNormalNode* normalNode = NULL;
-	cout << "predecessors of node " << node->getID() << ": size: " << predecessors.size() << endl;
+
 	if (dynamic_cast< DepGraphNormalNode*>(node) || dynamic_cast< DepGraphUninitNode*>(node) || dynamic_cast< DepGraphOpNode*>(node)) {
 		if (predecessors.empty()) {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: node " << node->getID() << " does not have predecessors. ");
@@ -1749,76 +1748,79 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 
 	if (!opNode->isBuiltin()) {
 		// __vlab_restrict
-        if (opName.find("__vlab_restrict") == string::npos) {
-        	throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not builtin function.\n");
+        if (opName.find("__vlab_restrict") != string::npos) {
+
+			if (successors.size() != 3) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments");
+			}
+
+			cout << "\t>>>> Handling __vlab_restrict validation phase" << endl;
+			DepGraphNode* subjectNode = successors[1];
+			DepGraphNode* patternNode = successors[0];
+			DepGraphNode* complementNode = successors[2];
+
+			if (childNode->equals(subjectNode)){
+				DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
+				if (pNode == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find pattern node");
+				}
+
+				Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
+				if (patternLit == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as pattern node");
+				}
+				string regString = patternLit->getLiteralValue();
+
+				if (regString.find_first_of('/') == 0 &&
+						regString.find_last_of('/') == (regString.length() -1) ) {
+					regString = regString.substr( 1,regString.length()-2);
+				}
+
+				if(regString.find_first_of('^') == 0 &&
+						regString.find_last_of('$') == (regString.length() -1)){
+					regString = "/" + regString.substr( 1,regString.length()-2) + "/";
+				}
+				else {
+					regString = "/.*(" + regString + ").*/";
+				}
+
+
+				StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
+				cout << endl << "**** REGEX AUTO("<< patternNode->getID() <<") *****" << endl;
+				regx->toDot();
+
+				DepGraphNormalNode* cNode = dynamic_cast<DepGraphNormalNode*>(complementNode);
+				if (cNode == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find complement node");
+				}
+
+				Literal* complementLit = dynamic_cast<Literal*>(cNode->getPlace());
+				if (complementLit == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as complement node");
+				}
+
+				// Union __vlab_restricts considering complement parameter
+				string complementString = complementLit->getLiteralValue();
+				if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
+					StrangerAutomaton* complementAuto = regx->complement(patternNode->getID());
+
+					retMe = opAuto->union_(complementAuto, childNode->getID());
+					delete complementAuto;
+				} else {
+					retMe = opAuto->union_(regx, childNode->getID());
+				}
+
+				delete regx;
+
+				return retMe;
+
+			} else {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path, check implementation: .\n");
+			}
+        } else {
+        	throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not __vlab_restrict.\n");
         }
 
-		if (successors.size() != 3) {
-			throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments");
-		}
-
-		cout << "Handling __vlab_restrict validation phase" << endl;
-		DepGraphNode* subjectNode = successors[1];
-		DepGraphNode* patternNode = successors[0];
-		DepGraphNode* complementNode = successors[2];
-
-		if (childNode->equals(subjectNode)){
-			DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
-			if (pNode == NULL) {
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find pattern node");
-			}
-
-			Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
-			if (patternLit == NULL) {
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as pattern node");
-			}
-			string regString = patternLit->getLiteralValue();
-			cout << "__vlab_restrict pattern " << regString << endl;
-
-			if (regString.find_first_of('/') == 0 &&
-					regString.find_last_of('/') == (regString.length() -1) ) {
-				regString = regString.substr( 1,regString.length()-2);
-			}
-
-			if(regString.find_first_of('^') == 0 &&
-					regString.find_last_of('$') == (regString.length() -1)){
-				regString = "/" + regString.substr( 1,regString.length()-2) + "/";
-			}
-			else {
-				regString = "/.*(" + regString + ").*/";
-			}
-
-			cout << "__vlab_restrict modified pattern " << regString << endl;
-			//TODO need to fix regex creation
-			StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
-//			StrangerAutomaton* regx = StrangerAutomaton::makeAnyString(10000);
-//			cout << "!!!!regex is created" << endl;
-
-			DepGraphNormalNode* cNode = dynamic_cast<DepGraphNormalNode*>(complementNode);
-			if (cNode == NULL) {
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find complement node");
-			}
-
-			Literal* complementLit = dynamic_cast<Literal*>(cNode->getPlace());
-			if (complementLit == NULL) {
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as complement node");
-			}
-
-			string complementString = complementLit->getLiteralValue();
-			if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
-				StrangerAutomaton* complementAuto = regx->complement(patternNode->getID());
-				retMe = opAuto->union_(complementAuto, childNode->getID());
-				delete complementAuto;
-			} else {
-				retMe = opAuto->union_(regx, childNode->getID());
-			}
-
-			delete regx;
-			return retMe;
-
-		} else {
-			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path, check implementation: .\n");
-		}
 	} else if (opName == ".") {
 		// CONCAT
 		throw StrangerStringAnalysisException( "SNH: concats are not handled until we really need " + opNode->getID());

@@ -92,9 +92,6 @@ void testPreReplaceCharWithString(){
 
 }
 
-void testRE(){
-//        StrangerAutomaton* serverfw141 = StrangerAutomaton::regExToAuto("/[^']/");
-}
 
 void testIcse2(){
 	int nosink = 0;
@@ -1249,9 +1246,29 @@ void testTransitionRelation(){
 
 }
 
-StrangerAutomaton* extractValidationPatch(string filename, string input_field_name) {
-	DepGraph dep = DepGraph::parseDotFile("/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot");
-	DepGraphUninitNode* uninit = dep.findInputNode("form_frame_name");
+void testRegexToAuto() {
+	StrangerAutomaton* t1 = StrangerAutomaton::regExToAuto("/.{0,60}/",true,1);
+
+	cout << endl << endl;
+	t1->toDot();
+	cout << endl << endl;
+
+	StrangerAutomaton* t2 = StrangerAutomaton::regExToAuto("/.*(.+).*/", true, 2);
+
+	cout << endl << endl;
+	t2->toDot();
+	cout << endl << endl;
+
+	StrangerAutomaton* t3 = StrangerAutomaton::regExToAuto("/.*abcefghojf.*/", true, 3);
+
+	cout << endl << endl;
+	t3->toDot();
+	cout << endl << endl;
+}
+
+StrangerAutomaton* extractValidationPatch(string dep_graph_file_name, string input_field_name) {
+	DepGraph dep = DepGraph::parseDotFile(dep_graph_file_name);
+	DepGraphUninitNode* uninit = dep.findInputNode(input_field_name);
 
 	if (uninit != NULL) {
 		cout << "Depgraph::findInputNode() says: Found an uninit node with ID: ";
@@ -1267,11 +1284,18 @@ StrangerAutomaton* extractValidationPatch(string filename, string input_field_na
 		ForwardImageComputer::staticInit();
 		ForwardImageComputer analyzer;
 
-		AnalysisResult validationExtraction = analyzer.doBackwardAnalysis_ValidationPhase(dep, inputDephGraph, sortedNodes);
-		StrangerAutomaton* nVPatch = validationExtraction[uninit->getID()];
-		StrangerAutomaton* vPatch = nVPatch->complement(uninit->getID());
-		delete nVPatch;
+		AnalysisResult validationExtractionResults = analyzer.doBackwardAnalysis_ValidationPhase(dep, inputDephGraph, sortedNodes);
+		StrangerAutomaton* negVPatch = validationExtractionResults[uninit->getID()];
+		StrangerAutomaton* vPatch = negVPatch->complement(uninit->getID());
+
+		cout << endl;
+//		for (AnalysisResultConstIterator it = validationExtractionResults.begin(); it != validationExtractionResults.end(); it++ ) {
+//			cout << "Printing automata for node ID: " << it->first << endl;
+//			(it->second)->toDot();
+//			cout << endl << endl;
+//		}
 		cout << "\t***VALIDATION PATCH IS CREATED" << endl;
+//		vPatch->toDot();
 		return vPatch;
 	}
 	return NULL;
@@ -1280,8 +1304,8 @@ StrangerAutomaton* extractValidationPatch(string filename, string input_field_na
 int main(int argc, char *argv[]) {
 
 
-	StrangerAutomaton* validationPatch = extractValidationPatch("/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot", "form_frame_name");
+//	StrangerAutomaton* validationPatch = extractValidationPatch("/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot", "form_frame_name");
 
-
+	testRegexToAuto();
 	return 0;
 }

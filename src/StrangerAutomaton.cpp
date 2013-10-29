@@ -1407,6 +1407,7 @@ StrangerAutomaton* StrangerAutomaton::regExToAuto(std::string phpRegexOrig,
                 std::string regExpStringVal;
     			debug(stringbuilder() << id <<  ": regExToString = "
     					<< regExp->toStringBuilder(regExpStringVal));
+
     			retMe = regExp->toAutomaton();
     		}
     
