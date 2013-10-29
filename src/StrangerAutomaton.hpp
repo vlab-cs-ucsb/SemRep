@@ -245,8 +245,6 @@ private:
     
     int ID;
     int autoTraceID;
-    bool top;
-    bool bottom;
     static int num_ascii_track;
     static int* indices_main;
     static unsigned* u_indices_main;

@@ -30,8 +30,6 @@ StrangerAutomaton::StrangerAutomaton()
 }
 void StrangerAutomaton::init()
 {
-    top = false;
-    bottom = false;
     this->ID = -1;
     this->autoTraceID = traceID++;
 }
@@ -122,15 +120,7 @@ StrangerAutomaton* StrangerAutomaton::clone()
  */
 StrangerAutomaton* StrangerAutomaton::makeBottom(int id)
 {
-    
-	debug(stringbuilder() << id << " = makeBottom()");
-	StrangerAutomaton* retMe =  new StrangerAutomaton(NULL);
-    
-	{
-		retMe->setID(id);
-	}
-	retMe->bottom = true;
-	return retMe;
+	return makePhi(id);
 }
 
 /**
@@ -167,15 +157,7 @@ StrangerAutomaton* StrangerAutomaton::makeBottom()
  */
 StrangerAutomaton* StrangerAutomaton::makeTop(int id)
 {
-    
-	debug(stringbuilder() << id << " = makeTop()");
-	StrangerAutomaton* retMe =  new StrangerAutomaton(NULL);
-	retMe->top = true;
-    
-	{
-		retMe->setID(id);
-	}
-	return retMe;
+	return StrangerAutomaton::makeAnyString();
 }
 
 /**
@@ -1933,14 +1915,6 @@ bool StrangerAutomaton::equals(StrangerAutomaton* otherAuto) {
  */
 bool StrangerAutomaton::checkEmptiness() {
     std::string debugStr = stringbuilder() << "checkEmptiness("  << this->ID <<  ") = ";
-    if (this->isBottom()){
-        debug(stringbuilder() << debugStr << "true");
-        return true;
-    }
-    else if (this->isTop()){
-        debug(stringbuilder() << debugStr << "false");
-        return false;
-    }
     
     debugToFile(stringbuilder() << "check_emptiness(M[" << this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//check_emptiness("  << this->ID <<  ")");
     int result = check_emptiness(this->dfa, num_ascii_track,
@@ -2005,7 +1979,7 @@ string StrangerAutomaton::getStr(){
  */
 bool StrangerAutomaton::isBottom() {
     //TODO: checkEmptiness causes lots of crashes so be careful here
-    return (this->bottom == true);
+    return this->checkEmptiness();
 }
 
 /**
@@ -2013,7 +1987,10 @@ bool StrangerAutomaton::isBottom() {
  * @return
  */
 bool StrangerAutomaton::isTop() {
-    return (this->top == true);
+	StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString();
+    bool result =  this->checkEquivalence(sigmaStar);
+    delete sigmaStar;
+    return result;
 }
 
 

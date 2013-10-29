@@ -43,6 +43,8 @@ typedef std::map<int, DepGraphNode*>::const_iterator NodesMapConstIterator;
 typedef std::vector<DepGraphNode*> NodesList;
 typedef std::vector<DepGraphNode*>::iterator NodesListIterator;
 typedef std::vector<DepGraphNode*>::const_iterator NodesListConstIterator;
+typedef std::vector<DepGraphNode*>::reverse_iterator NodesListReverseIterator;
+typedef std::vector<DepGraphNode *>::const_reverse_iterator NodesListConstReverseIterator;
 //typedef std::vector<const DepGraphNode*> NodesConstList;
 //typedef std::vector<const DepGraphNode*>::iterator NodesConstListIterator;
 //typedef std::vector<const DepGraphNode*>::const_iterator NodesConstListConstIterator;

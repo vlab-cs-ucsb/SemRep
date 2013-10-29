@@ -43,11 +43,11 @@ public:
                                   DepGraphNode* inputNode,
                                   AnalysisResult& fwAnalysisResult);
     AnalysisResult doInitialBackwardAnalysis(DepGraph& origDepGraph,
-                                                            DepGraph& inputDepGraph,
-                                                            /*SccNodes& sccNodes,*/
-                                                             NodesList& sortedNodes,
-                                                            StrangerAutomaton* intersectionAuto,
-                                                            const AnalysisResult& fwAnalysisResult);
+                                                                DepGraph& inputDepGraph,
+                                                                 NodesList& sortedNodes);
+    void doInitialBackwardNodeComputation(DepGraph& origDepGraph, DepGraph& inputDepGraph,
+                                   AnalysisResult& bwAnalysisResult,
+                                    DepGraphNode* node);
     void doInitialBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph& origDepGraph,
                                    AnalysisResult& bwAnalysisResult,
                                    const AnalysisResult& fwAnalysisResult,

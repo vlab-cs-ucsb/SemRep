@@ -33,6 +33,7 @@
 //#include "StringAnalyzer.h"
 
 #include "DepGraph.h"
+#include "ForwardImageComputer.h"
 
 using namespace std;
 
@@ -1254,11 +1255,21 @@ int main(int argc, char *argv[]) {
 	DepGraphUninitNode* uninit = dep.findInputNode("form_frame_name");
 
 	if (uninit != NULL) {
-		cout << "found!" << endl;
+		cout << "Depgraph::findInputNode() says: Found an uninit node with ID: ";
 		cout << uninit->getID() << endl;
 
-		DepGraph test = dep.getInputRelevantGraph(uninit);
-		cout << test.toDot() << endl;
+		DepGraph inputDephGraph = dep.getInputRelevantGraph(uninit);
+//		cout << test.toDot() << endl;
+
+		inputDephGraph.sort(inputDephGraph);
+		NodesList sortedNodes = inputDephGraph.getSortedNodes();
+//		cout << "Sorted nodes size: " << sortedNodes.size() << endl;
+
+		ForwardImageComputer::staticInit();
+		ForwardImageComputer analyzer;
+		analyzer.doInitialBackwardAnalysis(dep, inputDephGraph, sortedNodes);
+
+
 	}
 
 	return 0;

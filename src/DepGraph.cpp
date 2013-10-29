@@ -124,7 +124,7 @@ DepGraphUninitNode* DepGraph::findInputNode(string name){
 					if (varNode != NULL) {
 						Variable* o = dynamic_cast<Variable*>(varNode->getPlace());
 						if (o != NULL ){
-							cout << "var name: " << o->getName() << endl;
+//							cout << "var name: " << o->getName() << endl;
 							boost::smatch sm;
 							boost::regex regxGraphLabel(".*(" + name + ").*");
 							try {
