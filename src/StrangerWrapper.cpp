@@ -1247,22 +1247,28 @@ void testTransitionRelation(){
 }
 
 void testRegexToAuto() {
-	StrangerAutomaton* t1 = StrangerAutomaton::regExToAuto("/.{0,60}/",true,1);
+//	StrangerAutomaton* t1 = StrangerAutomaton::regExToAuto("/.{0,60}/",true,1);
+//
+//	cout << endl << endl;
+//	t1->toDot();
+//	cout << endl << endl;
+//
+//	StrangerAutomaton* t2 = StrangerAutomaton::regExToAuto("/.*(.+).*/", true, 2);
+//
+//	cout << endl << endl;
+//	t2->toDot();
+//	cout << endl << endl;
 
-	cout << endl << endl;
-	t1->toDot();
-	cout << endl << endl;
-
-	StrangerAutomaton* t2 = StrangerAutomaton::regExToAuto("/.*(.+).*/", true, 2);
-
-	cout << endl << endl;
-	t2->toDot();
-	cout << endl << endl;
-
-	StrangerAutomaton* t3 = StrangerAutomaton::regExToAuto("/.*abcefghojf.*/", true, 3);
+	StrangerAutomaton* t3 = StrangerAutomaton::regExToAuto("/a{0,3}/", true, 3);
 
 	cout << endl << endl;
 	t3->toDot();
+	cout << endl << endl;
+
+	StrangerAutomaton* t4 = StrangerAutomaton::regExToAuto("/a{1,3}/", true, 4);
+
+	cout << endl << endl;
+	t4->toDot();
 	cout << endl << endl;
 }
 
@@ -1288,24 +1294,42 @@ StrangerAutomaton* extractValidationPatch(string dep_graph_file_name, string inp
 		StrangerAutomaton* negVPatch = validationExtractionResults[uninit->getID()];
 		StrangerAutomaton* vPatch = negVPatch->complement(uninit->getID());
 
-		cout << endl;
+//		cout << endl;
 //		for (AnalysisResultConstIterator it = validationExtractionResults.begin(); it != validationExtractionResults.end(); it++ ) {
 //			cout << "Printing automata for node ID: " << it->first << endl;
 //			(it->second)->toDot();
 //			cout << endl << endl;
 //		}
-		cout << "\t***VALIDATION PATCH IS CREATED" << endl;
-//		vPatch->toDot();
+		cout << "__________" << "VALIDATION PATCH IS GENERATED (" << input_field_name <<")" << endl;
+//		vPatch->toDotAscii(0);
 		return vPatch;
 	}
 	return NULL;
 }
 
+StrangerAutomaton* checkSanitizationDifference(string patchee_dep_graph_file_name, string patcher_dep_graph_file_name, string input_field_name, StrangerAutomaton* validation_patch) {
+
+	StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(-5);
+
+	ForwardImageComputer::staticInit();
+	ForwardImageComputer analyzer;
+
+
+	return NULL;
+}
+
 int main(int argc, char *argv[]) {
 
+	string field_name = "form_frame_name";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot";
 
-//	StrangerAutomaton* validationPatch = extractValidationPatch("/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot", "form_frame_name");
+	// PHASE 1 : Extract the validation patch
+	StrangerAutomaton* validationPatchAuto = extractValidationPatch(patcher_name, field_name);
 
-	testRegexToAuto();
+	// PHASE 2 :
+	StrangerAutomaton* sanitDifferenceAuto = checkSanitizationDifference(patchee_name, patcher_name, field_name, validationPatchAuto);
+
+
 	return 0;
 }

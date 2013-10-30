@@ -30,6 +30,8 @@ StrangerAutomaton::StrangerAutomaton()
 }
 void StrangerAutomaton::init()
 {
+    top = false;
+    bottom = false;
     this->ID = -1;
     this->autoTraceID = traceID++;
 }
@@ -120,7 +122,15 @@ StrangerAutomaton* StrangerAutomaton::clone()
  */
 StrangerAutomaton* StrangerAutomaton::makeBottom(int id)
 {
-	return makePhi(id);
+    
+	debug(stringbuilder() << id << " = makeBottom()");
+	StrangerAutomaton* retMe =  new StrangerAutomaton(NULL);
+    
+	{
+		retMe->setID(id);
+	}
+	retMe->bottom = true;
+	return retMe;
 }
 
 /**
@@ -157,7 +167,15 @@ StrangerAutomaton* StrangerAutomaton::makeBottom()
  */
 StrangerAutomaton* StrangerAutomaton::makeTop(int id)
 {
-	return StrangerAutomaton::makeAnyString();
+    
+	debug(stringbuilder() << id << " = makeTop()");
+	StrangerAutomaton* retMe =  new StrangerAutomaton(NULL);
+	retMe->top = true;
+    
+	{
+		retMe->setID(id);
+	}
+	return retMe;
 }
 
 /**
@@ -301,7 +319,7 @@ StrangerAutomaton* StrangerAutomaton::makeCharRange(char from, char to) {
  * */
 StrangerAutomaton* StrangerAutomaton::makeAnyString(int id) {
     debug(stringbuilder() << id <<  " = makeAnyString()");
-
+    
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfaAllStringASCIIExceptReserveWords(NUM_ASCII_TRACKS, indices_main);//" << id << " = makeAnyString()");
     
     StrangerAutomaton* retMe = new StrangerAutomaton(
@@ -502,9 +520,8 @@ StrangerAutomaton* StrangerAutomaton::optional() {
  */
 StrangerAutomaton* StrangerAutomaton::kleensStar(int id) {
     debug(stringbuilder() << id <<  " = kleensStar("  << this->ID <<  ") -- start");
-
+    
     StrangerAutomaton* temp = this->closure(this->ID);
-
     StrangerAutomaton* retMe = temp->unionWithEmptyString(id);
     delete temp;
     debug(stringbuilder() << id <<  " = kleensStar("  << this->ID <<  ") -- end");
@@ -533,7 +550,7 @@ StrangerAutomaton* StrangerAutomaton::kleensStar() {
  */
 StrangerAutomaton* StrangerAutomaton::kleensStar(StrangerAutomaton* otherAuto, int id) {
     debug(stringbuilder() << id <<  " = kleensStar(" << otherAuto->ID << ")");
-
+    
     StrangerAutomaton* retMe = otherAuto->kleensStar(id);
     {
         retMe->setID(id);
@@ -562,16 +579,17 @@ StrangerAutomaton* StrangerAutomaton::kleensStar(StrangerAutomaton* otherAuto) {
 StrangerAutomaton* StrangerAutomaton::closure(int id) {
     debug(stringbuilder() << id <<  " = closure("  << this->ID <<  ")");
     
-//    if (isTop() || isBottom()) return this->clone(id);
+    if (isTop() || isBottom()) return this->clone(id);
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_closure_extrabit(M["<< this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//"<<id << " = closure("  << this->ID <<  ")");
     perfInfo.numOfClosure++;
     long start = PerfInfo::currentTimeMillis();
-
+    
     StrangerAutomaton* retMe = new StrangerAutomaton(
                                                      dfa_closure_extrabit(this->dfa,
                                                                           num_ascii_track,
                                                                           indices_main));
+    
     long stop = PerfInfo::currentTimeMillis();
     perfInfo.closureTime += (stop - start);
     
@@ -637,19 +655,19 @@ StrangerAutomaton* StrangerAutomaton::repeat(unsigned min, int id) {
         retMe = this->closure(id);
     else {
         StrangerAutomaton* temp = this->closure(id);
-
+        
         StrangerAutomaton* unionAuto = this->clone(id);
         StrangerAutomaton* concatAuto = this->clone(id);
         for (unsigned int i = 2; i < min; i++) {
         	StrangerAutomaton* tempConcat = concatAuto;
 			concatAuto = tempConcat->concatenate(this,id);
 			delete tempConcat;
-
+            
 			StrangerAutomaton* tempUnion = unionAuto;
 			unionAuto = tempUnion->union_(concatAuto, id);
 			delete tempUnion;
         }
-
+        
         StrangerAutomaton* complement = unionAuto->complement(id);
         retMe = temp->intersect(complement);
         
@@ -700,7 +718,7 @@ StrangerAutomaton* StrangerAutomaton::repeat(unsigned min, unsigned max, int id)
     else {
         StrangerAutomaton* unionAuto = NULL;
         StrangerAutomaton* concatAuto = NULL;
-
+        
         // handle min
         if ( min == 0) { // {min, max} where min is 0
         	unionAuto = makeEmptyString(id);
@@ -714,28 +732,28 @@ StrangerAutomaton* StrangerAutomaton::repeat(unsigned min, unsigned max, int id)
             }
             unionAuto = concatAuto->clone(id);
         }
-
+        
         // handle min + 1, max
     	for (unsigned int i = min + 1; i <= max; i++){
     		StrangerAutomaton* tempConcat = concatAuto;
     		concatAuto = tempConcat->concatenate(this,id);
     		delete tempConcat;
-
+            
     		StrangerAutomaton* tempUnion = unionAuto;
     		unionAuto = tempUnion->union_(concatAuto, id);
     		delete tempUnion;
     	}
-
+        
     	delete concatAuto;
     	retMe = unionAuto;
     }
-
+    
     debug(stringbuilder() << id <<  " = repeate(" <<  min << ", " << max << ", " << this->ID << ") -- end");
     {
         retMe->setID(id);
         retMe->debugAutomaton();
     }
-
+    
     return retMe;
 }
 
@@ -1407,7 +1425,6 @@ StrangerAutomaton* StrangerAutomaton::regExToAuto(std::string phpRegexOrig,
                 std::string regExpStringVal;
     			debug(stringbuilder() << id <<  ": regExToString = "
     					<< regExp->toStringBuilder(regExpStringVal));
-
     			retMe = regExp->toAutomaton();
     		}
     
@@ -1850,6 +1867,15 @@ bool StrangerAutomaton::checkInclusion(StrangerAutomaton* otherAuto) {
 bool StrangerAutomaton::checkEquivalence(StrangerAutomaton* otherAuto, int id1, int id2) {
     std::string debugStr = stringbuilder() << "checkEquivalence("  << this->ID <<  ", " << otherAuto->ID << ") = ";
     
+    if ((this->isTop() && otherAuto->isTop()) || (this->isBottom() && otherAuto->isBottom())){
+        debug(stringbuilder() << debugStr << "true");
+        return true;
+    }
+    else if (this->isTop() || this->isBottom() || otherAuto->isTop() || otherAuto->isBottom()){
+        debug(stringbuilder() << debugStr << "false");
+        return false;
+    }
+    
     debugToFile(stringbuilder() << "check_equivalence(M[" << this->autoTraceID << "],M["<< otherAuto->autoTraceID  << "], NUM_ASCII_TRACKS, indices_main);//check_equivalence("  << this->ID <<  ", " << otherAuto->ID << ")");
     int result = check_equivalence(this->dfa,
                                    otherAuto->dfa, num_ascii_track,
@@ -1915,9 +1941,18 @@ bool StrangerAutomaton::equals(StrangerAutomaton* otherAuto) {
  */
 bool StrangerAutomaton::checkEmptiness() {
     std::string debugStr = stringbuilder() << "checkEmptiness("  << this->ID <<  ") = ";
+    if (this->isBottom()){
+        debug(stringbuilder() << debugStr << "true");
+        return true;
+    }
+    else if (this->isTop()){
+        debug(stringbuilder() << debugStr << "false");
+        return false;
+    }
     
     debugToFile(stringbuilder() << "check_emptiness(M[" << this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//check_emptiness("  << this->ID <<  ")");
-    int result = check_emptiness(this->dfa, num_ascii_track, indices_main);
+    int result = check_emptiness(this->dfa, num_ascii_track,
+                                 indices_main);
     {
         debug(stringbuilder() << debugStr << (result == 0 ? false : true));
     }
@@ -1950,8 +1985,8 @@ bool StrangerAutomaton::isEmpty() {
  * @return
  */
 bool StrangerAutomaton::checkEmptyString() {
-//    if (this->isBottom() || this->isTop())
-//        return false;
+    if (this->isBottom() || this->isTop())
+        return false;
     debugToFile(stringbuilder() << "checkEmptyString(M[" << this->autoTraceID << "]);//checkEmptyString("  << this->ID <<  ")");
     if (::checkEmptyString(this->dfa) == 1)
         return true;
@@ -1978,7 +2013,7 @@ string StrangerAutomaton::getStr(){
  */
 bool StrangerAutomaton::isBottom() {
     //TODO: checkEmptiness causes lots of crashes so be careful here
-    return this->checkEmptiness();
+    return (this->bottom == true);
 }
 
 /**
@@ -1986,10 +2021,7 @@ bool StrangerAutomaton::isBottom() {
  * @return
  */
 bool StrangerAutomaton::isTop() {
-	StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString();
-    bool result =  this->checkEquivalence(sigmaStar);
-    delete sigmaStar;
-    return result;
+    return (this->top == true);
 }
 
 
@@ -2148,44 +2180,38 @@ StrangerAutomaton* StrangerAutomaton::preHtmlSpecialChars(StrangerAutomaton* sub
 
 StrangerAutomaton* StrangerAutomaton::stripslashes(StrangerAutomaton* subjectAuto, int id)
 {
-    
-    StrangerAutomaton *sigmaStar = StrangerAutomaton::makeAnyString();
-    StrangerAutomaton *sigmaStarSlashed = addslashes(sigmaStar);
+    StrangerAutomaton *sigmaStar = StrangerAutomaton::regExToAuto("/(.*('|\\\"|\\\\).*)+/", true, id);
+    sigmaStar->toDotAscii(0);
+    StrangerAutomaton *sigmaStarSlashed = addslashes(sigmaStar, id);
+    sigmaStarSlashed->toDotAscii(0);
     delete sigmaStar;
-    StrangerAutomaton *sigmaStarNotSlashed = sigmaStarSlashed->complement();
-    StrangerAutomaton *slashed = subjectAuto->intersect(sigmaStarSlashed);
-    StrangerAutomaton *notSlashed = subjectAuto->intersect(sigmaStarNotSlashed);
-    StrangerAutomaton *slashedPre = pre_addslashes(slashed);
-    StrangerAutomaton *result = notSlashed->union_(slashedPre);
-    return result;
+    StrangerAutomaton *sigmaStarNotSlashed = sigmaStarSlashed->complement(id);
+    sigmaStarNotSlashed->toDotAscii(0);
+    StrangerAutomaton *slashed = subjectAuto->intersect(sigmaStarSlashed, id);
+    slashed->toDotAscii(0);
+    delete sigmaStarSlashed;
+    StrangerAutomaton *notSlashed = subjectAuto->intersect(sigmaStarNotSlashed, id);
+    notSlashed->toDotAscii(0);
+    delete sigmaStarNotSlashed;
+    StrangerAutomaton *slashedPre = pre_addslashes(slashed, id);
+    slashedPre->toDotAscii(0);
+    delete slashed;
+    StrangerAutomaton *retMe = notSlashed->union_(slashedPre, id);
+    delete slashedPre;
+    {
+		retMe->ID = id;
+        retMe->debugAutomaton();
+	}
+
+    return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::pre_stripslashes(StrangerAutomaton* subjectAuto, int id)
 {
-    
-    //    debug(::java::lang::StringBuilder().append(id)->append(" = pre_stripslashes(")
-    //        ->append(npc(subjectAuto)->ID)
-    //        ->append(") -- start")->toString());
-    //    StrangerAutomaton* searchAuto = StrangerAutomaton::makeString("\\'", int32_t(1));
-    //    std::string replaceStr = "'";
-    //    StrangerAutomaton* retMe = npc(subjectAuto)->preReplace(searchAuto, replaceStr, int32_t(2));
-    //    searchAuto = StrangerAutomaton::makeString("\\\"", int32_t(3));
-    //    replaceStr = "\"";
-    //    retMe = retMe->preReplace(searchAuto, replaceStr, int32_t(2));
-    //    searchAuto = StrangerAutomaton::makeString("\\\\", int32_t(5));
-    //    replaceStr = "\\";
-    //    retMe = retMe->preReplace(searchAuto, replaceStr, int32_t(2));
-    //    debug(::java::lang::StringBuilder().append(id)->append(" = pre_stripslashes(")
-    //        ->append(npc(subjectAuto)->ID)
-    //        ->append(") -- end")->toString());
-    //{
-    //        npc(subjectAuto)->ID = id;
-    //        npc(subjectAuto)->debugAutomaton();
-    //    }
-    
-    //    return retMe;
-	throw new std::runtime_error("not implemented");
-    
+    StrangerAutomaton *slashed = addslashes(subjectAuto, id);
+    StrangerAutomaton *result = slashed->union_(subjectAuto, id);
+    delete slashed;
+    return result;
 }
 
 StrangerAutomaton* StrangerAutomaton::mysql_real_escape_string(StrangerAutomaton* subjectAuto, int id)

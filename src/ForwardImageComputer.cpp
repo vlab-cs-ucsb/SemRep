@@ -1786,8 +1786,6 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 
 
 				StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
-				cout << endl << "**** REGEX AUTO("<< patternNode->getID() <<") *****" << endl;
-				regx->toDot();
 
 				DepGraphNormalNode* cNode = dynamic_cast<DepGraphNormalNode*>(complementNode);
 				if (cNode == NULL) {

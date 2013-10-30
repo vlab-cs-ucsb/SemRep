@@ -163,7 +163,9 @@ public:
     static StrangerAutomaton* preHtmlSpecialChars(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* preHtmlSpecialChars(StrangerAutomaton* subjectAuto){return preHtmlSpecialChars(subjectAuto, traceID);};
     static StrangerAutomaton* stripslashes(StrangerAutomaton* subjectAuto, int id);
+    static StrangerAutomaton* stripslashes(StrangerAutomaton* subjectAuto){return stripslashes(subjectAuto, traceID);};
     static StrangerAutomaton* pre_stripslashes(StrangerAutomaton* subjectAuto, int id);
+    static StrangerAutomaton* pre_stripslashes(StrangerAutomaton* subjectAuto){return pre_stripslashes(subjectAuto, traceID);};
     static StrangerAutomaton* mysql_real_escape_string(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* pre_mysql_real_escape_string(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* nl2br(StrangerAutomaton* subjectAuto, int id);
@@ -245,6 +247,8 @@ private:
     
     int ID;
     int autoTraceID;
+    bool top;
+    bool bottom;
     static int num_ascii_track;
     static int* indices_main;
     static unsigned* u_indices_main;
