@@ -1,4 +1,5 @@
-src/StrangerWrapper.d: ../src/StrangerWrapper.cpp \
+src/StrangerPatcher.d: ../src/StrangerPatcher.cpp \
+ ../src/StrangerPatcher.h \
  /home/abaki/workspace/strangerlib/stranger_lib_internal.h \
  /home/abaki/workspace/strangerlib/stranger.h \
  /home/abaki/workspace/MONA/Mem/mem.h \
@@ -16,7 +17,9 @@ src/StrangerWrapper.d: ../src/StrangerWrapper.cpp \
  ../src/DepGraphOpNode.h ../src/DepGraphNormalNode.h ../src/TacPlace.h \
  ../src/Variable.h ../src/Literal.h ../src/Constant.h \
  ../src/ForwardImageComputer.h ../src/StringAnalysisTypes.h \
- ../src/StrangerStringAnalysisException.h ../src/StrangerPatcher.h
+ ../src/StrangerStringAnalysisException.h
+
+../src/StrangerPatcher.h:
 
 /home/abaki/workspace/strangerlib/stranger_lib_internal.h:
 
@@ -73,5 +76,3 @@ src/StrangerWrapper.d: ../src/StrangerWrapper.cpp \
 ../src/StringAnalysisTypes.h:
 
 ../src/StrangerStringAnalysisException.h:
-
-../src/StrangerPatcher.h:

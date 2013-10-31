@@ -34,6 +34,7 @@
 
 #include "DepGraph.h"
 #include "ForwardImageComputer.h"
+#include "StrangerPatcher.h"
 
 using namespace std;
 
@@ -1272,42 +1273,8 @@ void testRegexToAuto() {
 	cout << endl << endl;
 }
 
-StrangerAutomaton* extractValidationPatch(string dep_graph_file_name, string input_field_name) {
-	DepGraph dep = DepGraph::parseDotFile(dep_graph_file_name);
-	DepGraphUninitNode* uninit = dep.findInputNode(input_field_name);
 
-	if (uninit != NULL) {
-		cout << "Depgraph::findInputNode() says: Found an uninit node with ID: ";
-		cout << uninit->getID() << endl;
-
-		DepGraph inputDephGraph = dep.getInputRelevantGraph(uninit);
-//		cout << test.toDot() << endl;
-
-		inputDephGraph.sort(inputDephGraph);
-		NodesList sortedNodes = inputDephGraph.getSortedNodes();
-//		cout << "Sorted nodes size: " << sortedNodes.size() << endl;
-
-		ForwardImageComputer::staticInit();
-		ForwardImageComputer analyzer;
-
-		AnalysisResult validationExtractionResults = analyzer.doBackwardAnalysis_ValidationPhase(dep, inputDephGraph, sortedNodes);
-		StrangerAutomaton* negVPatch = validationExtractionResults[uninit->getID()];
-		StrangerAutomaton* vPatch = negVPatch->complement(uninit->getID());
-
-//		cout << endl;
-//		for (AnalysisResultConstIterator it = validationExtractionResults.begin(); it != validationExtractionResults.end(); it++ ) {
-//			cout << "Printing automata for node ID: " << it->first << endl;
-//			(it->second)->toDot();
-//			cout << endl << endl;
-//		}
-		cout << "__________" << "VALIDATION PATCH IS GENERATED (" << input_field_name <<")" << endl;
-//		vPatch->toDotAscii(0);
-		return vPatch;
-	}
-	return NULL;
-}
-
-StrangerAutomaton* checkSanitizationDifference(string patchee_dep_graph_file_name, string patcher_dep_graph_file_name, string input_field_name, StrangerAutomaton* validation_patch) {
+StrangerAutomaton* checkSanitizationDifference(string patcher_dep_graph_file_name, string patchee_dep_graph_file_name, string input_field_name, StrangerAutomaton* validation_patch) {
 
 	StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(-5);
 
@@ -1324,12 +1291,9 @@ int main(int argc, char *argv[]) {
 	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame.dot";
 	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot";
 
+
+	StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
 	// PHASE 1 : Extract the validation patch
-	StrangerAutomaton* validationPatchAuto = extractValidationPatch(patcher_name, field_name);
-
-	// PHASE 2 :
-	StrangerAutomaton* sanitDifferenceAuto = checkSanitizationDifference(patchee_name, patcher_name, field_name, validationPatchAuto);
-
-
+	strangerPatcher.extractValidationPatch();
 	return 0;
 }
