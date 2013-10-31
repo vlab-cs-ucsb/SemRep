@@ -244,7 +244,7 @@ DepGraph DepGraph::parseDotFile(std::string fname){
         boost::regex regxNodeVar("(.+) : (\\d+)\\\\nVar: (.+)\\\\nFunc: (.+)\\\\n");
         boost::regex regxNodeLit("^(.+) : (\\d+)\\\\nLit: (.*)\\\\n$");
         boost::regex regxConstant("^(.+) : (\\d+)\\\\nConst: (.*)\\\\n$");
-        boost::regex regxNodeOp("^(.+) : (\\d+)\\\\n(.+):\\\\n(.+)\\\\n.+\\\\n.*$");
+        boost::regex regxNodeOp("^(.+) : (\\d+)\\\\n(.+):\\\\n(.+)\\\\n.*$");
         string nodeName;
         string nodeDescription;
         string edge;
@@ -280,9 +280,10 @@ DepGraph DepGraph::parseDotFile(std::string fname){
                 nodeID = std::stoi(sm[1]) - 1;
                 nodeDescription = sm[2];
 
-                if (boost::regex_match(nodeDescription, sm, regxNodeDescription)){
+                if (boost::regex_match(nodeDescription, sm, regxNodeDescription)) {
                     nodeShape = sm[1];
                     nodeLabel = sm[2];
+//                    cout << "node label : " << nodeLabel << endl;
 //                    nodeSCCID = std::stoi(sm[3]);
                     nodeSCCID = -1;
 //                    nodeOrder = std::stoi(sm[4]);

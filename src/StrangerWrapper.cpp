@@ -1285,5 +1285,7 @@ int main(int argc, char *argv[]) {
 	StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
 	// PHASE 1 : Extract the validation patch
 	strangerPatcher.extractValidationPatch();
+	// PHASE 2 : Check the difference in forward analysis results
+	strangerPatcher.checkSanitizationDifference();
 	return 0;
 }

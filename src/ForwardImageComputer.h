@@ -26,6 +26,33 @@ public:
 	ForwardImageComputer();
 	virtual ~ForwardImageComputer();
     static void staticInit();
+
+    /****************************************************************************************************/
+    /********* VALIDATION PATCH EXTRACTION PHASE METHODS ************************************************/
+    /****************************************************************************************************/
+
+    AnalysisResult doBackwardAnalysis_ValidationPhase(DepGraph& origDepGraph,
+                                                                DepGraph& inputDepGraph,
+                                                                 NodesList& sortedNodes);
+    void doBackwardNodeComputation_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph,
+                                   AnalysisResult& bwAnalysisResult,
+                                    DepGraphNode* node);
+
+    StrangerAutomaton* makeBackwardAutoForOpChild_ValidationPhase( DepGraphOpNode* opNode,
+    			 DepGraphNode* childNode,
+    			AnalysisResult& bwAnalysisResult, DepGraph& depGraph);
+
+    /****************************************************************************************************/
+    /*********** SANITIZATION PATCH EXTRACTION METHODS **************************************************/
+    /****************************************************************************************************/
+
+    void doForwardAnalysis_CheckSanitDiffPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, NodesList& sortedNodes, AnalysisResult& analysisResult);
+
+    void doNodeComputation_CheckSanitDiffPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
+    /****************************************************************************************************/
+    /*********** REGULAR FORWARD IMAGE COMPUTATION METHODS **********************************************/
+    /****************************************************************************************************/
+
     AnalysisResult computeFwImage(DepGraph& origDepGraph, DepGraph& acyclicWorkGraph,
                                   /*SccNodes& sccNodes,*/ AnalysisResult& inputValuesMap,
                                   bool multiTrack);
@@ -37,17 +64,14 @@ public:
                            AnalysisResult& inputValuesMap, bool multiTrack);
     StrangerAutomaton* makeAutoForOp(DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph, bool multiTrack);
     
+//********************************************************************************************************************
+
     AnalysisResult computeBwImage(DepGraph& origDepGraph, DepGraph& acyclicWorkGraph,
                                   /*SccNodes& sccNodes,*/ AnalysisResult& inputValuesMap,
                                   StrangerAutomaton* intersectionAuto,
                                   DepGraphNode* inputNode,
                                   AnalysisResult& fwAnalysisResult);
-    AnalysisResult doBackwardAnalysis_ValidationPhase(DepGraph& origDepGraph,
-                                                                DepGraph& inputDepGraph,
-                                                                 NodesList& sortedNodes);
-    void doBackwardNodeComputation_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph,
-                                   AnalysisResult& bwAnalysisResult,
-                                    DepGraphNode* node);
+
     AnalysisResult doBackwardAnalysis(DepGraph& origDepGraph, DepGraph& inputDepGraph,
                                       /*SccNodes& sccNodes,*/
                                       NodesList& sortedNodes,
@@ -58,9 +82,6 @@ public:
                                    const AnalysisResult& fwAnalysisResult,
                                    DepGraphNode* node,
                                    bool multiTrack);
-    StrangerAutomaton* makeBackwardAutoForOpChild_ValidationPhase( DepGraphOpNode* opNode,
-    			 DepGraphNode* childNode,
-    			AnalysisResult& bwAnalysisResult, DepGraph& depGraph);
 
     StrangerAutomaton* makeBackwardAutoForOpChild(DepGraphOpNode* opNode,
                                                                         DepGraphNode* childNode,
