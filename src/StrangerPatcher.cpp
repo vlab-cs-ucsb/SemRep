@@ -78,6 +78,17 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 
 }
 
+/**
+ *
+ */
+StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
+	StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(-5);
 
+	ForwardImageComputer::staticInit();
+	ForwardImageComputer analyzer;
+
+
+	return NULL;
+}
 
 

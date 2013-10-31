@@ -1274,16 +1274,6 @@ void testRegexToAuto() {
 }
 
 
-StrangerAutomaton* checkSanitizationDifference(string patcher_dep_graph_file_name, string patchee_dep_graph_file_name, string input_field_name, StrangerAutomaton* validation_patch) {
-
-	StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(-5);
-
-	ForwardImageComputer::staticInit();
-	ForwardImageComputer analyzer;
-
-
-	return NULL;
-}
 
 int main(int argc, char *argv[]) {
 

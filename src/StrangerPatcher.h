@@ -38,6 +38,7 @@ public:
 	virtual ~StrangerPatcher();
 
 	StrangerAutomaton* extractValidationPatch();
+	StrangerAutomaton* checkSanitizationDifference();
 
 
 private:
