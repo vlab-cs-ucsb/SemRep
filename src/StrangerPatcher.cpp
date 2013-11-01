@@ -66,11 +66,17 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 		ForwardImageComputer::staticInit();
 		ForwardImageComputer analyzer;
 
-		AnalysisResult validationExtractionResults =
-				analyzer.doBackwardAnalysis_ValidationPhase(patcher_dep_graph, patcher_field_relevant_graph, patcher_sorted_field_relevant_nodes);
+		try {
+			AnalysisResult validationExtractionResults =
+					analyzer.doBackwardAnalysis_ValidationPhase(patcher_dep_graph, patcher_field_relevant_graph, patcher_sorted_field_relevant_nodes);
 
-		StrangerAutomaton* negVPatch = validationExtractionResults[patcher_uninit_field_node->getID()];
-		validation_patch_auto = negVPatch->complement(patcher_uninit_field_node->getID());
+			StrangerAutomaton* negVPatch = validationExtractionResults[patcher_uninit_field_node->getID()];
+					validation_patch_auto = negVPatch->complement(patcher_uninit_field_node->getID());
+
+		} catch (StrangerStringAnalysisException const &e) {
+	        cerr << e.what();
+	        exit(EXIT_FAILURE);
+	    }
 
 		message("validation patch is generated for input: " + input_field_name);
 //		validation_patch_auto->toDotAscii(0);
@@ -120,8 +126,9 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 		patcherAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patcher_dep_graph,patcher_field_relevant_graph,patcher_sorted_field_relevant_nodes,patcherAnalysis);
 		message("...finished forward analysis for patcher.");
 
-	//	message("starting forward analysis for patchee");
-	//	patcheeAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysis);
+		message("starting forward analysis for patchee");
+		patcheeAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysis);
+		message("...finished forward analysis for patchee.");
 
 	} catch (StrangerStringAnalysisException const &e) {
         cerr << e.what();
