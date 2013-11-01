@@ -136,10 +136,28 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
     }
 
 //	cout << endl << endl;
-//	StrangerAutomaton* patcherSinkAuto = patcherAnalysis[patcher_field_relevant_graph.getRoot()->getID()];
+	StrangerAutomaton* patcherSinkAuto = patcherAnalysis[patcher_field_relevant_graph.getRoot()->getID()];
 //	patcherSinkAuto->toDotAscii(0);
 
-	return NULL;
+//	cout << endl << endl;
+	StrangerAutomaton* patcheeSinkAuto = patcheeAnalysis[patchee_field_relevant_graph.getRoot()->getID()];
+//	patcheeSinkAuto->toDotAscii(0);
+
+	message("checking difference between patcher and patchee");
+	StrangerAutomaton* complementauto = patcherSinkAuto->complement(-3);
+	StrangerAutomaton* differenceAuto = patcheeSinkAuto->intersect(complementauto, -3);
+	delete complementauto;
+
+	if (differenceAuto->isEmpty() ){
+		message("no difference, no patch required!");
+	} else {
+		message("a difference is found, next step is to calculate patch");
+	}
+
+	cout << endl << endl;
+	differenceAuto->toDotAscii(0);
+
+	return differenceAuto;
 }
 
 
