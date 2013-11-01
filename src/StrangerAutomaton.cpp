@@ -124,8 +124,8 @@ StrangerAutomaton* StrangerAutomaton::makeBottom(int id)
 {
     
 	debug(stringbuilder() << id << " = makeBottom()");
-	StrangerAutomaton* retMe =  new StrangerAutomaton(NULL);
-    
+//	StrangerAutomaton* retMe =  new StrangerAutomaton(NULL);
+    StrangerAutomaton* retMe = StrangerAutomaton::makePhi(id);
 	{
 		retMe->setID(id);
 	}
@@ -169,7 +169,8 @@ StrangerAutomaton* StrangerAutomaton::makeTop(int id)
 {
     
 	debug(stringbuilder() << id << " = makeTop()");
-	StrangerAutomaton* retMe =  new StrangerAutomaton(NULL);
+//	StrangerAutomaton* retMe =  new StrangerAutomaton(NULL);
+	StrangerAutomaton* retMe =  StrangerAutomaton::makeAnyString(id);
 	retMe->top = true;
     
 	{

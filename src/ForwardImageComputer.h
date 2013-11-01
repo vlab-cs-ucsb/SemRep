@@ -48,7 +48,9 @@ public:
 
     void doForwardAnalysis_CheckSanitDiffPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, NodesList& sortedNodes, AnalysisResult& analysisResult);
 
-    void doNodeComputation_CheckSanitDiffPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
+    void doForwardNodeComputation_CheckSanitDiffPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
+
+    StrangerAutomaton* makeForwardAutoForOp_CheckSanitDiffPhase(DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph);
     /****************************************************************************************************/
     /*********** REGULAR FORWARD IMAGE COMPUTATION METHODS **********************************************/
     /****************************************************************************************************/

@@ -160,7 +160,7 @@ void ForwardImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& o
 				}
 
 				if (predAuto == NULL) {
-					throw StrangerStringAnalysisException("SNH: Predecessor Auto is Null!!");
+					throw StrangerStringAnalysisException("SNH: Predecessor Auto is Null: doBackwardNodeComputation_ValidationPhase()");
 				}
 
 				if (newAuto == NULL) {
@@ -176,11 +176,11 @@ void ForwardImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& o
 		}
 
 	} else {
-		throw new StrangerStringAnalysisException("SNH: cannot handle node type");
+		throw new StrangerStringAnalysisException("SNH: cannot handle node type: doBackwardNodeComputation_ValidationPhase()");
 	}
 
 	if (newAuto == NULL) {
-		throw new StrangerStringAnalysisException("SNH: pre-image is NULL");
+		throw new StrangerStringAnalysisException("SNH: pre-image is NULL: doBackwardNodeComputation_ValidationPhase()");
 	}
 
 	bwAnalysisResult[node->getID()] = newAuto;
@@ -206,7 +206,8 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
         if (opName.find("__vlab_restrict") != string::npos) {
 
 			if (successors.size() != 3) {
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments");
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments: "
+						"makeBackwardAutoForOpChild_ValidationPhase()");
 			}
 
 //			cout << "\t~~~~~>>> __vlab_restrict validation phase " << endl;
@@ -217,12 +218,14 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 			if (childNode->equals(subjectNode)){
 				DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
 				if (pNode == NULL) {
-					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find pattern node");
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find pattern node: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
 				}
 
 				Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
 				if (patternLit == NULL) {
-					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as pattern node");
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as pattern node: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
 				}
 				string regString = patternLit->getLiteralValue();
 
@@ -244,12 +247,14 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 
 				DepGraphNormalNode* cNode = dynamic_cast<DepGraphNormalNode*>(complementNode);
 				if (cNode == NULL) {
-					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find complement node");
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find complement node: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
 				}
 
 				Literal* complementLit = dynamic_cast<Literal*>(cNode->getPlace());
 				if (complementLit == NULL) {
-					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as complement node");
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as complement node: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
 				}
 
 				// Union __vlab_restricts considering complement parameter
@@ -264,19 +269,21 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 				}
 
 				delete regx;
-
-				return retMe;
+//				return retMe;
 
 			} else {
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path, check implementation: .\n");
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
+						"makeBackwardAutoForOpChild_ValidationPhase()");
 			}
         } else {
-        	throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not __vlab_restrict.\n");
+        	throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not __vlab_restrict.\n"
+        			"makeBackwardAutoForOpChild_ValidationPhase()");
         }
 
 	} else if (opName == ".") {
 		// CONCAT
-		throw StrangerStringAnalysisException( "SNH: concats are not handled until we really need " + opNode->getID());
+		throw StrangerStringAnalysisException( "concats are not handled until we really need: "
+				"makeBackwardAutoForOpChild_ValidationPhase()");
 	} else if (opName == "addslashes") {
 		// only has one parameter ==>  string addslashes  ( string $str  )
 		StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(opNode->getID());
@@ -286,7 +293,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 		delete sigmaStar;
 		delete forward;
 		delete intersection;
-		return retMe;
+//		return retMe;
 	} else if (opName == "trim" ) {
 		// only has one parameter ==>  string trim  ( string $str  )
 		StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(opNode->getID());
@@ -296,14 +303,12 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 		delete sigmaStar;
 		delete forward;
 		delete intersection;
-		return retMe;
-		return opAuto->preTrimSpaces(childNode->getID());
-
+//		return retMe;
 	} else {
 		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
 	}
 
-	return NULL;
+	return retMe;
 
 }
 
@@ -318,22 +323,19 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 void ForwardImageComputer::doForwardAnalysis_CheckSanitDiffPhase(
 		DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes, AnalysisResult& analysisResult) {
 
-	DepGraphNode* node;
-
 	for (NodesListIterator it = sortedNodes.begin(); it != sortedNodes.end(); it++) {
-		node = *it;
+		DepGraphNode* node = *it;
 
 		if (analysisResult.find(node->getID()) == analysisResult.end()) {
 			analysisResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
 		}
 
-		doNodeComputation_CheckSanitDiffPhase(origDepGraph, inputDepGraph, node, analysisResult);
+		doForwardNodeComputation_CheckSanitDiffPhase(origDepGraph, inputDepGraph, node, analysisResult);
 	}
-
 	return;
 }
 
-void ForwardImageComputer::doNodeComputation_CheckSanitDiffPhase(
+void ForwardImageComputer::doForwardNodeComputation_CheckSanitDiffPhase(
 		DepGraph& origDepGraph, DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult) {
 
 	if(node->getNonprocessedParents() == -1){
@@ -346,23 +348,260 @@ void ForwardImageComputer::doNodeComputation_CheckSanitDiffPhase(
     DepGraphNormalNode* normalnode;
     DepGraphOpNode* opNode;
     DepGraphUninitNode* uninitNode;
-    StrangerAutomaton* temp;
 
     if ((normalnode = dynamic_cast<DepGraphNormalNode*>(node)) != NULL) {
-    	if(successors.empty()) {
+    	if (successors.empty()) {
     		TacPlace* place = normalnode->getPlace();
     		Literal* lit = dynamic_cast<Literal*>(place);
     		if (lit == NULL) {
     			throw StrangerStringAnalysisException(stringbuilder() << "SNH: " << normalnode->getID() << ","
-    										<< "cannot handle, expecting literal node, or add this type to the implementation");
+    										<< "cannot handle, expecting literal node,\nor add this type to the implementation: "
+    												"doForwardNodeComputation_CheckSanitDiffPhase()");
     		}
     		newAuto = StrangerAutomaton::makeString(lit->getLiteralValue(), node->getID());
     	} else {
-    		// an interior node, unioun of all its successors
+    		// an interior node, union of all its successors
+    		for (NodesListIterator it = successors.begin(); it != successors.end(); it++) {
+    			DepGraphNode* succNode = *it;
+    			if (succNode->getID() == node->getID() ) {
+    				// avoid simple loops
+    				continue;
+    			}
+
+    			AnalysisResultIterator rit = analysisResult.find(succNode->getID());
+    			if (rit == analysisResult.end()) {
+    				// if this is the case, either use the originial graph instead of input relevant graph
+    				// or update the case here, compute all paths that passes through this node.
+    				throw StrangerStringAnalysisException("Successor of normal Node is not computed yet!\nUpdate implementation: "
+    						"doForwardNodeComputation_CheckSanitDiffPhase()");
+    			}
+    			StrangerAutomaton *succAuto = rit->second;
+    			if (newAuto == NULL) {
+    				newAuto = succAuto->clone(node->getID());
+    			} else {
+    				StrangerAutomaton* temp = newAuto;
+    				newAuto = newAuto->union_(succAuto, node->getID());
+    				delete temp;
+    			}
+    		}
     	}
 
+    } else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != NULL) {
+		newAuto = makeForwardAutoForOp_CheckSanitDiffPhase(opNode, analysisResult,	origDepGraph);
+    } else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != NULL) {
+    	// input nodes should already have been initialized
+    	if (analysisResult.find(node->getID()) == analysisResult.end()){
+    		throw StrangerStringAnalysisException("An Uninitialized input node found without initial automaton!\n"
+    				"doForwardNodeComputation_CheckSanitDiffPhase()");
+    	}
+    	newAuto = analysisResult[node->getID()];
+    } else {
+    	throw StrangerStringAnalysisException("Cannot handle node type!\ncheck or update code: "
+    			"doForwardNodeComputation_CheckSanitDiffPhase()");
     }
 
+    if (newAuto == NULL) {
+    	throw StrangerStringAnalysisException("Forward automaton cannot be computed!\ncheck or update code: "
+    			"doForwardNodeComputation_CheckSanitDiffPhase()");
+    }
+
+    analysisResult[node->getID()] = newAuto;
+}
+
+/**
+ * Forward image computation for operation nodes
+ */
+StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_CheckSanitDiffPhase(
+		DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph) {
+
+	NodesList successors = depGraph.getSuccessors(opNode);
+	StrangerAutomaton* retMe = NULL;
+	string opName = opNode->getName();
+
+	if (!opNode->isBuiltin()) {
+		// __vlab_restrict
+		if (opName.find("__vlab_restrict") != string::npos) {
+			if (successors.size() != 3) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments: "
+						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+			}
+
+			DepGraphNode* subjectNode = successors[1];
+			DepGraphNode* patternNode = successors[0];
+			DepGraphNode* complementNode = successors[2];
+
+
+			AnalysisResultIterator rit = analysisResult.find(subjectNode->getID());
+			if (rit == analysisResult.end()) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find subject auto: "
+										"makeForwardAutoForOp_CheckSanitDiffPhase()");
+			}
+
+			StrangerAutomaton* subjectAuto = rit->second;
+
+			DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
+			if (pNode == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find pattern node: "
+						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+			}
+
+			Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
+			if (patternLit == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as pattern node: "
+						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+			}
+			string regString = patternLit->getLiteralValue();
+
+			if (regString.find_first_of('/') == 0 &&
+					regString.find_last_of('/') == (regString.length() -1) ) {
+				regString = regString.substr( 1,regString.length()-2);
+			}
+
+			if(regString.find_first_of('^') == 0 &&
+					regString.find_last_of('$') == (regString.length() -1)){
+				regString = "/" + regString.substr( 1,regString.length()-2) + "/";
+			}
+			else {
+				regString = "/.*(" + regString + ").*/";
+			}
+
+
+			StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
+
+			DepGraphNormalNode* cNode = dynamic_cast<DepGraphNormalNode*>(complementNode);
+			if (cNode == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find complement node: "
+						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+			}
+
+			Literal* complementLit = dynamic_cast<Literal*>(cNode->getPlace());
+			if (complementLit == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as complement node: "
+						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+			}
+
+			// Union __vlab_restricts considering complement parameter
+			string complementString = complementLit->getLiteralValue();
+			if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
+				retMe = subjectAuto->intersect(regx, opNode->getID());
+			} else {
+				StrangerAutomaton* complementAuto = regx->complement(patternNode->getID());
+				retMe = subjectAuto->intersect(complementAuto, opNode->getID());
+				delete complementAuto;
+			}
+			delete regx;
+//			return retMe;
+
+		} else {
+        	throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not __vlab_restrict.\n"
+        			"makeForwardAutoForOp_CheckSanitDiffPhase()");
+        }
+	} else if (opName == ".") {
+		// We will stop at concatenation if the concat is for query string in sink
+		//TODO implement as described above
+		throw StrangerStringAnalysisException("Implement concat: "
+						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+	} else if (opName == "preg_replace") {
+		throw StrangerStringAnalysisException("Implement preg_replace: "
+				"makeForwardAutoForOp_CheckSanitDiffPhase()");
+	} else if (opName == "ereg_replace") {
+		throw StrangerStringAnalysisException("ereg_replace is not supported yet: "
+						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+	} else if (opName == "str_replace") {
+		throw StrangerStringAnalysisException("Implement str_replace: "
+								"makeForwardAutoForOp_CheckSanitDiffPhase()");
+		 //Note: subjectAuto should be a string to use the replace function
+		 //from StrangerLibrary. Otherwise we need a method to return the
+		 //set of strings that an automaton represents (in PHP replace
+		 //should always have only one string.
+
+		if (successors.size() < 3) {
+			throw new StrangerStringAnalysisException("SNH");
+		}
+		StrangerAutomaton* subjectAuto = analysisResult[successors[2]->getID()];
+		StrangerAutomaton* searchAuto = analysisResult[successors[0]->getID()];
+		string replaceStr = analysisResult[successors[1]->getID()]->getStr();
+
+		StrangerAutomaton* replacement = StrangerAutomaton::str_replace(
+				searchAuto, replaceStr, subjectAuto, opNode->getID());
+		retMe = replacement;
+//		return retMe;
+	} else if (opName == "addslashes") {
+		if (successors.size() != 1) {
+			throw new StrangerStringAnalysisException("addslashes should have one child: "
+					"makeForwardAutoForOp_CheckSanitDiffPhase()");
+		}
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+
+		StrangerAutomaton* slashesAuto = StrangerAutomaton::addslashes(
+				paramAuto, opNode->getID());
+		retMe = slashesAuto;
+//		return retMe;
+	} else if (opName == "stripslashes") {
+		 //this is not a precise model but rather an overapproximation
+		if (successors.size() != 1) {
+			throw new StrangerStringAnalysisException("stripslashes should have one child: "
+								"makeForwardAutoForOp_CheckSanitDiffPhase()");
+		}
+		 //only has one parameter
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		StrangerAutomaton* slashesAuto = StrangerAutomaton::stripslashes(
+				paramAuto, opNode->getID());
+		retMe = slashesAuto;
+//		return retMe;
+	} else if (opName == "mysql_real_escape_string") {
+
+		if (successors.size() < 1 || successors.size() > 2) {
+			throw new StrangerStringAnalysisException("mysql_real_escape_string wrong number of arguments: "
+					"makeForwardAutoForOp_CheckSanitDiffPhase()");
+		}
+        //we only care about the first parameter
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+
+		StrangerAutomaton* mysqlEscapeAuto = StrangerAutomaton::mysql_real_escape_string(
+				paramAuto, opNode->getID());
+		retMe = mysqlEscapeAuto;
+//		return retMe;
+
+	} else if (opName == "nl2br"){
+
+		if (successors.size() < 1 || successors.size() > 2) {
+			throw new StrangerStringAnalysisException("nl2br wrong number of arguments: "
+					"makeForwardAutoForOp_CheckSanitDiffPhase()");
+		}
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		StrangerAutomaton* nl2brAuto = StrangerAutomaton::nl2br(
+				paramAuto, opNode->getID());
+		retMe = nl2brAuto;
+//		return retMe;
+	} else if (opName == "trim" || opName == "strtoupper" || opName == "strtolower") {
+        if (successors.size() != 1) {
+			throw new StrangerStringAnalysisException(stringbuilder() << opName << " has more than one successor in depgraph.\n"
+					"makeForwardAutoForOp_CheckSanitDiffPhase()" );
+		}
+		 //TODO: quickly check if this correct
+		 //each is treated as a function and it does not do anything
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+
+        if (opName == "trim")
+            retMe = paramAuto->trimSpaces(opNode->getID());
+        else if (opName == "strtoupper") {
+        	retMe = paramAuto->toUpperCase(opNode->getID());
+        }
+        else if (opName == "strtolower") {
+        	retMe = paramAuto->toLowerCase(opNode->getID());
+        }
+
+//		return retMe;
+	}  else {
+		cout << "!!! Warning: Unmodeled builtin general function : " << opName;
+		f_unmodeled.push_back(opNode);
+
+		 //conservative decision for operations that have not been
+		 //modeled yet: .*
+		retMe = StrangerAutomaton::makeAnyString(opNode->getID());
+	}
+	return retMe;
 }
 
 /*******************************************************************************************************************************/
