@@ -144,9 +144,9 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 //	patcheeSinkAuto->toDotAscii(0);
 
 	message("checking difference between patcher and patchee");
-	StrangerAutomaton* complementauto = patcherSinkAuto->complement(-3);
-	StrangerAutomaton* differenceAuto = patcheeSinkAuto->intersect(complementauto, -3);
-	delete complementauto;
+	StrangerAutomaton* complementAuto = patcherSinkAuto->complement(-3);
+	StrangerAutomaton* differenceAuto = patcheeSinkAuto->intersect(complementAuto, -3);
+	delete complementAuto;
 
 	if (differenceAuto->isEmpty() ){
 		message("no difference, no patch required!");
