@@ -498,9 +498,26 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_CheckSanitDiffPhas
         }
 	} else if (opName == ".") {
 		// We will stop at concatenation if the concat is for query string in sink
-		//TODO implement as described above
-		throw StrangerStringAnalysisException("Implement concat: "
-						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+		// Simply forward the node that has a calculated value
+		for (NodesListIterator it = successors.begin(); it != successors.end(); it++){
+			DepGraphNode* succNode = *it;
+			AnalysisResultIterator rit = analysisResult.find(succNode->getID());
+			if (rit != analysisResult.end()) {
+				StrangerAutomaton* succAuto = rit->second;
+				if (retMe == NULL) {
+					retMe = succAuto->clone(opNode->getID());
+				} else {
+					StrangerAutomaton* temp = retMe;
+					retMe = retMe->concatenate(succAuto, opNode->getID());
+					delete temp;
+				}
+			}
+		}
+		if (retMe == NULL) {
+			throw StrangerStringAnalysisException("Check successors of concatenation: "
+									"makeForwardAutoForOp_CheckSanitDiffPhase()");
+		}
+
 	} else if (opName == "preg_replace") {
 		throw StrangerStringAnalysisException("Implement preg_replace: "
 				"makeForwardAutoForOp_CheckSanitDiffPhase()");

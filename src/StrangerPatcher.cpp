@@ -109,15 +109,16 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 	delete patcheeAnalysis[patchee_uninit_field_node->getID()];
 	patcheeAnalysis[patchee_uninit_field_node->getID()] = validation_patch_auto;
 
-	message("input node initializations completed...");
+	message("...input node initializations completed.");
 
 //	ForwardImageComputer::staticInit();
 	ForwardImageComputer patcherAnalyzer;
 	ForwardImageComputer patcheeAnalyzer;
 
 	try {
-		message("starting forward analysis for patcher");
+		message("starting forward analysis for patcher...");
 		patcherAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patcher_dep_graph,patcher_field_relevant_graph,patcher_sorted_field_relevant_nodes,patcherAnalysis);
+		message("...finished forward analysis for patcher.");
 
 	//	message("starting forward analysis for patchee");
 	//	patcheeAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysis);
@@ -126,9 +127,10 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
         cerr << e.what();
         exit(EXIT_FAILURE);
     }
-	cout << endl << endl;
-	StrangerAutomaton* patcherSinkAuto = patcherAnalysis[patcher_field_relevant_graph.getRoot()->getID()];
-	patcherSinkAuto->toDotAscii(0);
+
+//	cout << endl << endl;
+//	StrangerAutomaton* patcherSinkAuto = patcherAnalysis[patcher_field_relevant_graph.getRoot()->getID()];
+//	patcherSinkAuto->toDotAscii(0);
 
 	return NULL;
 }

@@ -42,6 +42,7 @@ public:
     			 DepGraphNode* childNode,
     			AnalysisResult& bwAnalysisResult, DepGraph& depGraph);
 
+
     /****************************************************************************************************/
     /*********** SANITIZATION PATCH EXTRACTION METHODS **************************************************/
     /****************************************************************************************************/
@@ -51,6 +52,8 @@ public:
     void doForwardNodeComputation_CheckSanitDiffPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
 
     StrangerAutomaton* makeForwardAutoForOp_CheckSanitDiffPhase(DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph);
+
+
     /****************************************************************************************************/
     /*********** REGULAR FORWARD IMAGE COMPUTATION METHODS **********************************************/
     /****************************************************************************************************/
