@@ -156,7 +156,7 @@ void ForwardImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& o
 				} else if (dynamic_cast< DepGraphNormalNode*>(pred)) {
 					predAuto = bwAnalysisResult.find( pred->getID() )->second;
 				} else if (dynamic_cast< DepGraphOpNode*>(pred)) {
-					predAuto = this->makeBackwardAutoForOpChild_ValidationPhase(dynamic_cast< DepGraphOpNode*>(pred), node, bwAnalysisResult, origDepGraph);
+					predAuto = this->makeBackwardAutoForOpChild_ValidationPhase(origDepGraph, dynamic_cast< DepGraphOpNode*>(pred), node, bwAnalysisResult);
 				}
 
 				if (predAuto == NULL) {
@@ -192,8 +192,8 @@ void ForwardImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& o
 /**
  * Do pre-image computation for validation patch
  */
-StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPhase( DepGraphOpNode* opNode,
-			 DepGraphNode* childNode, AnalysisResult& bwAnalysisResult, DepGraph& depGraph) {
+StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPhase(DepGraph& depGraph, DepGraphOpNode* opNode,
+			 DepGraphNode* childNode, AnalysisResult& bwAnalysisResult) {
 
 //	cout << "operation function is called" << endl;
 	StrangerAutomaton* retMe = NULL;
@@ -619,6 +619,226 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_CheckSanitDiffPhas
 		retMe = StrangerAutomaton::makeAnyString(opNode->getID());
 	}
 	return retMe;
+}
+
+/*******************************************************************************************************************************/
+/*********** REGULAR BACKWARD IMAGE COMPUTATION METHODS *************************************************************************/
+/*******************************************************************************************************************************/
+
+/**
+ * Giving an initial auto for root, using the results from previous forward analysis,
+ * do a backward analysis.
+ *
+ */
+AnalysisResult ForwardImageComputer::doBackwardAnalysis_RegularPhase(
+		DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes, StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult) {
+
+	AnalysisResult bwAnalysisResult;
+	// initially all nodes are bottom
+	for (DepGraphNode* node: origDepGraph.getSortedNodes()){
+		bwAnalysisResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
+	}
+
+	// initialize root node
+	bwAnalysisResult[inputDepGraph.getRoot()->getID()] = initialAuto;
+
+	// skipping root do backward analysis for the rest
+	for (NodesListConstReverseIterator it = sortedNodes.rbegin() + 1; it != sortedNodes.rend(); it++ ) {
+		DepGraphNode* node = (DepGraphNode*)(*it);
+
+		doBackwardNodeComputation_RegularPhase(origDepGraph, inputDepGraph, node, bwAnalysisResult, fwAnalysisResult);
+
+	}
+
+	return bwAnalysisResult;
+}
+
+/**
+ *
+ */
+void ForwardImageComputer::doBackwardNodeComputation_RegularPhase(
+		DepGraph& origDepGraph, DepGraph& inputDepGraph, DepGraphNode* node,
+		AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult) {
+
+	debug(stringbuilder() << "doRegularBackwardNodeComputaion for node: " << node->getID(), 2);
+	NodesList predecessors = origDepGraph.getPredecessors(node);
+	NodesList successors = origDepGraph.getSuccessors(node);
+	DepGraphNormalNode* normalNode = NULL;
+	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
+
+	if (dynamic_cast< DepGraphNormalNode*>(node) || dynamic_cast< DepGraphUninitNode*>(node) || dynamic_cast< DepGraphOpNode*>(node)) {
+		if (predecessors.empty()) {
+			throw StrangerStringAnalysisException(stringbuilder() << "Node(" << node->getID() << ") does not have predecessors.\n"
+					"doBackwardNodeComputation_RegularPhase()");
+		} else if (successors.empty() && (normalNode = dynamic_cast< DepGraphNormalNode*>(node))) {
+			TacPlace* place = normalNode->getPlace();
+			if (dynamic_cast<Literal*>(place)) { // assuming we have literals other than uninit node
+				newAuto = StrangerAutomaton::makeString(place->toString(), node->getID());
+			} else {
+				throw StrangerStringAnalysisException(stringbuilder() << "(Unhandled node type with 0 successors) SNH: " << place << ", " << normalNode->getFileName() << "," <<
+						normalNode->getOrigLineNo() << "\ndoBackwardNodeComputation_RegularPhase()");
+			}
+		} else {
+			// the automa is union of all prodecessors and interstect with forward analysis result
+			StrangerAutomaton* forwardAuto = fwAnalysisResult.find(node->getID())->second;
+			for (NodesListIterator it = predecessors.begin(); it != predecessors.end(); ++it) {
+				DepGraphNode* pred = *it;
+				StrangerAutomaton* predAuto = NULL;
+				if (pred == node) {
+					// ignore simple self loop (check correctness)
+					continue;
+				} else if (dynamic_cast< DepGraphNormalNode*>(pred)) {
+					predAuto = bwAnalysisResult.find( pred->getID() )->second;
+				} else if (dynamic_cast< DepGraphOpNode*>(pred)) {
+					predAuto = this->makeBackwardAutoForOpChild_RegularPhase(origDepGraph,dynamic_cast< DepGraphOpNode*>(pred), node,
+													bwAnalysisResult, fwAnalysisResult);
+				}
+
+				if (predAuto == NULL) {
+					continue;
+				}
+
+				if (newAuto == NULL) {
+					newAuto = predAuto->clone(node->getID());
+				} else {
+					tempAuto = newAuto;
+					newAuto = newAuto->union_(predAuto, node->getID());
+					delete tempAuto;
+					delete predAuto;
+				}
+			}
+
+			if (newAuto == NULL) {
+				throw StrangerStringAnalysisException("Cannot calculate backward auto, fix me\nndoBackwardNodeComputation_RegularPhase()");
+			}
+			tempAuto = newAuto;
+			newAuto = newAuto->intersect(forwardAuto, node->getID());
+			delete tempAuto;
+		}
+
+	} else {
+		throw new StrangerStringAnalysisException("SNH: cannot handle node type:\ndoBackwardNodeComputation_RegularPhase()");
+	}
+
+	if (newAuto == NULL) {
+		throw new StrangerStringAnalysisException("SNH: pre-image is NULL:\ndoBackwardNodeComputation_RegularPhase()");
+	}
+
+	bwAnalysisResult[node->getID()] = newAuto;
+	debug("--------------------------", 2);
+}
+
+/**
+ *
+ */
+StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase(
+		DepGraph& depGraph, DepGraphOpNode* opNode, DepGraphNode* childNode,
+		AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult) {
+
+	StrangerAutomaton* retMe = NULL;
+	NodesList successors = depGraph.getSuccessors(opNode);
+	StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
+	string opName = opNode->getName();
+
+
+	if (!opNode->isBuiltin()) {
+		// __vlab_restrict
+		if (opName.find("__vlab_restrict") != string::npos) {
+
+			if (successors.size() != 3) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments: "
+						"makeBackwardAutoForOpChild_RegularPhase()");
+			}
+
+			DepGraphNode* subjectNode = successors[1];
+			DepGraphNode* patternNode = successors[0];
+			DepGraphNode* complementNode = successors[2];
+
+			if (childNode->equals(subjectNode)){
+				retMe = opAuto->clone(childNode->getID());
+			} else if (childNode->equals(patternNode) || childNode->equals(complementNode)) {
+				throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") should not be handled,\ncheck implementation: "
+						"makeBackwardAutoForOpChild_RegularPhase()");
+			} else {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
+						"makeBackwardAutoForOpChild_RegularPhase()");
+			}
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not __vlab_restrict.\n"
+					"makeBackwardAutoForOpChild_RegularPhase()");
+		}
+
+	} else if (opName == ".") {
+		// CONCAT, forward analysis does not do concat actually
+		if (successors.size() < 2)
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: less than two successors for concat node " << opNode->getID() << ""
+					"\nmakeBackwardAutoForOpChild_RegularPhase()");
+
+		StrangerAutomaton* concatAuto = opAuto;
+
+		DepGraphNode* leftSibling = successors[0];
+		DepGraphNode* rightSibling = successors[1];
+
+		AnalysisResultConstIterator leftIt = fwAnalysisResult.find(leftSibling->getID());
+		AnalysisResultConstIterator rightIt = fwAnalysisResult.find(rightSibling->getID());
+
+		if (childNode->equals(leftSibling)){
+			if (leftIt == fwAnalysisResult.end()) {
+				throw StrangerStringAnalysisException(stringbuilder() << "Should not visit left node(" << leftSibling->getID() << ") in concat"
+						"\nmakeBackwardAutoForOpChild_RegularPhase()");
+			} else if (rightIt == fwAnalysisResult.end()) {
+				// we can just clone the previous auto, in that case actual concat operation is not done during forward analysis
+				retMe = concatAuto->clone(childNode->getID());
+			} else {
+				if (isLiteral(rightSibling, depGraph.getSuccessors(rightSibling))){
+					string value = getLiteralValue(rightSibling);
+					retMe = concatAuto->leftPreConcatConst(value, childNode->getID());
+				} else {
+					StrangerAutomaton* rightSiblingAuto = fwAnalysisResult.find(rightSibling->getID())->second;
+					retMe = concatAuto->leftPreConcat(rightSiblingAuto, childNode->getID());
+				}
+			}
+
+		} else if (childNode->equals(rightSibling)){
+
+			if (rightIt == fwAnalysisResult.end()) {
+				throw StrangerStringAnalysisException(stringbuilder() << "Should not visit right node(" << leftSibling->getID() << ") in concat"
+						"\nmakeBackwardAutoForOpChild_RegularPhase()");
+			} else if (leftIt == fwAnalysisResult.end()) {
+				// we can just clone the previous auto, in that case actual concat operation is not done during forward analysis
+				retMe = concatAuto->clone(childNode->getID());
+			} else {
+				if (isLiteral(leftSibling, depGraph.getSuccessors(leftSibling))){
+					string value = getLiteralValue(leftSibling);
+					retMe = concatAuto->rightPreConcatConst(value, childNode->getID());
+				} else {
+					StrangerAutomaton* leftSiblingAuto = fwAnalysisResult.find(leftSibling->getID())->second;
+					retMe = concatAuto->rightPreConcat(leftSiblingAuto, childNode->getID());
+				}
+			}
+
+		}else {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child (" << childNode->getID() << ") of concat (" << opNode->getID() << ") is not equal to any of the two successors."
+					"\nmakeBackwardAutoForOpChild_RegularPhase()");
+		}
+
+	} else if (opName == "addslashes") {
+		//TODO error here
+		// only has one parameter ==>  string addslashes  ( string $str  )
+		retMe = StrangerAutomaton::pre_addslashes(opAuto,childNode->getID());
+
+//		retMe = opAuto->clone(childNode->getID());
+	} else if (opName == "trim" ) {
+		// only has one parameter ==>  string trim  ( string $str  )
+		retMe = opAuto->preTrimSpaces(childNode->getID());
+
+	} else {
+		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
+	}
+
+	return retMe;
+
+
 }
 
 /*******************************************************************************************************************************/

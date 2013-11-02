@@ -90,8 +90,8 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
  */
 StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 
-	AnalysisResult patcherAnalysis;
-	AnalysisResult patcheeAnalysis;
+	AnalysisResult patcherAnalysisResult;
+	AnalysisResult patcheeAnalysisResult;
 
 	UninitNodesList patcherUninitNodes = patcher_dep_graph.getUninitNodes();
 	UninitNodesList patcheeUninitNodes = patchee_dep_graph.getUninitNodes();
@@ -101,20 +101,20 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 	// initialize patcher input nodes to sigma star
 	message("initializing patcher inputs with sigma star");
 	for (UninitNodesListConstIterator it = patcherUninitNodes.begin(); it != patcherUninitNodes.end(); it++) {
-		patcherAnalysis[(*it)->getID()] = StrangerAutomaton::makeAnyString((*it)->getID());
+		patcherAnalysisResult[(*it)->getID()] = StrangerAutomaton::makeAnyString((*it)->getID());
 	}
 
 	//TODO discuss initialization here,
 	message("initializing patchee inputs with bottom");
 	for (UninitNodesListConstIterator it = patcheeUninitNodes.begin(); it != patcheeUninitNodes.end(); it++) {
-		patcheeAnalysis[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
+		patcheeAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
 	}
 
 	// initialize uninit node that we are interested in with validation patch_auto
 	message(stringbuilder() << "initializing input node(" << patchee_uninit_field_node->getID() << ") with validation patch auto");
 
-	delete patcheeAnalysis[patchee_uninit_field_node->getID()];
-	patcheeAnalysis[patchee_uninit_field_node->getID()] = validation_patch_auto;
+	delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
+	patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
 
 	message("...input node initializations completed.");
 
@@ -124,11 +124,11 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 
 	try {
 		message("starting forward analysis for patcher...");
-		patcherAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patcher_dep_graph,patcher_field_relevant_graph,patcher_sorted_field_relevant_nodes,patcherAnalysis);
+		patcherAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patcher_dep_graph,patcher_field_relevant_graph,patcher_sorted_field_relevant_nodes,patcherAnalysisResult);
 		message("...finished forward analysis for patcher.");
 
 		message("starting forward analysis for patchee");
-		patcheeAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysis);
+		patcheeAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysisResult);
 		message("...finished forward analysis for patchee.");
 
 	} catch (StrangerStringAnalysisException const &e) {
@@ -137,11 +137,11 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
     }
 
 //	cout << endl << endl;
-	StrangerAutomaton* patcherSinkAuto = patcherAnalysis[patcher_field_relevant_graph.getRoot()->getID()];
+	StrangerAutomaton* patcherSinkAuto = patcherAnalysisResult[patcher_field_relevant_graph.getRoot()->getID()];
 //	patcherSinkAuto->toDotAscii(0);
 
 //	cout << endl << endl;
-	StrangerAutomaton* patcheeSinkAuto = patcheeAnalysis[patchee_field_relevant_graph.getRoot()->getID()];
+	StrangerAutomaton* patcheeSinkAuto = patcheeAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
 //	patcheeSinkAuto->toDotAscii(0);
 
 	message("checking difference between patcher and patchee");
@@ -158,15 +158,27 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 		StrangerAutomaton* lengthRestrictAuto =
 				patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcherSinkAuto, -4);
 		// do backward and forward again and check difference again
+
 		//TODO implementing here
+		try {
+			message("starting backward analysis to patch length constraints...");
+			AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,lengthRestrictAuto, patcheeAnalysisResult);
+			delete validation_patch_auto;
+			validation_patch_auto = bwResult[patchee_uninit_field_node->getID()];
+			patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
+			message("...validation patch is updated using length constraints");
+		} catch (StrangerStringAnalysisException const &e) {
+			cerr << e.what();
+			exit(EXIT_FAILURE);
+		}
 
 	} else {
 		message("handling difference (not yet implemented");
 		// return the difference
 	}
-
-	cout << endl << endl;
-	differenceAuto->toDotAscii(0);
+	cout << endl << endl << "OK" << endl << endl;
+//	cout << endl << endl;
+//	differenceAuto->toDotAscii(0);
 
 	return differenceAuto;
 }

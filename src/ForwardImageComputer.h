@@ -35,12 +35,10 @@ public:
                                                                 DepGraph& inputDepGraph,
                                                                  NodesList& sortedNodes);
     void doBackwardNodeComputation_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph,
-                                   AnalysisResult& bwAnalysisResult,
-                                    DepGraphNode* node);
+                                   AnalysisResult& bwAnalysisResult, DepGraphNode* node);
 
-    StrangerAutomaton* makeBackwardAutoForOpChild_ValidationPhase( DepGraphOpNode* opNode,
-    			 DepGraphNode* childNode,
-    			AnalysisResult& bwAnalysisResult, DepGraph& depGraph);
+    StrangerAutomaton* makeBackwardAutoForOpChild_ValidationPhase(DepGraph& depGraph, DepGraphOpNode* opNode,
+    			 DepGraphNode* childNode,AnalysisResult& bwAnalysisResult);
 
 
     /****************************************************************************************************/
@@ -53,6 +51,17 @@ public:
 
     StrangerAutomaton* makeForwardAutoForOp_CheckSanitDiffPhase(DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph);
 
+    /****************************************************************************************************/
+    /*********** REGULAR BACKWARD IMAGE COMPUTATION METHODS **********************************************/
+    /****************************************************************************************************/
+
+    AnalysisResult doBackwardAnalysis_RegularPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes, StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
+
+    void doBackwardNodeComputation_RegularPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, DepGraphNode* node,
+                                       AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
+
+    StrangerAutomaton* makeBackwardAutoForOpChild_RegularPhase(DepGraph& depGraph, DepGraphOpNode* opNode,
+			 DepGraphNode* childNode,AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
 
     /****************************************************************************************************/
     /*********** REGULAR FORWARD IMAGE COMPUTATION METHODS **********************************************/
