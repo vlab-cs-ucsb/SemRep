@@ -59,6 +59,7 @@ void StrangerPatcher::printAnalysisResults(AnalysisResult& result) {
 }
 
 /**
+ * TODO extract both validations and generate better patch
  * Initial backward analysis phase for extracting validation behavior
  */
 StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
@@ -104,9 +105,9 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 	}
 
 	//TODO discuss initialization here,
-	message("initializing patchee inputs with empty string");
+	message("initializing patchee inputs with bottom");
 	for (UninitNodesListConstIterator it = patcheeUninitNodes.begin(); it != patcheeUninitNodes.end(); it++) {
-		patcheeAnalysis[(*it)->getID()] = StrangerAutomaton::makeEmptyString((*it)->getID());
+		patcheeAnalysis[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
 	}
 
 	// initialize uninit node that we are interested in with validation patch_auto
@@ -150,8 +151,18 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 
 	if (differenceAuto->isEmpty() ){
 		message("no difference, no patch required!");
+		delete differenceAuto;
+		differenceAuto = NULL;
+	} else if(patcherSinkAuto->isLengthFinite()){
+		message("length constraints contribute to the difference, fixing issue...");
+		StrangerAutomaton* lengthRestrictAuto =
+				patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcherSinkAuto, -4);
+		// do backward and forward again and check difference again
+		//TODO implementing here
+
 	} else {
-		message("a difference is found, next step is to calculate patch");
+		message("handling difference (not yet implemented");
+		// return the difference
 	}
 
 	cout << endl << endl;
