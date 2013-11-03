@@ -113,8 +113,8 @@ StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
     }
 
 	patcher_sink_auto = patcherAnalysisResult[patcher_field_relevant_graph.getRoot()->getID()];
-
 	message("...computed patcher sink post image.");
+	return patcher_sink_auto;
 }
 
 /**
@@ -125,10 +125,7 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 
 	AnalysisResult patcheeAnalysisResult;
 	AnalysisResult patcheeAnalysisResult2;
-
-
 	UninitNodesList patcheeUninitNodes = patchee_dep_graph.getUninitNodes();
-
 
 	//TODO discuss initialization here,
 	message("initializing patchee inputs with bottom");
@@ -136,12 +133,10 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 		patcheeAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
 		patcheeAnalysisResult2[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
 	}
-
 	// initialize uninit node that we are interested in with validation patch_auto
 	message(stringbuilder() << "initializing input node(" << patchee_uninit_field_node->getID() << ") with validation patch auto");
 	delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
 	patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
-
 
 //	ForwardImageComputer::staticInit();
 	ForwardImageComputer patcheeAnalyzer;
@@ -160,6 +155,7 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 
 	StrangerAutomaton* patcheeSinkAuto = patcheeAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
 
+	StrangerAutomaton* patcherSinkAuto = computePatcherFWAnalysis();
 	message("checking difference between patcher and patchee");
 	StrangerAutomaton* complementAuto = patcherSinkAuto->complement(-3);
 	StrangerAutomaton* differenceAuto = patcheeSinkAuto->intersect(complementAuto, -3);
