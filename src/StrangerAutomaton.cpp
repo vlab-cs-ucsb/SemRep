@@ -1712,14 +1712,14 @@ StrangerAutomaton* StrangerAutomaton::restrictLengthByOtherAutomaton(StrangerAut
 }
 
 StrangerAutomaton* StrangerAutomaton::restrictLengthByOtherAutomatonFinite(StrangerAutomaton *otherAuto, int id){
-     P_DFAFiniteLengths pDFAFiniteLengths = dfaGetLengthsFiniteLang(otherAuto->dfa, num_ascii_track, indices_main);
+    P_DFAFiniteLengths pDFAFiniteLengths = dfaGetLengthsFiniteLang(otherAuto->dfa, num_ascii_track, indices_main);
     unsigned *lengths = pDFAFiniteLengths->lengths;
     const unsigned size = pDFAFiniteLengths->size;
-    int i;
+    unsigned i;
     for(i = 0; i < size; i++)
         cout << lengths[i] << ", ";
     cout << endl;
-    vector<unsigned> vec(lengths, lengths + size);
+//    vector<unsigned> vec(lengths, lengths + size);
     debug(stringbuilder() << id <<  " = dfaRestrictByFiniteLengths("  << this->ID << ", " << otherAuto->ID << ")");
 //    cout << "lengths are: " << vec << endl;
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaRestrictByFiniteLengths(this->dfa, lengths, size, false, num_ascii_track, indices_main));

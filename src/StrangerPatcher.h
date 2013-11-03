@@ -39,6 +39,9 @@ public:
 
 	StrangerAutomaton* extractValidationPatch();
 	StrangerAutomaton* checkSanitizationDifference();
+	StrangerAutomaton* extractSanitizationPatch(StrangerAutomaton* differenceAuto, const AnalysisResult& fwAnalysisResult);
+
+	StrangerAutomaton* computePatcherFWAnalysis();
 
 
 private:
@@ -58,6 +61,9 @@ private:
 	NodesList patchee_sorted_field_relevant_nodes;
 
 	StrangerAutomaton* validation_patch_auto;
+	StrangerAutomaton* sanitization_patch_auto;
+
+	StrangerAutomaton* patcher_sink_auto;
 
 	void message(string msg);
 	void printAnalysisResults(AnalysisResult& result);

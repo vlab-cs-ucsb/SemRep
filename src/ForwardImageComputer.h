@@ -42,17 +42,18 @@ public:
 
 
     /****************************************************************************************************/
-    /*********** SANITIZATION PATCH EXTRACTION METHODS **************************************************/
+    /*********** REGULAR FORWARD IMAGE COMPUTATION METHODS **********************************************/
     /****************************************************************************************************/
 
-    void doForwardAnalysis_CheckSanitDiffPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, NodesList& sortedNodes, AnalysisResult& analysisResult);
+    void doForwardAnalysis_RegularPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, NodesList& sortedNodes, AnalysisResult& analysisResult);
 
-    void doForwardNodeComputation_CheckSanitDiffPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
+    void doForwardNodeComputation_RegularPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
 
-    StrangerAutomaton* makeForwardAutoForOp_CheckSanitDiffPhase(DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph);
+    StrangerAutomaton* makeForwardAutoForOp_RegularPhase(DepGraph& depGraph, DepGraphOpNode* opNode, AnalysisResult& analysisResult);
+
 
     /****************************************************************************************************/
-    /*********** REGULAR BACKWARD IMAGE COMPUTATION METHODS **********************************************/
+    /*********** REGULAR BACKWARD IMAGE COMPUTATION METHODS *********************************************/
     /****************************************************************************************************/
 
     AnalysisResult doBackwardAnalysis_RegularPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes, StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
@@ -63,8 +64,9 @@ public:
     StrangerAutomaton* makeBackwardAutoForOpChild_RegularPhase(DepGraph& depGraph, DepGraphOpNode* opNode,
 			 DepGraphNode* childNode,AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
 
+
     /****************************************************************************************************/
-    /*********** REGULAR FORWARD IMAGE COMPUTATION METHODS **********************************************/
+    /*********** OLD METHODS *********************************************/
     /****************************************************************************************************/
 
     AnalysisResult computeFwImage(DepGraph& origDepGraph, DepGraph& acyclicWorkGraph,

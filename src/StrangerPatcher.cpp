@@ -49,6 +49,7 @@ void StrangerPatcher::message(string msg) {
 	cout << endl << "~~~~~~~~~~~>>> StrangerPatcher says: " << msg << endl;
 }
 
+
 void StrangerPatcher::printAnalysisResults(AnalysisResult& result) {
 	cout << endl;
 	for (AnalysisResultConstIterator it = result.begin(); it != result.end(); it++ ) {
@@ -86,17 +87,12 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 }
 
 /**
- *
+ * Computes sink post image for patcher
  */
-StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
-
+StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
+	message("computing patcher sink post image...");
 	AnalysisResult patcherAnalysisResult;
-	AnalysisResult patcheeAnalysisResult;
-
 	UninitNodesList patcherUninitNodes = patcher_dep_graph.getUninitNodes();
-	UninitNodesList patcheeUninitNodes = patchee_dep_graph.getUninitNodes();
-
-	// best case for us to have one uninit node and one sink
 
 	// initialize patcher input nodes to sigma star
 	message("initializing patcher inputs with sigma star");
@@ -104,31 +100,56 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 		patcherAnalysisResult[(*it)->getID()] = StrangerAutomaton::makeAnyString((*it)->getID());
 	}
 
+	ForwardImageComputer patcherAnalyzer;
+
+	try {
+		message("starting forward analysis for patcher...");
+		patcherAnalyzer.doForwardAnalysis_RegularPhase(patcher_dep_graph,patcher_field_relevant_graph,patcher_sorted_field_relevant_nodes,patcherAnalysisResult);
+		message("...finished forward analysis for patcher.");
+
+	} catch (StrangerStringAnalysisException const &e) {
+        cerr << e.what();
+        exit(EXIT_FAILURE);
+    }
+
+	patcher_sink_auto = patcherAnalysisResult[patcher_field_relevant_graph.getRoot()->getID()];
+
+	message("...computed patcher sink post image.");
+}
+
+/**
+ * TODO refoctor for less code, easy to handle code
+ */
+StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
+
+
+	AnalysisResult patcheeAnalysisResult;
+	AnalysisResult patcheeAnalysisResult2;
+
+
+	UninitNodesList patcheeUninitNodes = patchee_dep_graph.getUninitNodes();
+
+
 	//TODO discuss initialization here,
 	message("initializing patchee inputs with bottom");
 	for (UninitNodesListConstIterator it = patcheeUninitNodes.begin(); it != patcheeUninitNodes.end(); it++) {
 		patcheeAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
+		patcheeAnalysisResult2[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
 	}
 
 	// initialize uninit node that we are interested in with validation patch_auto
 	message(stringbuilder() << "initializing input node(" << patchee_uninit_field_node->getID() << ") with validation patch auto");
-
 	delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
 	patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
 
-	message("...input node initializations completed.");
 
 //	ForwardImageComputer::staticInit();
-	ForwardImageComputer patcherAnalyzer;
 	ForwardImageComputer patcheeAnalyzer;
 
 	try {
-		message("starting forward analysis for patcher...");
-		patcherAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patcher_dep_graph,patcher_field_relevant_graph,patcher_sorted_field_relevant_nodes,patcherAnalysisResult);
-		message("...finished forward analysis for patcher.");
 
 		message("starting forward analysis for patchee");
-		patcheeAnalyzer.doForwardAnalysis_CheckSanitDiffPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysisResult);
+		patcheeAnalyzer.doForwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysisResult);
 		message("...finished forward analysis for patchee.");
 
 	} catch (StrangerStringAnalysisException const &e) {
@@ -136,13 +157,8 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
         exit(EXIT_FAILURE);
     }
 
-//	cout << endl << endl;
-	StrangerAutomaton* patcherSinkAuto = patcherAnalysisResult[patcher_field_relevant_graph.getRoot()->getID()];
-//	patcherSinkAuto->toDotAscii(0);
 
-//	cout << endl << endl;
 	StrangerAutomaton* patcheeSinkAuto = patcheeAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
-//	patcheeSinkAuto->toDotAscii(0);
 
 	message("checking difference between patcher and patchee");
 	StrangerAutomaton* complementAuto = patcherSinkAuto->complement(-3);
@@ -157,6 +173,11 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 		message("length constraints contribute to the difference, fixing issue...");
 		StrangerAutomaton* lengthRestrictAuto =
 				patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcherSinkAuto, -4);
+//		cout << endl << endl;
+//		patcheeSinkAuto->toDotAscii(0);
+//
+//		cout << endl << endl;
+//		lengthRestrictAuto->toDotAscii(0);
 		// do backward and forward again and check difference again
 
 		//TODO implementing here
@@ -167,20 +188,44 @@ StrangerAutomaton* StrangerPatcher::checkSanitizationDifference() {
 			validation_patch_auto = bwResult[patchee_uninit_field_node->getID()];
 			patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
 			message("...validation patch is updated using length constraints");
+
+			message("second forward analysis begins for patchee...");
+			delete patcheeAnalysisResult2[patchee_uninit_field_node->getID()];
+			patcheeAnalysisResult2[patchee_uninit_field_node->getID()] = validation_patch_auto;
+			patcheeAnalyzer.doForwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysisResult2);
+			message("...second forward analysis ends for pathcee.");
+
+			patcheeSinkAuto = patcheeAnalysisResult2[patchee_field_relevant_graph.getRoot()->getID()];
+
+			message("checking difference between patcher and patchee");
+			complementAuto = patcherSinkAuto->complement(-3);
+			delete differenceAuto;
+			differenceAuto = patcheeSinkAuto->intersect(complementAuto, -3);
+			delete complementAuto;
+
+			if (differenceAuto->isEmpty() ){
+				message("no difference, no patch required!");
+				delete differenceAuto;
+				differenceAuto = NULL;
+			}
+			else {
+				message("difference auto is computed with additional phases for length");
+			}
+
 		} catch (StrangerStringAnalysisException const &e) {
 			cerr << e.what();
 			exit(EXIT_FAILURE);
 		}
 
 	} else {
-		message("handling difference (not yet implemented");
-		// return the difference
+		message("difference auto is computed");
 	}
-	cout << endl << endl << "OK" << endl << endl;
-//	cout << endl << endl;
-//	differenceAuto->toDotAscii(0);
-
 	return differenceAuto;
 }
 
-
+/**
+ *
+ */
+StrangerAutomaton* StrangerPatcher::extractSanitizationPatch(StrangerAutomaton* differenceAuto, const AnalysisResult& fwAnalysisResult) {
+	return NULL;
+}

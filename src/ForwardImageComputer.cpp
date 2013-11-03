@@ -320,7 +320,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
  * TODO implemented for simple dep graphs, extend it for more general cases as needed
  * 1 - Do forward analysis from an input to sink
  */
-void ForwardImageComputer::doForwardAnalysis_CheckSanitDiffPhase(
+void ForwardImageComputer::doForwardAnalysis_RegularPhase(
 		DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes, AnalysisResult& analysisResult) {
 
 	for (NodesListIterator it = sortedNodes.begin(); it != sortedNodes.end(); it++) {
@@ -330,12 +330,12 @@ void ForwardImageComputer::doForwardAnalysis_CheckSanitDiffPhase(
 			analysisResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
 		}
 
-		doForwardNodeComputation_CheckSanitDiffPhase(origDepGraph, inputDepGraph, node, analysisResult);
+		doForwardNodeComputation_RegularPhase(origDepGraph, inputDepGraph, node, analysisResult);
 	}
 	return;
 }
 
-void ForwardImageComputer::doForwardNodeComputation_CheckSanitDiffPhase(
+void ForwardImageComputer::doForwardNodeComputation_RegularPhase(
 		DepGraph& origDepGraph, DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult) {
 
 	if(node->getNonprocessedParents() == -1){
@@ -387,7 +387,7 @@ void ForwardImageComputer::doForwardNodeComputation_CheckSanitDiffPhase(
     	}
 
     } else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != NULL) {
-		newAuto = makeForwardAutoForOp_CheckSanitDiffPhase(opNode, analysisResult,	origDepGraph);
+		newAuto = makeForwardAutoForOp_RegularPhase(origDepGraph, opNode, analysisResult);
     } else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != NULL) {
     	// input nodes should already have been initialized
     	if (analysisResult.find(node->getID()) == analysisResult.end()){
@@ -411,8 +411,8 @@ void ForwardImageComputer::doForwardNodeComputation_CheckSanitDiffPhase(
 /**
  * Forward image computation for operation nodes
  */
-StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_CheckSanitDiffPhase(
-		DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph) {
+StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
+		DepGraph& depGraph, DepGraphOpNode* opNode, AnalysisResult& analysisResult) {
 
 	NodesList successors = depGraph.getSuccessors(opNode);
 	StrangerAutomaton* retMe = NULL;
@@ -824,8 +824,10 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 
 	} else if (opName == "addslashes") {
 		//TODO error here
+		cout << endl << endl << "add slahses has some error need to fix" << endl;
 		// only has one parameter ==>  string addslashes  ( string $str  )
-		retMe = StrangerAutomaton::pre_addslashes(opAuto,childNode->getID());
+		//retMe = StrangerAutomaton::pre_addslashes(opAuto,childNode->getID());
+		retMe = opAuto->clone(childNode->getID());
 
 //		retMe = opAuto->clone(childNode->getID());
 	} else if (opName == "trim" ) {
