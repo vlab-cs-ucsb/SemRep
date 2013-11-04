@@ -69,6 +69,7 @@ public:
     StrangerAutomaton* repeat1(unsigned min, unsigned max);
     StrangerAutomaton* complement(int id);
     StrangerAutomaton* complement();
+    StrangerAutomaton* difference(StrangerAutomaton* auto_, int id);
     StrangerAutomaton* union_(StrangerAutomaton* auto_, int id);
     StrangerAutomaton* union_(StrangerAutomaton* auto_);
     StrangerAutomaton* unionWithEmptyString(int id);

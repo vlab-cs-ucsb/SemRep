@@ -2792,6 +2792,13 @@ void StrangerAutomaton::debugToFile(std::string str)
     //    }
 }
 
+StrangerAutomaton* StrangerAutomaton::difference(StrangerAutomaton* auto_,	int id) {
+	StrangerAutomaton* complementAuto = auto_->complement(id);
+	StrangerAutomaton* differenceAuto = this->intersect(complementAuto, id);
+	delete complementAuto;
+	return differenceAuto;
+}
+
 std::string StrangerAutomaton::escapeSpecialChars(std::string s)
 {
     //	std::string b;

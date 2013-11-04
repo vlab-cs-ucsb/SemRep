@@ -38,10 +38,12 @@ public:
 	virtual ~StrangerPatcher();
 
 	StrangerAutomaton* extractValidationPatch();
-	StrangerAutomaton* checkSanitizationDifference();
-	StrangerAutomaton* extractSanitizationPatch(StrangerAutomaton* differenceAuto, const AnalysisResult& fwAnalysisResult);
+	StrangerAutomaton* extractSanitizationPatch();
 
 	StrangerAutomaton* computePatcherFWAnalysis();
+	AnalysisResult computePatcheeFWAnalysis_1();
+	AnalysisResult computePatcheeFwBwAnalysis_2(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
+	StrangerAutomaton* computePatcheeBWAnalysis_3(StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
 
 
 private:

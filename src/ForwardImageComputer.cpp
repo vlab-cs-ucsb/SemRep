@@ -826,8 +826,8 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 		//TODO error here
 		cout << endl << endl << "add slahses has some error need to fix" << endl;
 		// only has one parameter ==>  string addslashes  ( string $str  )
-		//retMe = StrangerAutomaton::pre_addslashes(opAuto,childNode->getID());
-		retMe = opAuto->clone(childNode->getID());
+		retMe = StrangerAutomaton::pre_addslashes(opAuto,childNode->getID());
+		//retMe = opAuto->clone(childNode->getID());
 
 //		retMe = opAuto->clone(childNode->getID());
 	} else if (opName == "trim" ) {
