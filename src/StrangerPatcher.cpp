@@ -66,24 +66,46 @@ void StrangerPatcher::printAnalysisResults(AnalysisResult& result) {
  */
 StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 
-		ForwardImageComputer::staticInit();
-		ForwardImageComputer analyzer;
+	message("BEGIN VALIDATION EXTRACTION PHASE...");
+	ForwardImageComputer::staticInit();
+	ForwardImageComputer analyzer;
 
-		try {
-			AnalysisResult validationExtractionResults =
-					analyzer.doBackwardAnalysis_ValidationPhase(patcher_dep_graph, patcher_field_relevant_graph, patcher_sorted_field_relevant_nodes);
+	try {
+		message("extracting validation from patcher");
+		AnalysisResult patcher_validationExtractionResults =
+				analyzer.doBackwardAnalysis_ValidationPhase(patcher_dep_graph, patcher_field_relevant_graph, patcher_sorted_field_relevant_nodes);
+		StrangerAutomaton* patcher_negVPatch = patcher_validationExtractionResults[patcher_uninit_field_node->getID()];
+		StrangerAutomaton* patcher_validation = patcher_negVPatch->complement(patcher_uninit_field_node->getID());
 
-			StrangerAutomaton* negVPatch = validationExtractionResults[patcher_uninit_field_node->getID()];
-					validation_patch_auto = negVPatch->complement(patcher_uninit_field_node->getID());
+		message("extracting validation from patchee");
+		AnalysisResult patchee_validationExtractionResults =
+				analyzer.doBackwardAnalysis_ValidationPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes);
+		StrangerAutomaton* patchee_negVPatch = patchee_validationExtractionResults[patchee_uninit_field_node->getID()];
+		StrangerAutomaton* patchee_validation = patchee_negVPatch->complement(patchee_uninit_field_node->getID());
 
-		} catch (StrangerStringAnalysisException const &e) {
-	        cerr << e.what();
-	        exit(EXIT_FAILURE);
-	    }
+		message("computing validation patch");
+		StrangerAutomaton* diffAuto = patchee_validation->difference(patcher_validation, patchee_uninit_field_node->getID());
+		StrangerAutomaton* interAuto = patchee_validation->intersect(patcher_validation, patchee_uninit_field_node->getID());
+		if (diffAuto->isEmpty()) {
+			message("no validation patch is required!!!");
+		} else if (interAuto->isEmpty()) {
+			message("client and server accepts different sets");
+		} else {
+			message("validation patch is generated for input: " + input_field_name);
+		}
 
-		message("validation patch is generated for input: " + input_field_name);
-//		validation_patch_auto->toDotAscii(0);
-		return validation_patch_auto;
+		// being conservative, otherwise handle three cases above
+		validation_patch_auto_1 = patcher_validation;
+		validation_patch_auto = validation_patch_auto_1;
+
+	} catch (StrangerStringAnalysisException const &e) {
+		cerr << e.what();
+		exit(EXIT_FAILURE);
+	}
+
+	message("END VALIDATION EXTRACTION PHASE...");
+	validation_patch_auto_1->toDotAscii(0);
+	return validation_patch_auto_1;
 
 }
 
@@ -133,7 +155,7 @@ AnalysisResult StrangerPatcher::computePatcheeFWAnalysis_1() {
 	// initialize uninit node that we are interested in with validation patch_auto
 	message(stringbuilder() << "initializing input node(" << patchee_uninit_field_node->getID() << ") with validation patch auto");
 	delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
-	patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
+	patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto_1;
 
 	ForwardImageComputer patcheeAnalyzer;
 
@@ -168,14 +190,14 @@ AnalysisResult StrangerPatcher::computePatcheeFwBwAnalysis_2(StrangerAutomaton* 
 
 		message("starting backward analysis to patch length constraints...");
 		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
-		delete validation_patch_auto;
-		validation_patch_auto = bwResult[patchee_uninit_field_node->getID()];
-		fwAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
+
+		validation_patch_auto_2 = bwResult[patchee_uninit_field_node->getID()];
+		fwAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto_2;
 		message("...validation patch is updated using length constraints");
 
 		message("second forward analysis begins for patchee...");
 		delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
-		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
+		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto_2;
 		patcheeAnalyzer.doForwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysisResult);
 		message("...second forward analysis ends for pathcee.");
 
@@ -197,7 +219,7 @@ StrangerAutomaton* StrangerPatcher::computePatcheeBWAnalysis_3(StrangerAutomaton
 
 
 /**
- * TODO refoctor for less code, easy to handle code
+ *
  */
 StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 
@@ -229,13 +251,14 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 			differenceAuto = patcheeSinkAuto->difference(patcherSinkAuto, -3);
 
 			if (differenceAuto->isEmpty() ){
-				message("no difference, no patch required!");
+				message("no difference, no patch required 2!");
 				delete differenceAuto;
 				sanitization_patch_auto = NULL;
 			}
 			else {
 				message("starting last backward analysis for sanitization patch with diff auto(length constraint included)...");
-				//sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult_2);
+				validation_patch_auto = validation_patch_auto_2;
+				sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult_2);
 				message("...finished last backward analysis for sanitization patch with diff auto(length constraint included).");
 			}
 
@@ -246,7 +269,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 
 	} else {
 		message("starting last backward analysis for sanitization patch with diff auto...");
-		//sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult);
+		sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult);
 		message("...finished last backward analysis for sanitization patch with diff auto.");
 	}
 

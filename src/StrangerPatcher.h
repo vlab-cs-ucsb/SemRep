@@ -62,10 +62,12 @@ private:
 	NodesList patcher_sorted_field_relevant_nodes;
 	NodesList patchee_sorted_field_relevant_nodes;
 
+	StrangerAutomaton* patcher_sink_auto;
+
+	StrangerAutomaton* validation_patch_auto_1;
+	StrangerAutomaton* validation_patch_auto_2;
 	StrangerAutomaton* validation_patch_auto;
 	StrangerAutomaton* sanitization_patch_auto;
-
-	StrangerAutomaton* patcher_sink_auto;
 
 	void message(string msg);
 	void printAnalysisResults(AnalysisResult& result);
