@@ -47,6 +47,9 @@ public:
 
 	StrangerAutomaton* getValidationPatchAuto() { return validation_patch_auto; }
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
+
+	bool is_validation_patch_required = false;
+	bool is_sanitization_patch_required = true;
 private:
 	string patcher_dep_graph_file_name;
 	string patchee_dep_graph_file_name;

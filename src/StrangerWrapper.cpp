@@ -1279,10 +1279,22 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		strangerPatcher.extractValidationPatch();
 		strangerPatcher.extractSanitizationPatch();
 
-//		cout << endl << endl;
-//		strangerPatcher.getValidationPatchAuto()->toDotAscii(0);
-//		cout << endl << endl;
-//		strangerPatcher.getSanitizationPatchAuto()->toDotAscii(0);
+		cout << endl << "\t------ OVERALL RESULT ------" << endl;
+		if (strangerPatcher.is_validation_patch_required) {
+			cout << "\t    - validation patch is generated" << endl;
+			//		cout << endl << endl;
+			//		strangerPatcher.getValidationPatchAuto()->toDotAscii(0);
+		} else {
+			cout << "\t    - no validation patch" << endl;
+		}
+
+		if (strangerPatcher.is_sanitization_patch_required) {
+			cout << "\t    - sanitization patch is generated" << endl;
+			//		cout << endl << endl;
+			//		strangerPatcher.getSanitizationPatchAuto()->toDotAscii(0);
+		} else {
+			cout << "\t    - no sanitization patch" << endl;
+		}
 
 	} catch (StrangerStringAnalysisException const &e) {
 		cerr << e.what();
@@ -1320,7 +1332,11 @@ void patch_snipe_local__form_details() {
 }
 
 void patch_snipe_local__form_image_title() {
+	string field_name = "form_image_title";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_image_title.dot";
 
+	call_patcher(patcher_name, patchee_name, field_name);
 }
 
 void patch_snipe_local__form_keywords() {
@@ -1341,7 +1357,9 @@ void patch_snipe_local__gallery_id() {
 
 int main(int argc, char *argv[]) {
 //	patch_snipe_frame__form_frame_name();
-	patch_snipe_local__form_author();
+//	patch_snipe_local__form_author();
+//	patch_snipe_local__form_details();
+	patch_snipe_local__form_image_title();
 
 	return 0;
 }

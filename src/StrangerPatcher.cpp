@@ -93,10 +93,13 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 		StrangerAutomaton* interAuto = patchee_validation->intersect(patcher_validation, patchee_uninit_field_node->getID());
 		if (diffAuto->isEmpty()) {
 			message("no validation patch is required!!!");
+			is_validation_patch_required = false;
 		} else if (interAuto->isEmpty()) {
 			message("client and server accepts different sets");
+			is_validation_patch_required = false;
 		} else {
 			message("validation patch is generated for input: " + input_field_name);
+			is_validation_patch_required = true;;
 		}
 
 		// being conservative, otherwise handle three cases above
@@ -237,6 +240,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		message("no difference, no sanitization patch required!");
 		delete differenceAuto;
 		sanitization_patch_auto = NULL;
+		is_sanitization_patch_required = false;
 	} else if(patcherSinkAuto->isLengthFinite()){
 		message("length constraints contribute to the difference, fixing issue...");
 		StrangerAutomaton* lengthRestrictAuto =
@@ -257,12 +261,14 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 				message("no difference, no sanitization patch required 2!");
 				delete differenceAuto;
 				sanitization_patch_auto = NULL;
+				is_sanitization_patch_required = false;
 			}
 			else {
 				message("starting last backward analysis for sanitization patch with diff auto(length constraint included)...");
 				validation_patch_auto = validation_patch_auto_2;
 				sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult_2);
 				message("...finished last backward analysis for sanitization patch with diff auto(length constraint included).");
+				is_sanitization_patch_required = true;
 			}
 
 		} catch (StrangerStringAnalysisException const &e) {
@@ -274,6 +280,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		message("starting last backward analysis for sanitization patch with diff auto...");
 		sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult);
 		message("...finished last backward analysis for sanitization patch with diff auto.");
+		is_sanitization_patch_required = true;
 	}
 
 	return sanitization_patch_auto;
