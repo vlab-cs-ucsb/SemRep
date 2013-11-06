@@ -1273,19 +1273,75 @@ void testRegexToAuto() {
 	cout << endl << endl;
 }
 
+void call_patcher(string patcher_name, string patchee_name, string field_name){
+	try {
+		StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
+		strangerPatcher.extractValidationPatch();
+		strangerPatcher.extractSanitizationPatch();
 
+//		cout << endl << endl;
+//		strangerPatcher.getValidationPatchAuto()->toDotAscii(0);
+//		cout << endl << endl;
+//		strangerPatcher.getSanitizationPatchAuto()->toDotAscii(0);
 
-int main(int argc, char *argv[]) {
+	} catch (StrangerStringAnalysisException const &e) {
+		cerr << e.what();
+		exit(EXIT_FAILURE);
+	}
 
+}
+
+/****************************************************************************************************/
+/*********** SNIPE GALLERY *********************************************/
+/****************************************************************************************************/
+
+void patch_snipe_frame__form_frame_name() {
 	string field_name = "form_frame_name";
 	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame.dot";
 	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot";
 
+	call_patcher(patcher_name, patchee_name, field_name);
+}
 
-	StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
-	// PHASE 1 : Extract validation patch
-	strangerPatcher.extractValidationPatch();
-	// PHASE 2 : Extract sanitization patch
-	strangerPatcher.extractSanitizationPatch();
+void patch_snipe_local__form_author() {
+	string field_name = "form_author";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_author.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_local__form_details() {
+	string field_name = "form_details";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_details.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_local__form_image_title() {
+
+}
+
+void patch_snipe_local__form_keywords() {
+
+}
+
+void patch_snipe_local__form_location() {
+
+}
+
+void patch_snipe_local__form_publish() {
+
+}
+
+void patch_snipe_local__gallery_id() {
+
+}
+
+int main(int argc, char *argv[]) {
+//	patch_snipe_frame__form_frame_name();
+	patch_snipe_local__form_author();
+
 	return 0;
 }

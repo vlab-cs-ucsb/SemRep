@@ -45,7 +45,8 @@ public:
 	AnalysisResult computePatcheeFwBwAnalysis_2(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
 	StrangerAutomaton* computePatcheeBWAnalysis_3(StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
 
-
+	StrangerAutomaton* getValidationPatchAuto() { return validation_patch_auto; }
+	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
 private:
 	string patcher_dep_graph_file_name;
 	string patchee_dep_graph_file_name;

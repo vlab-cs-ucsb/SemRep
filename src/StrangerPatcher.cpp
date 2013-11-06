@@ -23,6 +23,7 @@ StrangerPatcher::StrangerPatcher(string patcher_dep_graph_file_name,string patch
 		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in patcher dep graph.");
 	}
 	message(stringbuilder() << "patcher uninit node(" << patcher_uninit_field_node->getID() << ") found.");
+
 	this->patchee_uninit_field_node = patchee_dep_graph.findInputNode(input_field_name);
 	if (patchee_uninit_field_node == NULL) {
 		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in patchee dep graph.");
@@ -38,6 +39,10 @@ StrangerPatcher::StrangerPatcher(string patcher_dep_graph_file_name,string patch
 	this->patcher_sorted_field_relevant_nodes = patcher_field_relevant_graph.getSortedNodes();
 	patchee_field_relevant_graph.sort(patchee_field_relevant_graph);
 	this->patchee_sorted_field_relevant_nodes = patchee_field_relevant_graph.getSortedNodes();
+
+
+
+//	cout << endl << patchee_field_relevant_graph.toDot() << endl;
 }
 
 StrangerPatcher::~StrangerPatcher() {
@@ -104,9 +109,7 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 	}
 
 	message("END VALIDATION EXTRACTION PHASE...");
-	validation_patch_auto_1->toDotAscii(0);
-	return validation_patch_auto_1;
-
+	return validation_patch_auto;
 }
 
 /**
@@ -231,7 +234,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 	StrangerAutomaton* differenceAuto = patcheeSinkAuto->difference(patcherSinkAuto, -3);
 
 	if (differenceAuto->isEmpty() ){
-		message("no difference, no patch required!");
+		message("no difference, no sanitization patch required!");
 		delete differenceAuto;
 		sanitization_patch_auto = NULL;
 	} else if(patcherSinkAuto->isLengthFinite()){
@@ -251,7 +254,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 			differenceAuto = patcheeSinkAuto->difference(patcherSinkAuto, -3);
 
 			if (differenceAuto->isEmpty() ){
-				message("no difference, no patch required 2!");
+				message("no difference, no sanitization patch required 2!");
 				delete differenceAuto;
 				sanitization_patch_auto = NULL;
 			}

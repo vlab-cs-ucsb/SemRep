@@ -76,26 +76,20 @@ void ForwardImageComputer::debugMemoryUsage(int dlevel){
 AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes) {
 	AnalysisResult bwValidationPatchResult;
 
-	// initially all nodes are bottom
-	for (DepGraphNode* node: origDepGraph.getSortedNodes()){
+	// initially all nodes are bottom, we are computing the rejected sets.
+	for (DepGraphNode* node: origDepGraph.getNodes()){
 		bwValidationPatchResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
 	}
 
-
-	// make all nodes sigma star until a _vlab_restrict op node, no need to calculate  pre-image for those
-	NodesListConstReverseIterator rit;
-	for (NodesListConstReverseIterator it = sortedNodes.rbegin(); it != sortedNodes.rend(); it++ ) {
+	NodesListConstReverseIterator it;
+	for (it = sortedNodes.rbegin(); it != sortedNodes.rend(); it++ ) {
 		DepGraphNode* node = (DepGraphNode*)(*it);
 		if (dynamic_cast< DepGraphNormalNode*>(node) || dynamic_cast< DepGraphUninitNode*>(node) || dynamic_cast< DepGraphOpNode*>(node)) {
-
-//			cout << "\tProcessing node ID: " << node->getID() << endl;
-			bwValidationPatchResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
 
 			if (dynamic_cast< DepGraphOpNode*>(node) ) {
 				DepGraphOpNode* op = dynamic_cast< DepGraphOpNode*>(node);
 				// if the operation is __vlab_restrict, handle first restrict function, special case here
 				if (op->getName().find("__vlab_restrict") != string::npos) {
-					rit = it;
 					break;
 				}
 			}
@@ -105,16 +99,14 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph
 		}
 	}
 
-//	cout << "Processing after first restrict" << endl;
-	if (rit != sortedNodes.rend()) { // if it is not NULL it can't be the last node, now continue analysis with the rest of the nodes
-
-		while ( ++rit != sortedNodes.rend()) {
-			DepGraphNode* node = (DepGraphNode*)(*rit);
+	if (it != sortedNodes.rend()) { // if it is not NULL it can't be the last node, now continue analysis with the rest of the nodes
+		while ( ++it != sortedNodes.rend()) {
+			DepGraphNode* node = (DepGraphNode*)(*it);
 			doBackwardNodeComputation_ValidationPhase(origDepGraph, inputDepGraph, bwValidationPatchResult, node);
 		}
-
 	} else {
-		cout << "\tVALIDATION STEP: no __vlab_restrict function, do not have any validation patch!" << endl;
+		// basically server accepts anystring
+		cout << "\tVALIDATION STEP: no __vlab_restrict function, do not have any validation!" << endl;
 	}
 
 	return bwValidationPatchResult;
@@ -323,13 +315,17 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 void ForwardImageComputer::doForwardAnalysis_RegularPhase(
 		DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes, AnalysisResult& analysisResult) {
 
+//	for (DepGraphNode* node: origDepGraph.getNodes()){
+//		if (analysisResult.find(node->getID()) == analysisResult.end()) {
+//			analysisResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
+//		}
+//	}
+
 	for (NodesListIterator it = sortedNodes.begin(); it != sortedNodes.end(); it++) {
 		DepGraphNode* node = *it;
-
 		if (analysisResult.find(node->getID()) == analysisResult.end()) {
 			analysisResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
 		}
-
 		doForwardNodeComputation_RegularPhase(origDepGraph, inputDepGraph, node, analysisResult);
 	}
 	return;
@@ -356,7 +352,7 @@ void ForwardImageComputer::doForwardNodeComputation_RegularPhase(
     		if (lit == NULL) {
     			throw StrangerStringAnalysisException(stringbuilder() << "SNH: " << normalnode->getID() << ","
     										<< "cannot handle, expecting literal node,\nor add this type to the implementation: "
-    												"doForwardNodeComputation_CheckSanitDiffPhase()");
+    												"doForwardNodeComputation_RegularPhase()");
     		}
     		newAuto = StrangerAutomaton::makeString(lit->getLiteralValue(), node->getID());
     	} else {
@@ -372,8 +368,11 @@ void ForwardImageComputer::doForwardNodeComputation_RegularPhase(
     			if (rit == analysisResult.end()) {
     				// if this is the case, either use the originial graph instead of input relevant graph
     				// or update the case here, compute all paths that passes through this node.
-    				throw StrangerStringAnalysisException("Successor of normal Node is not computed yet!\nUpdate implementation: "
-    						"doForwardNodeComputation_CheckSanitDiffPhase()");
+    				cout << endl << "!!! Not all successors of a normal node is computed !!! : doForwardNodeComputation_RegularPhase()" << endl;
+    				continue;
+//    				throw StrangerStringAnalysisException("Successor of normal Node is not computed yet!\nUpdate implementation: "
+//    						"doForwardNodeComputation_RegularPhase()");
+
     			}
     			StrangerAutomaton *succAuto = rit->second;
     			if (newAuto == NULL) {
@@ -392,17 +391,17 @@ void ForwardImageComputer::doForwardNodeComputation_RegularPhase(
     	// input nodes should already have been initialized
     	if (analysisResult.find(node->getID()) == analysisResult.end()){
     		throw StrangerStringAnalysisException("An Uninitialized input node found without initial automaton!\n"
-    				"doForwardNodeComputation_CheckSanitDiffPhase()");
+    				"doForwardNodeComputation_RegularPhase()");
     	}
     	newAuto = analysisResult[node->getID()];
     } else {
     	throw StrangerStringAnalysisException("Cannot handle node type!\ncheck or update code: "
-    			"doForwardNodeComputation_CheckSanitDiffPhase()");
+    			"doForwardNodeComputation_RegularPhase()");
     }
 
     if (newAuto == NULL) {
     	throw StrangerStringAnalysisException("Forward automaton cannot be computed!\ncheck or update code: "
-    			"doForwardNodeComputation_CheckSanitDiffPhase()");
+    			"doForwardNodeComputation_RegularPhase()");
     }
 
     analysisResult[node->getID()] = newAuto;

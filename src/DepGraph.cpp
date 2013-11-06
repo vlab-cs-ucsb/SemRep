@@ -101,6 +101,14 @@ OpNodesList DepGraph::getFuncsNodes(const std::vector<std::string> funcsNames) {
 	return retMe;
 }
 
+NodesList DepGraph::getNodes() {
+	NodesList retMe;
+	for (NodesMapConstIterator it = nodes.begin(); it != nodes.end(); it++) {
+		retMe.push_back(it->second);
+	}
+	return retMe;
+}
+
 UninitNodesList DepGraph::getUninitNodes() {
     UninitNodesList retMe;
 //	for (NodesMapConstIterator it = nodes.begin(); it != nodes.end(); ++it) {
@@ -131,9 +139,7 @@ DepGraphUninitNode* DepGraph::findInputNode(string name){
 								if (boost::regex_match(o->getName(), sm, regxGraphLabel)) {
 										return uninitNode;
 								}
-								else {
-									throw invalid_argument("error parsing variable name");
-								}
+
 							} catch (exception const &e) {
 						        cerr << "Cannot handle var name: " << o->getName() << ". Following exception happened:\n" << e.what();
 						        exit(EXIT_FAILURE);

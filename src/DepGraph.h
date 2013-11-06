@@ -112,7 +112,8 @@ public:
 		}
 		return num;
 	};
-	 UninitNodesList getUninitNodes() ;
+	NodesList getNodes();
+	UninitNodesList getUninitNodes() ;
 	std::vector<NodesList> getSccs()  {
 		throw std::runtime_error("DepGraph.getSccs() not implemented yet.");
 	};
