@@ -1279,7 +1279,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		strangerPatcher.extractValidationPatch();
 		strangerPatcher.extractSanitizationPatch();
 
-		cout << endl << "\t------ OVERALL RESULT ------" << endl;
+		cout << endl << "\t------ OVERALL RESULT for: " << field_name << " ------" << endl;
 		if (strangerPatcher.is_validation_patch_required) {
 			cout << "\t    - validation patch is generated" << endl;
 			//		cout << endl << endl;
@@ -1310,7 +1310,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 void patch_snipe_frame__form_frame_name() {
 	string field_name = "form_frame_name";
 	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame_client.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame__form_frame_name.dot";
 
 	call_patcher(patcher_name, patchee_name, field_name);
 }
@@ -1331,35 +1331,179 @@ void patch_snipe_local__form_details() {
 	call_patcher(patcher_name, patchee_name, field_name);
 }
 
-void patch_snipe_local__form_image_title() {
-	string field_name = "form_image_title";
+void patch_snipe_local__form_keywords() {
+	string field_name = "form_keywords";
 	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_image_title.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_keywords.dot";
 
 	call_patcher(patcher_name, patchee_name, field_name);
 }
 
-void patch_snipe_local__form_keywords() {
-
-}
-
 void patch_snipe_local__form_location() {
+	string field_name = "form_location";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_location.dot";
 
+	call_patcher(patcher_name, patchee_name, field_name);
 }
 
 void patch_snipe_local__form_publish() {
+	string field_name = "form_publish";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_publish.dot";
 
+	call_patcher(patcher_name, patchee_name, field_name);
 }
 
 void patch_snipe_local__gallery_id() {
+	string field_name = "gallery_id";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__gallery_id.dot";
 
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+//gallery_115 corresponds to new gallery form
+void patch_snipe_gallery_115__cat_parent() {
+	string field_name = "cat_parent";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__cat_parent.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_115__form_cat_description() {
+	string field_name = "form_cat_description";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_cat_description.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_115__form_gallery_name() {
+	string field_name = "form_gallery_name";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_gallery_name.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+// gallery_41 corresponds to edit gallery form
+void patch_snipe_gallery_41__cat_parent() {
+	string field_name = "cat_parent";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__cat_parent.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_41__form_cat_description() {
+	string field_name = "form_cat_description";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_cat_description.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_41__form_gallery_name() {
+	string field_name = "form_gallery_name";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_gallery_name.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_41__form_frame_id() {
+	string field_name = "form_frame_id";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_frame_id.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_41__form_orderby() {
+	string field_name = "form_orderby";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_orderby.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_41__form_order() {
+	string field_name = "form_order";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_order.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_41__form_watermark_txt() {
+	string field_name = "form_watermark_txt";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_watermark_txt.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_snipe_gallery_41__gallery_id() {
+	string field_name = "gallery_id";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__gallery_id.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+/****************************************************************************************************/
+/*********** PHPNEWS ********************************************************************************/
+/****************************************************************************************************/
+
+void patch_phpnews_auth_89__user() {
+	string field_name = "user";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89_user_password.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89__user.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_phpnews_auth_89__password() {
+	string field_name = "password";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89_user_password.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89__password.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
+}
+
+void patch_phpnews_admin_post2_1527__subject() {
+	string field_name = "subject";
+	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_post2_1527_subject.dot";
+	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_post__subject.dot";
+
+	call_patcher(patcher_name, patchee_name, field_name);
 }
 
 int main(int argc, char *argv[]) {
 //	patch_snipe_frame__form_frame_name();
 //	patch_snipe_local__form_author();
 //	patch_snipe_local__form_details();
-	patch_snipe_local__form_image_title();
+//	patch_snipe_local__form_keywords();
+//	patch_snipe_local__form_location();
+//	patch_snipe_local__form_publish();
+//	patch_snipe_local__gallery_id();
+//	patch_snipe_gallery_115__cat_parent();
+//	patch_snipe_gallery_115__form_cat_description();
+//	patch_snipe_gallery_115__form_gallery_name();
+//	patch_snipe_gallery_41__cat_parent();
+//	patch_snipe_gallery_41__form_cat_description();
+//	patch_snipe_gallery_41__form_gallery_name();
+//	patch_snipe_gallery_41__form_frame_id();
+//	patch_snipe_gallery_41__form_orderby();
+//	patch_snipe_gallery_41__form_order();
+//	patch_snipe_gallery_41__form_watermark_txt();
+//	patch_snipe_gallery_41__gallery_id();
+
+//	patch_phpnews_auth_89__user();
+//	patch_phpnews_auth_89__password();
+	patch_phpnews_admin_post2_1527__subject();
 
 	return 0;
 }

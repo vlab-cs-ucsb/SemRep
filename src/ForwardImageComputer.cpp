@@ -207,7 +207,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 			DepGraphNode* patternNode = successors[0];
 			DepGraphNode* complementNode = successors[2];
 
-			if (childNode->equals(subjectNode)){
+			if (childNode->equals(subjectNode)) {
 				DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
 				if (pNode == NULL) {
 					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find pattern node: "
@@ -296,6 +296,21 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 		delete forward;
 		delete intersection;
 //		return retMe;
+	} else if (opName == "htmlspecialchars") {
+		//TODO handle all params, currently we only consider first param
+		if (childNode->equals(successors[0])) {
+			StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(opNode->getID());
+			StrangerAutomaton* forward = StrangerAutomaton::htmlSpecialChars(sigmaStar, opNode->getID());
+			StrangerAutomaton* intersection = opAuto->intersect(forward, childNode->getID());
+			retMe = StrangerAutomaton::preHtmlSpecialChars(intersection, childNode->getID());
+			delete sigmaStar;
+			delete forward;
+			delete intersection;
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of htmlspecialchars (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
+					"makeBackwardAutoForOpChild_ValidationPhase()");
+		}
+
 	} else {
 		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
 	}
@@ -422,7 +437,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 		if (opName.find("__vlab_restrict") != string::npos) {
 			if (successors.size() != 3) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments: "
-						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+						"makeForwardAutoForOp_RegularPhase()");
 			}
 
 			DepGraphNode* subjectNode = successors[1];
@@ -433,7 +448,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 			AnalysisResultIterator rit = analysisResult.find(subjectNode->getID());
 			if (rit == analysisResult.end()) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find subject auto: "
-										"makeForwardAutoForOp_CheckSanitDiffPhase()");
+										"makeForwardAutoForOp_RegularPhase()");
 			}
 
 			StrangerAutomaton* subjectAuto = rit->second;
@@ -441,13 +456,13 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 			DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
 			if (pNode == NULL) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find pattern node: "
-						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+						"makeForwardAutoForOp_RegularPhase()");
 			}
 
 			Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
 			if (patternLit == NULL) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as pattern node: "
-						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+						"makeForwardAutoForOp_RegularPhase()");
 			}
 			string regString = patternLit->getLiteralValue();
 
@@ -470,13 +485,13 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 			DepGraphNormalNode* cNode = dynamic_cast<DepGraphNormalNode*>(complementNode);
 			if (cNode == NULL) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find complement node: "
-						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+						"makeForwardAutoForOp_RegularPhase()");
 			}
 
 			Literal* complementLit = dynamic_cast<Literal*>(cNode->getPlace());
 			if (complementLit == NULL) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find literal as complement node: "
-						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+						"makeForwardAutoForOp_RegularPhase()");
 			}
 
 			// Union __vlab_restricts considering complement parameter
@@ -493,7 +508,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 
 		} else {
         	throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not __vlab_restrict.\n"
-        			"makeForwardAutoForOp_CheckSanitDiffPhase()");
+        			"makeForwardAutoForOp_RegularPhase()");
         }
 	} else if (opName == ".") {
 		// We will stop at concatenation if the concat is for query string in sink
@@ -514,18 +529,18 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 		}
 		if (retMe == NULL) {
 			throw StrangerStringAnalysisException("Check successors of concatenation: "
-									"makeForwardAutoForOp_CheckSanitDiffPhase()");
+									"makeForwardAutoForOp_RegularPhase()");
 		}
 
 	} else if (opName == "preg_replace") {
 		throw StrangerStringAnalysisException("Implement preg_replace: "
-				"makeForwardAutoForOp_CheckSanitDiffPhase()");
+				"makeForwardAutoForOp_RegularPhase()");
 	} else if (opName == "ereg_replace") {
 		throw StrangerStringAnalysisException("ereg_replace is not supported yet: "
-						"makeForwardAutoForOp_CheckSanitDiffPhase()");
+						"makeForwardAutoForOp_RegularPhase()");
 	} else if (opName == "str_replace") {
 		throw StrangerStringAnalysisException("Implement str_replace: "
-								"makeForwardAutoForOp_CheckSanitDiffPhase()");
+								"makeForwardAutoForOp_RegularPhase()");
 		 //Note: subjectAuto should be a string to use the replace function
 		 //from StrangerLibrary. Otherwise we need a method to return the
 		 //set of strings that an automaton represents (in PHP replace
@@ -545,7 +560,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 	} else if (opName == "addslashes") {
 		if (successors.size() != 1) {
 			throw new StrangerStringAnalysisException("addslashes should have one child: "
-					"makeForwardAutoForOp_CheckSanitDiffPhase()");
+					"makeForwardAutoForOp_RegularPhase()");
 		}
 		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
 
@@ -554,22 +569,35 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 		retMe = slashesAuto;
 //		return retMe;
 	} else if (opName == "stripslashes") {
+		throw new StrangerStringAnalysisException("stripslashes is not working: "
+										"makeForwardAutoForOp_RegularPhase()");
 		 //this is not a precise model but rather an overapproximation
-		if (successors.size() != 1) {
-			throw new StrangerStringAnalysisException("stripslashes should have one child: "
-								"makeForwardAutoForOp_CheckSanitDiffPhase()");
-		}
-		 //only has one parameter
-		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
-		StrangerAutomaton* slashesAuto = StrangerAutomaton::stripslashes(
-				paramAuto, opNode->getID());
-		retMe = slashesAuto;
+//		if (successors.size() != 1) {
+//			throw new StrangerStringAnalysisException("stripslashes should have one child: "
+//								"makeForwardAutoForOp_RegularPhase()");
+//		}
+//		 //only has one parameter
+//		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+//		StrangerAutomaton* slashesAuto = StrangerAutomaton::stripslashes(
+//				paramAuto, opNode->getID());
+//		retMe = slashesAuto;
 //		return retMe;
-	} else if (opName == "mysql_real_escape_string") {
+	} else if (opName == "mysql_escape_string") {
+		if (successors.size() < 1 || successors.size() > 2) {
+			throw new StrangerStringAnalysisException("mysql_escape_string wrong number of arguments: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+        //we only care about the first parameter
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
 
+		StrangerAutomaton* mysqlEscapeAuto = StrangerAutomaton::mysql_escape_string(
+				paramAuto, opNode->getID());
+		retMe = mysqlEscapeAuto;
+
+	} else if (opName == "mysql_real_escape_string") {
 		if (successors.size() < 1 || successors.size() > 2) {
 			throw new StrangerStringAnalysisException("mysql_real_escape_string wrong number of arguments: "
-					"makeForwardAutoForOp_CheckSanitDiffPhase()");
+					"makeForwardAutoForOp_RegularPhase()");
 		}
         //we only care about the first parameter
 		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
@@ -577,13 +605,26 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 		StrangerAutomaton* mysqlEscapeAuto = StrangerAutomaton::mysql_real_escape_string(
 				paramAuto, opNode->getID());
 		retMe = mysqlEscapeAuto;
-//		return retMe;
+
+	} else if (opName == "htmlspecialchars") {
+		//TODO handle all params, currently we only consider first param
+		if (analysisResult.find(successors[0]->getID()) != analysisResult.end()) {
+			//we only care about the first parameter
+			StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+
+			StrangerAutomaton* htmlSpecAuto = StrangerAutomaton::htmlSpecialChars(paramAuto, opNode->getID());
+			retMe = htmlSpecAuto;
+
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: successors[0] of htmlspecialchars (" << opNode->getID() << ") is not calculated,\ncheck implementation: "
+					"makeBackwardAutoForOpChild_ValidationPhase()");
+		}
 
 	} else if (opName == "nl2br"){
 
 		if (successors.size() < 1 || successors.size() > 2) {
 			throw new StrangerStringAnalysisException("nl2br wrong number of arguments: "
-					"makeForwardAutoForOp_CheckSanitDiffPhase()");
+					"makeForwardAutoForOp_RegularPhase()");
 		}
 		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
 		StrangerAutomaton* nl2brAuto = StrangerAutomaton::nl2br(
@@ -593,7 +634,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 	} else if (opName == "trim" || opName == "strtoupper" || opName == "strtolower") {
         if (successors.size() != 1) {
 			throw new StrangerStringAnalysisException(stringbuilder() << opName << " has more than one successor in depgraph.\n"
-					"makeForwardAutoForOp_CheckSanitDiffPhase()" );
+					"makeForwardAutoForOp_RegularPhase()" );
 		}
 		 //TODO: quickly check if this correct
 		 //each is treated as a function and it does not do anything
@@ -609,7 +650,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
         }
 
 //		return retMe;
-	}  else {
+	} else {
 		cout << "!!! Warning: Unmodeled builtin general function : " << opName;
 		f_unmodeled.push_back(opNode);
 
@@ -830,6 +871,17 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 		// only has one parameter ==>  string trim  ( string $str  )
 		retMe = opAuto->preTrimSpaces(childNode->getID());
 
+	} else if (opName == "htmlspecialchars") {
+		//TODO handle all params, currently we only consider first param
+		if (childNode->equals(successors[0])) {
+			retMe = StrangerAutomaton::preHtmlSpecialChars(opAuto, childNode->getID());
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of htmlspecialchars (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
+					"makeBackwardAutoForOpChild_ValidationPhase()");
+		}
+	} else if (opName == "mysql_escape_string") {
+		// has one parameter
+		retMe = StrangerAutomaton::pre_mysql_escape_string(opAuto, childNode->getID());
 	} else {
 		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
 	}

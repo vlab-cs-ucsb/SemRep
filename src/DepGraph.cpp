@@ -134,7 +134,7 @@ DepGraphUninitNode* DepGraph::findInputNode(string name){
 						if (o != NULL ){
 //							cout << "var name: " << o->getName() << endl;
 							boost::smatch sm;
-							boost::regex regxGraphLabel(".*(" + name + ").*");
+							boost::regex regxGraphLabel(".*(POST|GET|REQUEST)\\[(" + name + ").*");
 							try {
 								if (boost::regex_match(o->getName(), sm, regxGraphLabel)) {
 										return uninitNode;

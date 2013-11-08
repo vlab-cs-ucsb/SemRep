@@ -95,16 +95,16 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 			message("no validation patch is required!!!");
 			is_validation_patch_required = false;
 		} else if (interAuto->isEmpty()) {
-			message("client and server accepts different sets");
-			is_validation_patch_required = false;
+			message("client and server accepts different sets, validation patch is generated");
+			is_validation_patch_required = true;
 		} else {
 			message("validation patch is generated for input: " + input_field_name);
 			is_validation_patch_required = true;;
 		}
 
-		// being conservative, otherwise handle three cases above
+		//TODO validation patch auto is intersection auto
 		validation_patch_auto_1 = patcher_validation;
-		validation_patch_auto = validation_patch_auto_1;
+		validation_patch_auto = interAuto;
 
 	} catch (StrangerStringAnalysisException const &e) {
 		cerr << e.what();
@@ -123,11 +123,15 @@ StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
 	AnalysisResult patcherAnalysisResult;
 	UninitNodesList patcherUninitNodes = patcher_dep_graph.getUninitNodes();
 
-	// initialize patcher input nodes to sigma star
-	message("initializing patcher inputs with sigma star");
+	// initialize patcher input nodes to bottom
+	message("initializing patcher inputs with bottom");
 	for (UninitNodesListConstIterator it = patcherUninitNodes.begin(); it != patcherUninitNodes.end(); it++) {
-		patcherAnalysisResult[(*it)->getID()] = StrangerAutomaton::makeAnyString((*it)->getID());
+		patcherAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
 	}
+	// initialize uninit node that we are interested in with sigma star
+	message(stringbuilder() << "initializing input node(" << patcher_uninit_field_node->getID() << ") with sigma star");
+	delete patcherAnalysisResult[patcher_uninit_field_node->getID()];
+	patcherAnalysisResult[patcher_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(patcher_uninit_field_node->getID());
 
 	ForwardImageComputer patcherAnalyzer;
 

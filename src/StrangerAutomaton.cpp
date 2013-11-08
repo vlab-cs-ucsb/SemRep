@@ -2215,6 +2215,28 @@ StrangerAutomaton* StrangerAutomaton::pre_stripslashes(StrangerAutomaton* subjec
     return result;
 }
 
+StrangerAutomaton* StrangerAutomaton::mysql_escape_string(StrangerAutomaton* subjectAuto, int id) {
+    debug(stringbuilder() << id << " = mysql_escape_string(" << subjectAuto->ID << ");");
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfaMysqlEscapeString(subjectAuto->dfa, num_ascii_track, indices_main));
+    {
+        retMe->ID = id;
+        retMe->debugAutomaton();
+    }
+
+    return retMe;
+}
+
+StrangerAutomaton* StrangerAutomaton::pre_mysql_escape_string(StrangerAutomaton* subjectAuto, int id) {
+	debug(stringbuilder() << id << " = pre_mysql_escape_string(" << subjectAuto->ID << ");");
+	StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreMysqlEscapeString(subjectAuto->dfa, num_ascii_track, indices_main));
+	{
+		retMe->ID = id;
+        retMe->debugAutomaton();
+	}
+
+	return retMe;
+}
+
 StrangerAutomaton* StrangerAutomaton::mysql_real_escape_string(StrangerAutomaton* subjectAuto, int id)
 {
     
@@ -2798,6 +2820,8 @@ StrangerAutomaton* StrangerAutomaton::difference(StrangerAutomaton* auto_,	int i
 	delete complementAuto;
 	return differenceAuto;
 }
+
+
 
 std::string StrangerAutomaton::escapeSpecialChars(std::string s)
 {

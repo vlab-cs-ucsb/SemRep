@@ -155,6 +155,7 @@ public:
 //    StrangerAutomaton* trimRight(char chars[]);
     StrangerAutomaton* preTrimSpaces(int id);
     StrangerAutomaton* preTrimSpaces() { return preTrimSpaces(traceID);};
+
     static StrangerAutomaton* addslashes(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* addslashes(StrangerAutomaton* subjectAuto){return addslashes(subjectAuto, traceID);};
     static StrangerAutomaton* pre_addslashes(StrangerAutomaton* subjectAuto, int id);
@@ -167,6 +168,8 @@ public:
     static StrangerAutomaton* stripslashes(StrangerAutomaton* subjectAuto){return stripslashes(subjectAuto, traceID);};
     static StrangerAutomaton* pre_stripslashes(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* pre_stripslashes(StrangerAutomaton* subjectAuto){return pre_stripslashes(subjectAuto, traceID);};
+    static StrangerAutomaton* mysql_escape_string(StrangerAutomaton* subjectAuto, int id);
+    static StrangerAutomaton* pre_mysql_escape_string(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* mysql_real_escape_string(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* pre_mysql_real_escape_string(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* nl2br(StrangerAutomaton* subjectAuto, int id);
