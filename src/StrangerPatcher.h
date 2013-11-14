@@ -75,7 +75,7 @@ private:
 
 	void message(string msg);
 	void printAnalysisResults(AnalysisResult& result);
-
+	void printNodeList(NodesList nodes);
 };
 
 

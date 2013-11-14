@@ -1422,12 +1422,14 @@ StrangerAutomaton* StrangerAutomaton::regExToAuto(std::string phpRegexOrig,
 //    				char c = (char)Integer.valueOf(hexChar.substring(2,4), 16).intValue();
 //    				phpRegexOrig = phpRegexOrig.replace(hexChar, "\\" << c);
 //    			}
+
     			RegExp* regExp = new RegExp(phpRegexOrig, RegExp::NONE);
                 std::string regExpStringVal;
     			debug(stringbuilder() << id <<  ": regExToString = "
     					<< regExp->toStringBuilder(regExpStringVal));
     			retMe = regExp->toAutomaton();
     		}
+
     
     		debug(stringbuilder() << id <<  " = regExToAuto(" << phpRegexOrig << ") -- end");
     		debug(stringbuilder() << "============");

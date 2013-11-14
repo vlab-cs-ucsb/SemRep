@@ -40,9 +40,8 @@ StrangerPatcher::StrangerPatcher(string patcher_dep_graph_file_name,string patch
 	patchee_field_relevant_graph.sort(patchee_field_relevant_graph);
 	this->patchee_sorted_field_relevant_nodes = patchee_field_relevant_graph.getSortedNodes();
 
-
-
 //	cout << endl << patchee_field_relevant_graph.toDot() << endl;
+//	printNodeList(patchee_sorted_field_relevant_nodes);
 }
 
 StrangerPatcher::~StrangerPatcher() {
@@ -63,6 +62,14 @@ void StrangerPatcher::printAnalysisResults(AnalysisResult& result) {
 		(it->second)->toDot();
 		cout << endl << endl;
 	}
+}
+
+void StrangerPatcher::printNodeList(NodesList nodes) {
+	cout << endl;
+	for (NodesListConstIterator it = nodes.begin(); it != nodes.end(); it++ ) {
+		cout << (*it)->getID() << " ";
+	}
+	cout << endl;
 }
 
 /**
@@ -105,6 +112,9 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 		//TODO validation patch auto is intersection auto
 		validation_patch_auto_1 = patcher_validation;
 		validation_patch_auto = interAuto;
+
+//		validation_patch_auto->toDotAscii(0);
+//		throw StrangerStringAnalysisException("baki");
 
 	} catch (StrangerStringAnalysisException const &e) {
 		cerr << e.what();
@@ -205,6 +215,9 @@ AnalysisResult StrangerPatcher::computePatcheeFwBwAnalysis_2(StrangerAutomaton* 
 		fwAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto_2;
 		message("...validation patch is updated using length constraints");
 
+//		validation_patch_auto_2->toDotAscii(0);
+//		throw StrangerStringAnalysisException("baki");
+
 		message("second forward analysis begins for patchee...");
 		delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
 		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto_2;
@@ -223,6 +236,9 @@ AnalysisResult StrangerPatcher::computePatcheeFwBwAnalysis_2(StrangerAutomaton* 
 StrangerAutomaton* StrangerPatcher::computePatcheeBWAnalysis_3(StrangerAutomaton* initialAuto,	const AnalysisResult& fwAnalysisResult) {
 	ForwardImageComputer patcheeAnalyzer;
 	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
+	//sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
+	//TODO get the previous node
+	DepGraphNode* succNode = patchee_field_relevant_graph.getPredecessors(patchee_uninit_field_node);
 	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
 	return sanitization_patch_auto;
 }

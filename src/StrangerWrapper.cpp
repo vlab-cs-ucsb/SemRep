@@ -1283,7 +1283,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		if (strangerPatcher.is_validation_patch_required) {
 			cout << "\t    - validation patch is generated" << endl;
 			//		cout << endl << endl;
-			//		strangerPatcher.getValidationPatchAuto()->toDotAscii(0);
+//					strangerPatcher.getValidationPatchAuto()->toDotAscii(0);
 		} else {
 			cout << "\t    - no validation patch" << endl;
 		}
@@ -1291,7 +1291,8 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		if (strangerPatcher.is_sanitization_patch_required) {
 			cout << "\t    - sanitization patch is generated" << endl;
 			//		cout << endl << endl;
-			//		strangerPatcher.getSanitizationPatchAuto()->toDotAscii(0);
+					//strangerPatcher.getSanitizationPatchAuto()->toDotAscii(0);
+			strangerPatcher.getSanitizationPatchAuto()->toDot();
 		} else {
 			cout << "\t    - no sanitization patch" << endl;
 		}
@@ -1303,207 +1304,361 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 
 }
 
+void patch_paperexample_email(bool reversed) {
+	string field_name = "email";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/paperexample/patchee.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/paperexample/patcher.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
 /****************************************************************************************************/
 /*********** SNIPE GALLERY *********************************************/
 /****************************************************************************************************/
 
-void patch_snipe_frame__form_frame_name() {
+void patch_snipe_frame__form_frame_name(bool reversed) {
 	string field_name = "form_frame_name";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame__form_frame_name.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_frame__form_frame_name.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+
 }
 
-void patch_snipe_local__form_author() {
+void patch_snipe_local__form_author(bool reversed) {
 	string field_name = "form_author";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_author.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_author.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_local__form_details() {
+void patch_snipe_local__form_details(bool reversed) {
 	string field_name = "form_details";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_details.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_details.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_local__form_keywords() {
+void patch_snipe_local__form_keywords(bool reversed) {
 	string field_name = "form_keywords";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_keywords.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_keywords.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_local__form_location() {
+void patch_snipe_local__form_location(bool reversed) {
 	string field_name = "form_location";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_location.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_location.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_local__form_publish() {
+void patch_snipe_local__form_publish(bool reversed) {
 	string field_name = "form_publish";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_publish.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__form_publish.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_local__gallery_id() {
+void patch_snipe_local__gallery_id(bool reversed) {
 	string field_name = "gallery_id";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__gallery_id.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_local__gallery_id.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
 //gallery_115 corresponds to new gallery form
-void patch_snipe_gallery_115__cat_parent() {
+void patch_snipe_gallery_115__cat_parent(bool reversed) {
 	string field_name = "cat_parent";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__cat_parent.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__cat_parent.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_115__form_cat_description() {
+void patch_snipe_gallery_115__form_cat_description(bool reversed) {
 	string field_name = "form_cat_description";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_cat_description.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_cat_description.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_115__form_gallery_name() {
+void patch_snipe_gallery_115__form_gallery_name(bool reversed) {
 	string field_name = "form_gallery_name";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_gallery_name.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_115.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_gallery_name.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
 // gallery_41 corresponds to edit gallery form
-void patch_snipe_gallery_41__cat_parent() {
+void patch_snipe_gallery_41__cat_parent(bool reversed) {
 	string field_name = "cat_parent";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__cat_parent.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__cat_parent.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_41__form_cat_description() {
+void patch_snipe_gallery_41__form_cat_description(bool reversed) {
 	string field_name = "form_cat_description";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_cat_description.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_cat_description.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_41__form_gallery_name() {
+void patch_snipe_gallery_41__form_gallery_name(bool reversed) {
 	string field_name = "form_gallery_name";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_gallery_name.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_gallery_name.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_41__form_frame_id() {
+void patch_snipe_gallery_41__form_frame_id(bool reversed) {
 	string field_name = "form_frame_id";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_frame_id.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_frame_id.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+		if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_41__form_orderby() {
+void patch_snipe_gallery_41__form_orderby(bool reversed) {
 	string field_name = "form_orderby";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_orderby.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_orderby.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_41__form_order() {
+void patch_snipe_gallery_41__form_order(bool reversed) {
 	string field_name = "form_order";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_order.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_order.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_41__form_watermark_txt() {
+void patch_snipe_gallery_41__form_watermark_txt(bool reversed) {
 	string field_name = "form_watermark_txt";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_watermark_txt.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__form_watermark_txt.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_snipe_gallery_41__gallery_id() {
+void patch_snipe_gallery_41__gallery_id(bool reversed) {
 	string field_name = "gallery_id";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__gallery_id.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery_41.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/snipegallery/snipe_gallery__gallery_id.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
 /****************************************************************************************************/
 /*********** PHPNEWS ********************************************************************************/
 /****************************************************************************************************/
 
-void patch_phpnews_auth_89__user() {
+void patch_phpnews_auth_89__user(bool reversed) {
 	string field_name = "user";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89_user_password.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89__user.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89_user_password.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89__user.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_phpnews_auth_89__password() {
+void patch_phpnews_auth_89__password(bool reversed) {
 	string field_name = "password";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89_user_password.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89__password.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89_user_password.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_auth_89__password.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
-void patch_phpnews_admin_post2_1527__subject() {
+void patch_phpnews_admin_post2_1527__subject(bool reversed) {
 	string field_name = "subject";
-	string patchee_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_post2_1527_subject.dot";
-	string patcher_name = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_post__subject.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_post2_1527_subject.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_post__subject.dot";
 
-	call_patcher(patcher_name, patchee_name, field_name);
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_phpnews_admin_modifypost3_2382__subject(bool reversed) {
+	string field_name = "subject";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_modifypost3_2382_subject.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_post__subject.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_phpnews_admin_newsposter2_1780__username(bool reversed) {
+	string field_name = "username";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_newsposter2_1780_email_username.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_poster__username.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_phpnews_admin_newsposter2_1780__email(bool reversed) {
+	string field_name = "email";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_newsposter2_1780_email_username.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_poster__email.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_phpnews_admin_modifynewsposter3_3091__email(bool reversed) {
+	string field_name = "email";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_modifynewsposter3_3091_email.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/phpnews/phpnews_admin_poster__email.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
 }
 
 int main(int argc, char *argv[]) {
-//	patch_snipe_frame__form_frame_name();
-//	patch_snipe_local__form_author();
-//	patch_snipe_local__form_details();
-//	patch_snipe_local__form_keywords();
-//	patch_snipe_local__form_location();
-//	patch_snipe_local__form_publish();
-//	patch_snipe_local__gallery_id();
-//	patch_snipe_gallery_115__cat_parent();
-//	patch_snipe_gallery_115__form_cat_description();
-//	patch_snipe_gallery_115__form_gallery_name();
-//	patch_snipe_gallery_41__cat_parent();
-//	patch_snipe_gallery_41__form_cat_description();
-//	patch_snipe_gallery_41__form_gallery_name();
-//	patch_snipe_gallery_41__form_frame_id();
-//	patch_snipe_gallery_41__form_orderby();
-//	patch_snipe_gallery_41__form_order();
-//	patch_snipe_gallery_41__form_watermark_txt();
-//	patch_snipe_gallery_41__gallery_id();
 
-//	patch_phpnews_auth_89__user();
-//	patch_phpnews_auth_89__password();
-	patch_phpnews_admin_post2_1527__subject();
+/***********	Client - Server Patching	***********/
+	bool patchClient = false;
+//	patch_snipe_frame__form_frame_name(patchClient);
+//	patch_snipe_local__form_author(patchClient);
+//	patch_snipe_local__form_details(patchClient);
+//	patch_snipe_local__form_keywords(patchClient);
+//	patch_snipe_local__form_location(patchClient);
+//	patch_snipe_local__form_publish(patchClient);
+//	patch_snipe_local__gallery_id(patchClient);
+//	patch_snipe_gallery_115__cat_parent(patchClient);
+//	patch_snipe_gallery_115__form_cat_description(patchClient);
+//	patch_snipe_gallery_115__form_gallery_name(patchClient);
+//	patch_snipe_gallery_41__cat_parent(patchClient);
+//	patch_snipe_gallery_41__form_cat_description(patchClient);
+//	patch_snipe_gallery_41__form_gallery_name(patchClient);
+//	patch_snipe_gallery_41__form_frame_id(patchClient);
+//	patch_snipe_gallery_41__form_orderby(patchClient);
+//	patch_snipe_gallery_41__form_order(patchClient);
+//	patch_snipe_gallery_41__form_watermark_txt(patchClient);
+//	patch_snipe_gallery_41__gallery_id(patchClient);
+
+//	patch_phpnews_auth_89__user(patchClient);
+//	patch_phpnews_auth_89__password(patchClient);
+//	patch_phpnews_admin_post2_1527__subject(patchClient);
+//	patch_phpnews_admin_modifypost3_2382__subject(patchClient);
+//	patch_phpnews_admin_newsposter2_1780__username(patchClient);
+//	patch_phpnews_admin_newsposter2_1780__email(patchClient);
+//	patch_phpnews_admin_modifynewsposter3_3091__email(patchClient);
+
+	patch_paperexample_email(false);
 
 	return 0;
 }

@@ -311,6 +311,9 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 					"makeBackwardAutoForOpChild_ValidationPhase()");
 		}
 
+	} else if (opName == "strip_tags") {
+		cout << endl << "!!!!! strip_tags is not implemented yet" << endl;
+		retMe = bwAnalysisResult.find( childNode->getID() )->second;
 	} else {
 		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
 	}
@@ -383,7 +386,8 @@ void ForwardImageComputer::doForwardNodeComputation_RegularPhase(
     			if (rit == analysisResult.end()) {
     				// if this is the case, either use the originial graph instead of input relevant graph
     				// or update the case here, compute all paths that passes through this node.
-    				cout << endl << "!!! Not all successors of a normal node is computed !!! : doForwardNodeComputation_RegularPhase()" << endl;
+    				cout << endl << "!!! Not all successors of a normal node(" << node->getID() << ") is computed, not computed node("<< succNode->getID() <<") !!!:\n"
+    						"doForwardNodeComputation_RegularPhase()" << endl;
     				continue;
 //    				throw StrangerStringAnalysisException("Successor of normal Node is not computed yet!\nUpdate implementation: "
 //    						"doForwardNodeComputation_RegularPhase()");
