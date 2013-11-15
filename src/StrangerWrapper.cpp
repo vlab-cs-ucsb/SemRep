@@ -2557,6 +2557,9 @@ int main(int argc, char *argv[]) {
 
 /***********	Client - Server Patching	***********/
 	bool patchClient = false;
+
+//	patch_paperexample_email(patchClient);
+
 //	patch_snipe_frame__form_frame_name(patchClient);
 //	patch_snipe_local__form_author(patchClient);
 //	patch_snipe_local__form_details(patchClient);
@@ -2584,7 +2587,83 @@ int main(int argc, char *argv[]) {
 //	patch_phpnews_admin_newsposter2_1780__email(patchClient);
 //	patch_phpnews_admin_modifynewsposter3_3091__email(patchClient);
 
-	patch_paperexample_email(false);
+	patch_schoolmate_announcements_9__title(patchClient);
+	patch_schoolmate_announcements_9__message(patchClient);
+	patch_schoolmate_announcements_18__title(patchClient);
+	patch_schoolmate_announcements_18__message(patchClient);
+	patch_schoolmate_announcements_18__announcementid(patchClient);
+	patch_schoolmate_header__apoint(patchClient);
+	patch_schoolmate_header__bpoint(patchClient);
+	patch_schoolmate_header__cpoint(patchClient);
+	patch_schoolmate_header__dpoint(patchClient);
+	patch_schoolmate_header__fpoint(patchClient);
+	patch_schoolmate_header__numperiods(patchClient);
+	patch_schoolmate_header__numsemesters(patchClient);
+	patch_schoolmate_header__schooladdress(patchClient);
+	patch_schoolmate_header__schoolname(patchClient);
+	patch_schoolmate_header__schoolphone(patchClient);
+	patch_schoolmate_header__sitemessage(patchClient);
+	patch_schoolmate_header__sitetext(patchClient);
+	patch_schoolmate_manageclasses_25__semester(patchClient);
+	patch_schoolmate_manageclasses_28__periodnum(patchClient);
+	patch_schoolmate_manageclasses_28__roomnum(patchClient);
+	patch_schoolmate_manageclasses_28__sectionnum(patchClient);
+	patch_schoolmate_manageclasses_28__semester(patchClient);
+	patch_schoolmate_manageclasses_28__substitute(patchClient);
+	patch_schoolmate_manageclasses_28__teacher(patchClient);
+	patch_schoolmate_manageclasses_28__title(patchClient);
+	patch_schoolmate_manageclasses_83__courseid(patchClient);
+	patch_schoolmate_manageclasses_83__periodnum(patchClient);
+	patch_schoolmate_manageclasses_83__roomnum(patchClient);
+	patch_schoolmate_manageclasses_83__sectionnum(patchClient);
+	patch_schoolmate_manageclasses_83__semester(patchClient);
+	patch_schoolmate_manageclasses_83__substitute(patchClient);
+	patch_schoolmate_manageclasses_83__teacher(patchClient);
+	patch_schoolmate_manageclasses_83__title(patchClient);
+	patch_schoolmate_manageparents_36__fname(patchClient);
+	patch_schoolmate_manageparents_36__lname(patchClient);
+	patch_schoolmate_manageparents_36__student(patchClient);
+	patch_schoolmate_manageparents_36__username(patchClient);
+	patch_schoolmate_manageparents_58__fname(patchClient);
+	patch_schoolmate_manageparents_58__lname(patchClient);
+	patch_schoolmate_manageparents_58__student(patchClient);
+	patch_schoolmate_manageparents_58__username(patchClient);
+	patch_schoolmate_manageparents_58__parentid(patchClient);
+	patch_schoolmate_managesemesters_11__half(patchClient);
+	patch_schoolmate_managesemesters_11__term(patchClient);
+	patch_schoolmate_managesemesters_11__title(patchClient);
+	patch_schoolmate_managesemesters_23__half(patchClient);
+	patch_schoolmate_managesemesters_23__term(patchClient);
+	patch_schoolmate_managesemesters_23__title(patchClient);
+	patch_schoolmate_managesemesters_23__semesterid(patchClient);
+	patch_schoolmate_managestudents_31__fname(patchClient);
+	patch_schoolmate_managestudents_31__lname(patchClient);
+	patch_schoolmate_managestudents_31__mi(patchClient);
+	patch_schoolmate_managestudents_31__username(patchClient);
+	patch_schoolmate_managestudents_43__fname(patchClient);
+	patch_schoolmate_managestudents_43__lname(patchClient);
+	patch_schoolmate_managestudents_43__mi(patchClient);
+	patch_schoolmate_managestudents_43__username(patchClient);
+	patch_schoolmate_managestudents_43__studentid(patchClient);
+	patch_schoolmate_manageteachers_29__fname(patchClient);
+	patch_schoolmate_manageteachers_29__lname(patchClient);
+	patch_schoolmate_manageteachers_29__username(patchClient);
+	patch_schoolmate_manageteachers_39__fname(patchClient);
+	patch_schoolmate_manageteachers_39__lname(patchClient);
+	patch_schoolmate_manageteachers_39__username(patchClient);
+	patch_schoolmate_manageteachers_39__teacherid(patchClient);
+	patch_schoolmate_manageterms_9__title(patchClient);
+	patch_schoolmate_manageterms_19__title(patchClient);
+	patch_schoolmate_manageterms_19__termid(patchClient);
+	patch_schoolmate_manageusers_28__password(patchClient);
+	patch_schoolmate_manageusers_28__type(patchClient);
+	patch_schoolmate_manageusers_28__username(patchClient);
+	patch_schoolmate_manageusers_39__password(patchClient);
+	patch_schoolmate_manageusers_39__type(patchClient);
+	patch_schoolmate_manageusers_39__username(patchClient);
+	patch_schoolmate_manageusers_39__userid(patchClient);
+	patch_schoolmate_validatelogin__username(patchClient);
+	patch_schoolmate_validatelogin__password(patchClient);
 
 	return 0;
 }
