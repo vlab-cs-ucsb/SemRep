@@ -54,6 +54,7 @@ public:
 	long constpreconcatTime;
 	long forwardTime;
 	long backwardTime;
+	long validation_phase_time;
 	long multiTime;
 	long generateExampleTime;
 	int numOfGenerateExample;

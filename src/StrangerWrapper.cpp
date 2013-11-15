@@ -1627,6 +1627,209 @@ void patch_phpnews_admin_modifynewsposter3_3091__email(bool reversed) {
 	}
 }
 
+/****************************************************************************************************/
+/*********** SCHOOLMATE *****************************************************************************/
+/****************************************************************************************************/
+
+void patch_schoolmate_header__schoolname(bool reversed) {
+	string field_name = "schoolname";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__schoolname.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_header__schooladdress(bool reversed) {
+	string field_name = "schooladdress";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__schooladdress.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_header__schoolphone(bool reversed) {
+	string field_name = "schoolphone";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__schoolphone.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_header__sitemessage(bool reversed) {
+	string field_name = "sitemessage";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__sitemessage.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_header__sitetext(bool reversed) {
+	string field_name = "sitetext";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__sitetext.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_header__numsemesters(bool reversed) {
+	string field_name = "numsemesters";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__numsemesters.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_header__numperiods(bool reversed) {
+	string field_name = "numsemesters";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__numperiods.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_header__apoint(bool reversed) {
+	string field_name = "apoint";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__apoint.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+void patch_schoolmate_header__bpoint(bool reversed) {
+	string field_name = "bpoint";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__bpoint.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+void patch_schoolmate_header__cpoint(bool reversed) {
+	string field_name = "cpoint";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__cpoint.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+void patch_schoolmate_header__dpoint(bool reversed) {
+	string field_name = "dpoint";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__dpoint.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+void patch_schoolmate_header__fpoint(bool reversed) {
+	string field_name = "fpoint";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__fpoint.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_announcements_9__title(bool reversed) {
+	string field_name = "title";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements_9.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements__title.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_announcements_9__message(bool reversed) {
+	string field_name = "message";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements_9.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements__message.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_announcements_18__title(bool reversed) {
+	string field_name = "title";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements_18.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements__title.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+void patch_schoolmate_announcements_18__message(bool reversed) {
+	string field_name = "message";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements_18.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements__message.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_announcements_18__announcementid(bool reversed) {
+	string field_name = "announcementid";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements_18.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageannouncements__announcementid.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
 int main(int argc, char *argv[]) {
 
 /***********	Client - Server Patching	***********/

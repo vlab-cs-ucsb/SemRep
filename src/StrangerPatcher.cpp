@@ -236,10 +236,10 @@ AnalysisResult StrangerPatcher::computePatcheeFwBwAnalysis_2(StrangerAutomaton* 
 StrangerAutomaton* StrangerPatcher::computePatcheeBWAnalysis_3(StrangerAutomaton* initialAuto,	const AnalysisResult& fwAnalysisResult) {
 	ForwardImageComputer patcheeAnalyzer;
 	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
-	//sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
-	//TODO get the previous node
-	DepGraphNode* succNode = patchee_field_relevant_graph.getPredecessors(patchee_uninit_field_node);
 	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
+	//TODO get the previous node
+//	DepGraphNode* succNode = patchee_field_relevant_graph.getPredecessors(patchee_uninit_field_node);
+//	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
 	return sanitization_patch_auto;
 }
 

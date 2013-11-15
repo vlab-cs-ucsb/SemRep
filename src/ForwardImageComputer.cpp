@@ -74,6 +74,8 @@ void ForwardImageComputer::debugMemoryUsage(int dlevel){
  * 3- If there are some other ops after first restrict, do pre-image computation for them and intersect result.
  */
 AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes) {
+
+	long start_validation_phase = perfInfo.currentTimeMillis();
 	AnalysisResult bwValidationPatchResult;
 
 	// initially all nodes are bottom, we are computing the rejected sets.
@@ -108,7 +110,8 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph
 		// basically server accepts anystring
 		cout << "\tVALIDATION STEP: no __vlab_restrict function, do not have any validation!" << endl;
 	}
-
+	long stop_validation_phase = perfInfo.currentTimeMillis();
+	perfInfo.validation_phase_time = stop_validation_phase - start_validation_phase;
 	return bwValidationPatchResult;
 }
 
