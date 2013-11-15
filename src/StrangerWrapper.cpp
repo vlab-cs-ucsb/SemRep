@@ -1830,6 +1830,198 @@ void patch_schoolmate_announcements_18__announcementid(bool reversed) {
 	}
 }
 
+void patch_schoolmate_manageclasses_25__semester(bool reversed) {
+	string field_name = "semester";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_25.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__semester.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_28__semester(bool reversed) {
+	string field_name = "semester";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__semester.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_28__periodnum(bool reversed) {
+	string field_name = "periodnum";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__periodnum.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_28__roomnum(bool reversed) {
+	string field_name = "roomnum";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__roomnum.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_28__sectionnum(bool reversed) {
+	string field_name = "sectionnum";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__sectionnum.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_28__substitute(bool reversed) {
+	string field_name = "substitute";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__substitute.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_28__teacher(bool reversed) {
+	string field_name = "teacher";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__teacher.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_28__title(bool reversed) {
+	string field_name = "title";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__title.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_83__semester(bool reversed) {
+	string field_name = "semester";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_83.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__semester.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_83__periodnum(bool reversed) {
+	string field_name = "periodnum";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_83.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__periodnum.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_83__roomnum(bool reversed) {
+	string field_name = "roomnum";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_83.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__roomnum.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_83__sectionnum(bool reversed) {
+	string field_name = "sectionnum";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_83.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__sectionnum.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_83__substitute(bool reversed) {
+	string field_name = "substitute";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_83.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__substitute.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_83__teacher(bool reversed) {
+	string field_name = "teacher";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_83.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__teacher.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_83__title(bool reversed) {
+	string field_name = "title";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_83.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__title.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageclasses_83__courseid(bool reversed) {
+	string field_name = "courseid";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses_83.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageclasses__courseid.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
 int main(int argc, char *argv[]) {
 
 /***********	Client - Server Patching	***********/
