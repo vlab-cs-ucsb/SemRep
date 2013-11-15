@@ -2322,6 +2322,237 @@ void patch_schoolmate_managestudents_43__studentid(bool reversed) {
 	}
 }
 
+void patch_schoolmate_manageteachers_29__fname(bool reversed) {
+	string field_name = "fname";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers_29.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers__fname.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageteachers_29__lname(bool reversed) {
+	string field_name = "lname";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers_29.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers__lname.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageteachers_29__username(bool reversed) {
+	string field_name = "username";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers_29.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers__username.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageteachers_39__fname(bool reversed) {
+	string field_name = "fname";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers_39.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers__fname.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageteachers_39__lname(bool reversed) {
+	string field_name = "lname";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers_39.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers__lname.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageteachers_39__username(bool reversed) {
+	string field_name = "username";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers_39.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers__username.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageteachers_39__teacherid(bool reversed) {
+	string field_name = "teacherid";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers_39.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageteachers__teacherid.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+
+
+void patch_schoolmate_manageterms_9__title(bool reversed) {
+	string field_name = "title";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageterms_9.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageterms__title.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageterms_19__title(bool reversed) {
+	string field_name = "title";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageterms_19.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageterms__title.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageterms_19__termid(bool reversed) {
+	string field_name = "termid";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageterms_19.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageterms_19__termid.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageusers_28__username(bool reversed) {
+	string field_name = "username";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers__username.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageusers_28__type(bool reversed) {
+	string field_name = "type";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers__type.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageusers_28__password(bool reversed) {
+	string field_name = "password";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_28.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_28__password.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageusers_39__username(bool reversed) {
+	string field_name = "username";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_39.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers__username.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageusers_39__type(bool reversed) {
+	string field_name = "type";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_39.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers__type.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageusers_39__password(bool reversed) {
+	string field_name = "password";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_39.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_39__password.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_manageusers_39__userid(bool reversed) {
+	string field_name = "userid";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_39.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageusers_39__userid.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_validatelogin__username(bool reversed) {
+	string field_name = "username";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_validatelogin.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_validatelogin__username.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_schoolmate_validatelogin__password(bool reversed) {
+	string field_name = "password";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_validatelogin.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_validatelogin__password.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+
 int main(int argc, char *argv[]) {
 
 /***********	Client - Server Patching	***********/
