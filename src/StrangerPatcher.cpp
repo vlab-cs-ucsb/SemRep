@@ -22,13 +22,13 @@ StrangerPatcher::StrangerPatcher(string patcher_dep_graph_file_name,string patch
 	if (patcher_uninit_field_node == NULL) {
 		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in patcher dep graph.");
 	}
-	message(stringbuilder() << "patcher uninit node(" << patcher_uninit_field_node->getID() << ") found.");
+	message(stringbuilder() << "patcher uninit node(" << patcher_uninit_field_node->getID() << ") found for field " << input_field_name << ".");
 
 	this->patchee_uninit_field_node = patchee_dep_graph.findInputNode(input_field_name);
 	if (patchee_uninit_field_node == NULL) {
 		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in patchee dep graph.");
 	}
-	message(stringbuilder() << "patchee uninit node(" << patchee_uninit_field_node->getID() << ") found.");
+	message(stringbuilder() << "patchee uninit node(" << patchee_uninit_field_node->getID() << ") found for field " << input_field_name << ".");
 
 	// initialize input relevant graphs
 	this->patcher_field_relevant_graph = patcher_dep_graph.getInputRelevantGraph(patcher_uninit_field_node);
@@ -101,20 +101,25 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 		if (diffAuto->isEmpty()) {
 			message("no validation patch is required!!!");
 			is_validation_patch_required = false;
+			validation_patch_auto_1 = StrangerAutomaton::makeAnyString(patchee_uninit_field_node->getID());
+			validation_patch_auto = validation_patch_auto_1;
+			delete interAuto;
+
 		} else if (interAuto->isEmpty()) {
 			message("client and server accepts different sets, validation patch is generated");
 			is_validation_patch_required = true;
+			validation_patch_auto_1 = interAuto->clone(-11);
+			validation_patch_auto = interAuto;
 		} else {
 			message("validation patch is generated for input: " + input_field_name);
-			is_validation_patch_required = true;;
+			is_validation_patch_required = true;
+			validation_patch_auto_1 = interAuto->clone(-11);
+			validation_patch_auto = interAuto;
 		}
 
-		//TODO validation patch auto is intersection auto
-		validation_patch_auto_1 = patcher_validation;
-		validation_patch_auto = interAuto;
-
-//		validation_patch_auto->toDotAscii(0);
-//		throw StrangerStringAnalysisException("baki");
+		delete patcher_validation;
+		delete patchee_validation;
+		delete diffAuto;
 
 	} catch (StrangerStringAnalysisException const &e) {
 		cerr << e.what();
@@ -237,9 +242,6 @@ StrangerAutomaton* StrangerPatcher::computePatcheeBWAnalysis_3(StrangerAutomaton
 	ForwardImageComputer patcheeAnalyzer;
 	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
 	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
-	//TODO get the previous node
-//	DepGraphNode* succNode = patchee_field_relevant_graph.getPredecessors(patchee_uninit_field_node);
-//	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
 	return sanitization_patch_auto;
 }
 
@@ -266,9 +268,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		StrangerAutomaton* lengthRestrictAuto =
 				patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcherSinkAuto, -4);
 
-		//TODO implementing here
 		try {
-
 			AnalysisResult patcheeAnalysisResult_2 = computePatcheeFwBwAnalysis_2(lengthRestrictAuto, patcheeAnalysisResult);
 
 			patcheeSinkAuto = patcheeAnalysisResult_2[patchee_field_relevant_graph.getRoot()->getID()];
@@ -282,6 +282,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 				delete differenceAuto;
 				sanitization_patch_auto = NULL;
 				is_sanitization_patch_required = false;
+				is_length_validation_patch_required = false;
 			}
 			else {
 				message("starting last backward analysis for sanitization patch with diff auto(length constraint included)...");
@@ -289,6 +290,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 				sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult_2);
 				message("...finished last backward analysis for sanitization patch with diff auto(length constraint included).");
 				is_sanitization_patch_required = true;
+				is_length_validation_patch_required = true;
 			}
 
 		} catch (StrangerStringAnalysisException const &e) {
@@ -301,6 +303,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult);
 		message("...finished last backward analysis for sanitization patch with diff auto.");
 		is_sanitization_patch_required = true;
+		is_length_validation_patch_required = false;
 	}
 
 	return sanitization_patch_auto;

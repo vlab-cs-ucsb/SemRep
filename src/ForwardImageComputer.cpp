@@ -317,6 +317,9 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 	} else if (opName == "strip_tags") {
 		cout << endl << "!!!!! strip_tags is not implemented yet" << endl;
 		retMe = bwAnalysisResult.find( childNode->getID() )->second;
+	} else if (opName == "md5") {
+		cout << endl << "!!!!! md5 cannot be implemented, continues with previous node results" << endl;
+		retMe = bwAnalysisResult.find( childNode->getID() )->second;
 	} else {
 		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
 	}
@@ -657,6 +660,9 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
         }
 
 //		return retMe;
+	} else if (opName == "md5") {
+		StrangerAutomaton* succAuto = analysisResult[successors[0]->getID()];
+		retMe = succAuto->clone(opNode->getID());
 	} else {
 		cout << "!!! Warning: Unmodeled builtin general function : " << opName;
 		f_unmodeled.push_back(opNode);
@@ -889,8 +895,11 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 	} else if (opName == "mysql_escape_string") {
 		// has one parameter
 		retMe = StrangerAutomaton::pre_mysql_escape_string(opAuto, childNode->getID());
+	} else if (opName == "md5") {
+		cout << endl << "!!!!! md5 cannot be implemented, continues with previous node results" << endl;
+		retMe = bwAnalysisResult.find( childNode->getID() )->second;
 	} else {
-		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
+		throw StrangerStringAnalysisException( "Not implemented yet for regular validation phase: " + opName);
 	}
 
 	return retMe;

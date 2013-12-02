@@ -1280,6 +1280,8 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		strangerPatcher.extractSanitizationPatch();
 
 		cout << endl << "\t------ OVERALL RESULT for: " << field_name << " ------" << endl;
+		cout << "\t    Patcher: " << patcher_name << endl;
+		cout << "\t    Patchee: " << patchee_name << endl;
 		if (strangerPatcher.is_validation_patch_required) {
 			cout << "\t    - validation patch is generated" << endl;
 			//		cout << endl << endl;
@@ -1288,11 +1290,16 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 			cout << "\t    - no validation patch" << endl;
 		}
 
+		if (strangerPatcher.is_length_validation_patch_required) {
+			cout << "\t    - length validation patch is generated" << endl;
+		} else {
+			cout << "\t    - no length validation patch" << endl;
+		}
+
 		if (strangerPatcher.is_sanitization_patch_required) {
 			cout << "\t    - sanitization patch is generated" << endl;
 			//		cout << endl << endl;
 					//strangerPatcher.getSanitizationPatchAuto()->toDotAscii(0);
-			strangerPatcher.getSanitizationPatchAuto()->toDot();
 		} else {
 			cout << "\t    - no sanitization patch" << endl;
 		}
@@ -1704,7 +1711,7 @@ void patch_schoolmate_header__numsemesters(bool reversed) {
 }
 
 void patch_schoolmate_header__numperiods(bool reversed) {
-	string field_name = "numsemesters";
+	string field_name = "numperiods";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__numperiods.dot";
 
@@ -2046,9 +2053,9 @@ void patch_schoolmate_manageparents_36__lname(bool reversed) {
 	}
 }
 
-void patch_schoolmate_manageparents_36__student(bool reversed) {
+void patch_schoolmate_manageparents_46__student(bool reversed) {
 	string field_name = "student";
-	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageparents_36.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageparents_46.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageparents__student.dot";
 
 	if (reversed) {
@@ -2086,18 +2093,6 @@ void patch_schoolmate_manageparents_58__lname(bool reversed) {
 	string field_name = "lname";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageparents_58.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageparents__lname.dot";
-
-	if (reversed) {
-		call_patcher(server, client, field_name);
-	} else {
-		call_patcher(client, server, field_name);
-	}
-}
-
-void patch_schoolmate_manageparents_58__student(bool reversed) {
-	string field_name = "student";
-	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageparents_58.dot";
-	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_manageparents__student.dot";
 
 	if (reversed) {
 		call_patcher(server, client, field_name);
@@ -2178,23 +2173,10 @@ void patch_schoolmate_managesemesters_23__title(bool reversed) {
 	}
 }
 
-void patch_schoolmate_managesemesters_23__term(bool reversed) {
-	string field_name = "term";
-	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_managesemesters_23.dot";
-	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_managesemesters__term.dot";
-
-	if (reversed) {
-		call_patcher(server, client, field_name);
-	} else {
-		call_patcher(client, server, field_name);
-	}
-}
-
 void patch_schoolmate_managesemesters_23__half(bool reversed) {
 	string field_name = "half";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_managesemesters_23.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_managesemesters__half.dot";
-
 	if (reversed) {
 		call_patcher(server, client, field_name);
 	} else {
@@ -2203,7 +2185,7 @@ void patch_schoolmate_managesemesters_23__half(bool reversed) {
 }
 
 void patch_schoolmate_managesemesters_23__semesterid(bool reversed) {
-	string field_name = "half";
+	string field_name = "semesterid";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_managesemesters_23.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_managesemesters_23__semesterid.dot";
 
@@ -2540,24 +2522,11 @@ void patch_schoolmate_validatelogin__username(bool reversed) {
 	}
 }
 
-void patch_schoolmate_validatelogin__password(bool reversed) {
-	string field_name = "password";
-	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_validatelogin.dot";
-	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_validatelogin__password.dot";
-
-	if (reversed) {
-		call_patcher(server, client, field_name);
-	} else {
-		call_patcher(client, server, field_name);
-	}
-}
-
 
 int main(int argc, char *argv[]) {
 
 /***********	Client - Server Patching	***********/
-	bool patchClient = false;
-
+	bool patchClient = true;
 //	patch_paperexample_email(patchClient);
 
 //	patch_snipe_frame__form_frame_name(patchClient);
@@ -2622,18 +2591,16 @@ int main(int argc, char *argv[]) {
 	patch_schoolmate_manageclasses_83__title(patchClient);
 	patch_schoolmate_manageparents_36__fname(patchClient);
 	patch_schoolmate_manageparents_36__lname(patchClient);
-	patch_schoolmate_manageparents_36__student(patchClient);
+	patch_schoolmate_manageparents_46__student(patchClient);
 	patch_schoolmate_manageparents_36__username(patchClient);
 	patch_schoolmate_manageparents_58__fname(patchClient);
 	patch_schoolmate_manageparents_58__lname(patchClient);
-	patch_schoolmate_manageparents_58__student(patchClient);
 	patch_schoolmate_manageparents_58__username(patchClient);
 	patch_schoolmate_manageparents_58__parentid(patchClient);
 	patch_schoolmate_managesemesters_11__half(patchClient);
 	patch_schoolmate_managesemesters_11__term(patchClient);
 	patch_schoolmate_managesemesters_11__title(patchClient);
 	patch_schoolmate_managesemesters_23__half(patchClient);
-	patch_schoolmate_managesemesters_23__term(patchClient);
 	patch_schoolmate_managesemesters_23__title(patchClient);
 	patch_schoolmate_managesemesters_23__semesterid(patchClient);
 	patch_schoolmate_managestudents_31__fname(patchClient);
@@ -2663,7 +2630,6 @@ int main(int argc, char *argv[]) {
 	patch_schoolmate_manageusers_39__username(patchClient);
 	patch_schoolmate_manageusers_39__userid(patchClient);
 	patch_schoolmate_validatelogin__username(patchClient);
-	patch_schoolmate_validatelogin__password(patchClient);
 
 	return 0;
 }

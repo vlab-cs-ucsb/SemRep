@@ -61,6 +61,7 @@
 									<listOptionValue builtIn="false" value="monabdd"/>
 									<listOptionValue builtIn="false" value="strangerlib"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="boost_regex"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="boost_date_time"/>
 								</option>
 								<option id="gnu.cpp.link.option.flags.104580434" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.462254442" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">

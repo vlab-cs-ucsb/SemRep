@@ -1917,6 +1917,7 @@ bool StrangerAutomaton::checkEquivalence(StrangerAutomaton* otherAuto) {
  */
 bool StrangerAutomaton::isLengthFinite(){
     std::string debugString = stringbuilder() << "isLengthFinite("  << this->ID << ") = ";
+    this->toDot();
     int result = ::isLengthFiniteTarjan(this->dfa, num_ascii_track, indices_main);
     debug(stringbuilder() << debugString << ( result == 0 ? false : true ));
     if (result == 0)
@@ -2731,16 +2732,16 @@ int StrangerAutomaton::debugLevel = 1;
 void StrangerAutomaton::debug(std::string s)
 {
     
-    if(debugLevel >= 1)
-        std::cout << s << endl;
+//    if(debugLevel >= 1)
+//        std::cout << s << endl;
     
 }
 
 void StrangerAutomaton::debugAutomaton()
 {
-    if(debugLevel >= 3) {
-        this->toDotAscii(0);
-    }
+//    if(debugLevel >= 3) {
+//        this->toDotAscii(0);
+//    }
 }
 
 
