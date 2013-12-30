@@ -121,6 +121,7 @@ public:
     bool checkEquivalence(StrangerAutomaton* auto_, int id1, int id2);
     bool checkEquivalence(StrangerAutomaton* auto_);
     bool isLengthFinite();
+    unsigned getMaxLength();
     bool equals(StrangerAutomaton* other);
     bool checkEmptiness();
     bool isEmpty();
@@ -160,10 +161,10 @@ public:
     static StrangerAutomaton* addslashes(StrangerAutomaton* subjectAuto){return addslashes(subjectAuto, traceID);};
     static StrangerAutomaton* pre_addslashes(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* pre_addslashes(StrangerAutomaton* subjectAuto){return pre_addslashes(subjectAuto, traceID);};
-    static StrangerAutomaton* htmlSpecialChars(StrangerAutomaton* subjectAuto, int id);
-    static StrangerAutomaton* htmlSpecialChars(StrangerAutomaton* subjectAuto){return htmlSpecialChars(subjectAuto, traceID);};
-    static StrangerAutomaton* preHtmlSpecialChars(StrangerAutomaton* subjectAuto, int id);
-    static StrangerAutomaton* preHtmlSpecialChars(StrangerAutomaton* subjectAuto){return preHtmlSpecialChars(subjectAuto, traceID);};
+    static StrangerAutomaton* htmlSpecialChars(StrangerAutomaton* subjectAuto, std::string flag, int id);
+    static StrangerAutomaton* htmlSpecialChars(StrangerAutomaton* subjectAuto, std::string flag){return htmlSpecialChars(subjectAuto,flag, traceID);};
+    static StrangerAutomaton* preHtmlSpecialChars(StrangerAutomaton* subjectAuto, std::string flag, int id);
+    static StrangerAutomaton* preHtmlSpecialChars(StrangerAutomaton* subjectAuto, std::string flag){return preHtmlSpecialChars(subjectAuto, flag, traceID);};
     static StrangerAutomaton* stripslashes(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* stripslashes(StrangerAutomaton* subjectAuto){return stripslashes(subjectAuto, traceID);};
     static StrangerAutomaton* pre_stripslashes(StrangerAutomaton* subjectAuto, int id);

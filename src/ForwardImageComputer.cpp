@@ -28,8 +28,8 @@ bool ForwardImageComputer::initialized = false;
  */
 int ForwardImageComputer::autoDebugLevel = 1;
 int ForwardImageComputer::debugLevel = 1;
-PerfInfo ForwardImageComputer::perfInfo;
 
+PerfInfo ForwardImageComputer::perfInfo;
 //static
 void ForwardImageComputer::staticInit() {
     initialized =  true;
@@ -106,12 +106,13 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph
 			DepGraphNode* node = (DepGraphNode*)(*it);
 			doBackwardNodeComputation_ValidationPhase(origDepGraph, inputDepGraph, bwValidationPatchResult, node);
 		}
+		cout << "\t\t: validation function found!" << endl;
 	} else {
 		// basically server accepts anystring
-		cout << "\tVALIDATION STEP: no __vlab_restrict function, do not have any validation!" << endl;
+		cout << "\t\t: do not have any validation!, no __vlab_restrict function" << endl;
 	}
 	long stop_validation_phase = perfInfo.currentTimeMillis();
-	perfInfo.validation_phase_time = stop_validation_phase - start_validation_phase;
+//	perfInfo.validation_phase_time = stop_validation_phase - start_validation_phase;
 	return bwValidationPatchResult;
 }
 
@@ -300,12 +301,27 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 		delete intersection;
 //		return retMe;
 	} else if (opName == "htmlspecialchars") {
-		//TODO handle all params, currently we only consider first param
 		if (childNode->equals(successors[0])) {
+			string flagString = "ENT_COMPAT";
+			if (successors.size() > 1) {
+				DepGraphNode* flagNode = successors[1];
+				DepGraphNormalNode* fNode = dynamic_cast<DepGraphNormalNode*>(flagNode);
+				if (fNode == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag node: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
+				}
+
+				Constant* flagConst = dynamic_cast<Constant*>(fNode->getPlace());
+				if (flagConst == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag constant value: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
+				}
+				flagString = flagConst->toString();
+			}
 			StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(opNode->getID());
-			StrangerAutomaton* forward = StrangerAutomaton::htmlSpecialChars(sigmaStar, opNode->getID());
+			StrangerAutomaton* forward = StrangerAutomaton::htmlSpecialChars(sigmaStar, flagString, opNode->getID());
 			StrangerAutomaton* intersection = opAuto->intersect(forward, childNode->getID());
-			retMe = StrangerAutomaton::preHtmlSpecialChars(intersection, childNode->getID());
+			retMe = StrangerAutomaton::preHtmlSpecialChars(intersection, flagString, childNode->getID());
 			delete sigmaStar;
 			delete forward;
 			delete intersection;
@@ -617,12 +633,27 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 		retMe = mysqlEscapeAuto;
 
 	} else if (opName == "htmlspecialchars") {
-		//TODO handle all params, currently we only consider first param
 		if (analysisResult.find(successors[0]->getID()) != analysisResult.end()) {
 			//we only care about the first parameter
 			StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+			string flagString = "ENT_COMPAT";
+			if (successors.size() > 1) {
+				DepGraphNode* flagNode = successors[1];
+				DepGraphNormalNode* fNode = dynamic_cast<DepGraphNormalNode*>(flagNode);
+				if (fNode == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag node: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
+				}
 
-			StrangerAutomaton* htmlSpecAuto = StrangerAutomaton::htmlSpecialChars(paramAuto, opNode->getID());
+				Constant* flagConst = dynamic_cast<Constant*>(fNode->getPlace());
+				if (flagConst == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag constant value: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
+				}
+				flagString = flagConst->toString();
+			}
+
+			StrangerAutomaton* htmlSpecAuto = StrangerAutomaton::htmlSpecialChars(paramAuto, flagString, opNode->getID());
 			retMe = htmlSpecAuto;
 
 		} else {
@@ -885,9 +916,24 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 		retMe = opAuto->preTrimSpaces(childNode->getID());
 
 	} else if (opName == "htmlspecialchars") {
-		//TODO handle all params, currently we only consider first param
 		if (childNode->equals(successors[0])) {
-			retMe = StrangerAutomaton::preHtmlSpecialChars(opAuto, childNode->getID());
+			string flagString = "ENT_COMPAT";
+			if (successors.size() > 1) {
+				DepGraphNode* flagNode = successors[1];
+				DepGraphNormalNode* fNode = dynamic_cast<DepGraphNormalNode*>(flagNode);
+				if (fNode == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag node: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
+				}
+
+				Constant* flagConst = dynamic_cast<Constant*>(fNode->getPlace());
+				if (flagConst == NULL) {
+					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag constant value: "
+							"makeBackwardAutoForOpChild_ValidationPhase()");
+				}
+				flagString = flagConst->toString();
+			}
+			retMe = StrangerAutomaton::preHtmlSpecialChars(opAuto, flagString, childNode->getID());
 		} else {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of htmlspecialchars (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
 					"makeBackwardAutoForOpChild_ValidationPhase()");
@@ -992,10 +1038,10 @@ void ForwardImageComputer::doForwardAnalysis(
 		}
 
 		long stopForward = perfInfo.currentTimeMillis();
-		if (!multiTrack)
-			perfInfo.forwardTime = (stopForward - startForward);
-		else
-			perfInfo.multiTime = (stopForward - startForward);
+//		if (!multiTrack)
+//			perfInfo.forwardTime = (stopForward - startForward);
+//		else
+//			perfInfo.multiTime = (stopForward - startForward);
 	}
 //
 //	//******************************************************************************************/
@@ -1037,7 +1083,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 		 cout << "----------------------------" << endl;
 
 		 long stopBackward = perfInfo.currentTimeMillis();
-		 perfInfo.backwardTime += stopBackward - startBackward;
+//		 perfInfo.backwardTime += stopBackward - startBackward;
 
 		 cout << "\n***  Stranger Sanit Backward Analysis End ***\n\n" << endl;
 

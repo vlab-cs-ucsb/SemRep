@@ -6,23 +6,23 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-#include "stranger_lib_internal.h"
-#include <iostream>
-#include <vector>
-#include "stranger.h"
-#include "bdd.h"
-#include "dfa.h"
-#include "bdd_dump.h"
-#include "bdd_external.h"
-#include "StrangerAutomaton.hpp"
-#include <regex>
-#include <fstream>
-#include <cstdio>
-#include <ctime>
-
-#include <string>
-#include <map>
-#include <utility>
+//#include "stranger_lib_internal.h"
+//#include <iostream>
+//#include <vector>
+//#include "stranger.h"
+//#include "bdd.h"
+//#include "dfa.h"
+//#include "bdd_dump.h"
+//#include "bdd_external.h"
+//#include "StrangerAutomaton.hpp"
+//#include <regex>
+//#include <fstream>
+//#include <cstdio>
+//#include <ctime>
+//
+//#include <string>
+//#include <map>
+//#include <utility>
 //#include "DepGraphNormalNode.h"
 //#include "DepGraphNode.h"
 //#include "DepGraph.h"
@@ -32,16 +32,17 @@
 //#include "Literal.h"
 //#include "StringAnalyzer.h"
 
-#include "DepGraph.h"
-#include "ForwardImageComputer.h"
+//#include "DepGraph.h"
+//#include "ForwardImageComputer.h"
 #include "StrangerPatcher.h"
 
 using namespace std;
 
+
 void testReplaceCharWithString(){
     StrangerAutomaton *m = StrangerAutomaton::makeAnyStringL1ToL2(0, 100);
-    DFA *a = dfaHtmlSpecialChars(m->dfa, StrangerAutomaton::getVar(), StrangerAutomaton::getIndices());
-    DFA *a2 = dfaPreHtmlSpecialChars(a, StrangerAutomaton::getVar(), StrangerAutomaton::getIndices());
+    DFA *a = dfaHtmlSpecialChars(m->dfa, StrangerAutomaton::getVar(), StrangerAutomaton::getIndices(), ENT_COMPAT);
+    DFA *a2 = dfaPreHtmlSpecialChars(a, StrangerAutomaton::getVar(), StrangerAutomaton::getIndices(), ENT_COMPAT);
 //    m->toDotAscii(2);
 //    DFA *a = dfa_replace_char_with_string(m->dfa, StrangerAutomaton::getVar(), StrangerAutomaton::getIndices(), '<', "&lt;");
 //    cout << "done1 " << a->ns << endl;
@@ -1284,22 +1285,20 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		cout << "\t    Patchee: " << patchee_name << endl;
 		if (strangerPatcher.is_validation_patch_required) {
 			cout << "\t    - validation patch is generated" << endl;
-			//		cout << endl << endl;
-//					strangerPatcher.getValidationPatchAuto()->toDotAscii(0);
 		} else {
 			cout << "\t    - no validation patch" << endl;
 		}
 
-		if (strangerPatcher.is_length_validation_patch_required) {
-			cout << "\t    - length validation patch is generated" << endl;
+		cout << "\t    - validation patch analysis time: " << StrangerPatcher::perfInfo.validation_patch_extraction.total_milliseconds() << endl;
+
+		if (strangerPatcher.is_validation_patch_for_length_issue_required) {
+			cout << "\t    - second validation patch for length issue is generated" << endl;
 		} else {
-			cout << "\t    - no length validation patch" << endl;
+			cout << "\t    - no second validation patch for length issue" << endl;
 		}
 
 		if (strangerPatcher.is_sanitization_patch_required) {
 			cout << "\t    - sanitization patch is generated" << endl;
-			//		cout << endl << endl;
-					//strangerPatcher.getSanitizationPatchAuto()->toDotAscii(0);
 		} else {
 			cout << "\t    - no sanitization patch" << endl;
 		}
@@ -2526,7 +2525,7 @@ void patch_schoolmate_validatelogin__username(bool reversed) {
 int main(int argc, char *argv[]) {
 
 /***********	Client - Server Patching	***********/
-	bool patchClient = true;
+	bool patchClient = false;
 //	patch_paperexample_email(patchClient);
 
 //	patch_snipe_frame__form_frame_name(patchClient);
@@ -2556,80 +2555,80 @@ int main(int argc, char *argv[]) {
 //	patch_phpnews_admin_newsposter2_1780__email(patchClient);
 //	patch_phpnews_admin_modifynewsposter3_3091__email(patchClient);
 
-	patch_schoolmate_announcements_9__title(patchClient);
-	patch_schoolmate_announcements_9__message(patchClient);
-	patch_schoolmate_announcements_18__title(patchClient);
-	patch_schoolmate_announcements_18__message(patchClient);
-	patch_schoolmate_announcements_18__announcementid(patchClient);
-	patch_schoolmate_header__apoint(patchClient);
-	patch_schoolmate_header__bpoint(patchClient);
-	patch_schoolmate_header__cpoint(patchClient);
-	patch_schoolmate_header__dpoint(patchClient);
-	patch_schoolmate_header__fpoint(patchClient);
-	patch_schoolmate_header__numperiods(patchClient);
-	patch_schoolmate_header__numsemesters(patchClient);
-	patch_schoolmate_header__schooladdress(patchClient);
+//	patch_schoolmate_announcements_9__title(patchClient);
+//	patch_schoolmate_announcements_9__message(patchClient);
+//	patch_schoolmate_announcements_18__title(patchClient);
+//	patch_schoolmate_announcements_18__message(patchClient);
+//	patch_schoolmate_announcements_18__announcementid(patchClient);
+//	patch_schoolmate_header__apoint(patchClient);
+//	patch_schoolmate_header__bpoint(patchClient);
+//	patch_schoolmate_header__cpoint(patchClient);
+//	patch_schoolmate_header__dpoint(patchClient);
+//	patch_schoolmate_header__fpoint(patchClient);
+//	patch_schoolmate_header__numperiods(patchClient);
+//	patch_schoolmate_header__numsemesters(patchClient);
+//	patch_schoolmate_header__schooladdress(patchClient);
 	patch_schoolmate_header__schoolname(patchClient);
-	patch_schoolmate_header__schoolphone(patchClient);
-	patch_schoolmate_header__sitemessage(patchClient);
-	patch_schoolmate_header__sitetext(patchClient);
-	patch_schoolmate_manageclasses_25__semester(patchClient);
-	patch_schoolmate_manageclasses_28__periodnum(patchClient);
-	patch_schoolmate_manageclasses_28__roomnum(patchClient);
-	patch_schoolmate_manageclasses_28__sectionnum(patchClient);
-	patch_schoolmate_manageclasses_28__semester(patchClient);
-	patch_schoolmate_manageclasses_28__substitute(patchClient);
-	patch_schoolmate_manageclasses_28__teacher(patchClient);
-	patch_schoolmate_manageclasses_28__title(patchClient);
-	patch_schoolmate_manageclasses_83__courseid(patchClient);
-	patch_schoolmate_manageclasses_83__periodnum(patchClient);
-	patch_schoolmate_manageclasses_83__roomnum(patchClient);
-	patch_schoolmate_manageclasses_83__sectionnum(patchClient);
-	patch_schoolmate_manageclasses_83__semester(patchClient);
-	patch_schoolmate_manageclasses_83__substitute(patchClient);
-	patch_schoolmate_manageclasses_83__teacher(patchClient);
-	patch_schoolmate_manageclasses_83__title(patchClient);
-	patch_schoolmate_manageparents_36__fname(patchClient);
-	patch_schoolmate_manageparents_36__lname(patchClient);
-	patch_schoolmate_manageparents_46__student(patchClient);
-	patch_schoolmate_manageparents_36__username(patchClient);
-	patch_schoolmate_manageparents_58__fname(patchClient);
-	patch_schoolmate_manageparents_58__lname(patchClient);
-	patch_schoolmate_manageparents_58__username(patchClient);
-	patch_schoolmate_manageparents_58__parentid(patchClient);
-	patch_schoolmate_managesemesters_11__half(patchClient);
-	patch_schoolmate_managesemesters_11__term(patchClient);
-	patch_schoolmate_managesemesters_11__title(patchClient);
-	patch_schoolmate_managesemesters_23__half(patchClient);
-	patch_schoolmate_managesemesters_23__title(patchClient);
-	patch_schoolmate_managesemesters_23__semesterid(patchClient);
-	patch_schoolmate_managestudents_31__fname(patchClient);
-	patch_schoolmate_managestudents_31__lname(patchClient);
-	patch_schoolmate_managestudents_31__mi(patchClient);
-	patch_schoolmate_managestudents_31__username(patchClient);
-	patch_schoolmate_managestudents_43__fname(patchClient);
-	patch_schoolmate_managestudents_43__lname(patchClient);
-	patch_schoolmate_managestudents_43__mi(patchClient);
-	patch_schoolmate_managestudents_43__username(patchClient);
-	patch_schoolmate_managestudents_43__studentid(patchClient);
-	patch_schoolmate_manageteachers_29__fname(patchClient);
-	patch_schoolmate_manageteachers_29__lname(patchClient);
-	patch_schoolmate_manageteachers_29__username(patchClient);
-	patch_schoolmate_manageteachers_39__fname(patchClient);
-	patch_schoolmate_manageteachers_39__lname(patchClient);
-	patch_schoolmate_manageteachers_39__username(patchClient);
-	patch_schoolmate_manageteachers_39__teacherid(patchClient);
-	patch_schoolmate_manageterms_9__title(patchClient);
-	patch_schoolmate_manageterms_19__title(patchClient);
-	patch_schoolmate_manageterms_19__termid(patchClient);
-	patch_schoolmate_manageusers_28__password(patchClient);
-	patch_schoolmate_manageusers_28__type(patchClient);
-	patch_schoolmate_manageusers_28__username(patchClient);
-	patch_schoolmate_manageusers_39__password(patchClient);
-	patch_schoolmate_manageusers_39__type(patchClient);
-	patch_schoolmate_manageusers_39__username(patchClient);
-	patch_schoolmate_manageusers_39__userid(patchClient);
-	patch_schoolmate_validatelogin__username(patchClient);
+//	patch_schoolmate_header__schoolphone(patchClient);
+//	patch_schoolmate_header__sitemessage(patchClient);
+//	patch_schoolmate_header__sitetext(patchClient);
+//	patch_schoolmate_manageclasses_25__semester(patchClient);
+//	patch_schoolmate_manageclasses_28__periodnum(patchClient);
+//	patch_schoolmate_manageclasses_28__roomnum(patchClient);
+//	patch_schoolmate_manageclasses_28__sectionnum(patchClient);
+//	patch_schoolmate_manageclasses_28__semester(patchClient);
+//	patch_schoolmate_manageclasses_28__substitute(patchClient);
+//	patch_schoolmate_manageclasses_28__teacher(patchClient);
+//	patch_schoolmate_manageclasses_28__title(patchClient);
+//	patch_schoolmate_manageclasses_83__courseid(patchClient);
+//	patch_schoolmate_manageclasses_83__periodnum(patchClient);
+//	patch_schoolmate_manageclasses_83__roomnum(patchClient);
+//	patch_schoolmate_manageclasses_83__sectionnum(patchClient);
+//	patch_schoolmate_manageclasses_83__semester(patchClient);
+//	patch_schoolmate_manageclasses_83__substitute(patchClient);
+//	patch_schoolmate_manageclasses_83__teacher(patchClient);
+//	patch_schoolmate_manageclasses_83__title(patchClient);
+//	patch_schoolmate_manageparents_36__fname(patchClient);
+//	patch_schoolmate_manageparents_36__lname(patchClient);
+//	patch_schoolmate_manageparents_46__student(patchClient);
+//	patch_schoolmate_manageparents_36__username(patchClient);
+//	patch_schoolmate_manageparents_58__fname(patchClient);
+//	patch_schoolmate_manageparents_58__lname(patchClient);
+//	patch_schoolmate_manageparents_58__username(patchClient);
+//	patch_schoolmate_manageparents_58__parentid(patchClient);
+//	patch_schoolmate_managesemesters_11__half(patchClient);
+//	patch_schoolmate_managesemesters_11__term(patchClient);
+//	patch_schoolmate_managesemesters_11__title(patchClient);
+//	patch_schoolmate_managesemesters_23__half(patchClient);
+//	patch_schoolmate_managesemesters_23__title(patchClient);
+//	patch_schoolmate_managesemesters_23__semesterid(patchClient);
+//	patch_schoolmate_managestudents_31__fname(patchClient);
+//	patch_schoolmate_managestudents_31__lname(patchClient);
+//	patch_schoolmate_managestudents_31__mi(patchClient);
+//	patch_schoolmate_managestudents_31__username(patchClient);
+//	patch_schoolmate_managestudents_43__fname(patchClient);
+//	patch_schoolmate_managestudents_43__lname(patchClient);
+//	patch_schoolmate_managestudents_43__mi(patchClient);
+//	patch_schoolmate_managestudents_43__username(patchClient);
+//	patch_schoolmate_managestudents_43__studentid(patchClient);
+//	patch_schoolmate_manageteachers_29__fname(patchClient);
+//	patch_schoolmate_manageteachers_29__lname(patchClient);
+//	patch_schoolmate_manageteachers_29__username(patchClient);
+//	patch_schoolmate_manageteachers_39__fname(patchClient);
+//	patch_schoolmate_manageteachers_39__lname(patchClient);
+//	patch_schoolmate_manageteachers_39__username(patchClient);
+//	patch_schoolmate_manageteachers_39__teacherid(patchClient);
+//	patch_schoolmate_manageterms_9__title(patchClient);
+//	patch_schoolmate_manageterms_19__title(patchClient);
+//	patch_schoolmate_manageterms_19__termid(patchClient);
+//	patch_schoolmate_manageusers_28__password(patchClient);
+//	patch_schoolmate_manageusers_28__type(patchClient);
+//	patch_schoolmate_manageusers_28__username(patchClient);
+//	patch_schoolmate_manageusers_39__password(patchClient);
+//	patch_schoolmate_manageusers_39__type(patchClient);
+//	patch_schoolmate_manageusers_39__username(patchClient);
+//	patch_schoolmate_manageusers_39__userid(patchClient);
+//	patch_schoolmate_validatelogin__username(patchClient);
 
 	return 0;
 }

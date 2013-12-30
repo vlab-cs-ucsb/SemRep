@@ -29,6 +29,7 @@
 
 #include "DepGraph.h"
 #include "ForwardImageComputer.h"
+#include "StrangerDebugger.hpp"
 
 using namespace std;
 
@@ -42,15 +43,17 @@ public:
 
 	StrangerAutomaton* computePatcherFWAnalysis();
 	AnalysisResult computePatcheeFWAnalysis_1();
-	AnalysisResult computePatcheeFwBwAnalysis_2(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
+	AnalysisResult computePatcheeBwFwAnalysis_2(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
 	StrangerAutomaton* computePatcheeBWAnalysis_3(StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
 
 	StrangerAutomaton* getValidationPatchAuto() { return validation_patch_auto; }
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
 
 	bool is_validation_patch_required = false;
-	bool is_length_validation_patch_required = false;
+	bool is_validation_patch_for_length_issue_required = false;
 	bool is_sanitization_patch_required = false;
+
+	static PerfInfo perfInfo;
 private:
 	string patcher_dep_graph_file_name;
 	string patchee_dep_graph_file_name;
@@ -77,6 +80,7 @@ private:
 	void message(string msg);
 	void printAnalysisResults(AnalysisResult& result);
 	void printNodeList(NodesList nodes);
+	bool isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto);
 };
 
 

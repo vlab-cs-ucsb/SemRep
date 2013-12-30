@@ -24,23 +24,34 @@ public:
 	static void printMemoryUsage();
 	void reset();
 	static long currentTimeMillis();
+	static boost::posix_time::ptime current_time();
     static void addGraphInfo(std::string dotName, int numOfNodes, int numOfEdges);
-	long sinkRunningTime;
+
+    boost::posix_time::time_duration validation_patch_extraction;
+    boost::posix_time::time_duration length_patch_extraction;
+    boost::posix_time::time_duration sanitization_patch_extraction;
+    boost::posix_time::time_duration forward_analysis_time;
+    boost::posix_time::time_duration backward_analysis_time;
+
+    int num_of_forward_analysis;
+    int num_of_backward_analysis;
+
+    long sinkRunningTime;
 	int stringLength;
 
 	int numOfConcat;
 	int numOfUnion;
 	int numOfReplace;
 
-	long concatTime;
-	long unionTime;
-	long replaceTime;
+	int concatTime;
+	int unionTime;
+	int replaceTime;
 
 	int numOfPreConcat;
 	int numOfPreReplace;
 
-	long preconcatTime;
-	long prereplaceTime;
+	int preconcatTime;
+	int prereplaceTime;
 
 	int numOfIntersect;
 	long intersectTime;

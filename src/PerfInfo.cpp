@@ -10,40 +10,44 @@
 using namespace std;
 
 PerfInfo::PerfInfo() {
-	sinkRunningTime = 0;
-	stringLength = 0;
 
-	numOfConcat = 0;
-	numOfUnion = 0;
-	numOfReplace = 0;
 
-	concatTime = 0;
-	unionTime = 0;
-	replaceTime = 0;
-
-	numOfPreConcat = 0;
-	numOfPreReplace = 0;
-
-	preconcatTime = 0;
-	prereplaceTime = 0;
-
-	numOfIntersect = 0;
-	intersectTime = 0;
-	numOfPreciseWiden = 0;
-	preciseWidenTime = 0;
-	numOfCoarseWiden = 0;
-	coarseWidenTime = 0;
-	numOfClosure = 0;
-	closureTime = 0;
-	numOfComplement = 0;
-	complementTime = 0;
-	numOfConstPreConcat = 0;
-	constpreconcatTime = 0;
-	forwardTime = 0;
-	backwardTime = 0;
-	multiTime = 0;
-	generateExampleTime = 0;
-	numOfGenerateExample = 0;
+    num_of_forward_analysis = 0;
+    num_of_backward_analysis = 0;
+//	sinkRunningTime = 0;
+//	stringLength = 0;
+//
+//	numOfConcat = 0;
+//	numOfUnion = 0;
+//	numOfReplace = 0;
+//
+//	concatTime = 0;
+//	unionTime = 0;
+//	replaceTime = 0;
+//
+//	numOfPreConcat = 0;
+//	numOfPreReplace = 0;
+//
+//	preconcatTime = 0;
+//	prereplaceTime = 0;
+//
+//	numOfIntersect = 0;
+//	intersectTime = 0;
+//	numOfPreciseWiden = 0;
+//	preciseWidenTime = 0;
+//	numOfCoarseWiden = 0;
+//	coarseWidenTime = 0;
+//	numOfClosure = 0;
+//	closureTime = 0;
+//	numOfComplement = 0;
+//	complementTime = 0;
+//	numOfConstPreConcat = 0;
+//	constpreconcatTime = 0;
+//	forwardTime = 0;
+//	backwardTime = 0;
+//	multiTime = 0;
+//	generateExampleTime = 0;
+//	numOfGenerateExample = 0;
 
 }
 
@@ -51,78 +55,56 @@ PerfInfo::~PerfInfo() {
 
 }
 
-//	public static class GraphInfo {
-//		String sinkName;
-//		int numOfNodes = 0;
-//		int numOfEdges = 0;
-//		public GraphInfo(String sinkName, int numOfNodes, int numOfEdges){
-//			this.sinkName = sinkName;
-//			this.numOfNodes = numOfNodes;
-//			this.numOfEdges = numOfEdges;
-//		}
-//		public String toString(){
-//			String retMe = "Sink: " + sinkName + "\n";
-//			retMe += "Number of nodes = " + numOfNodes + ",   Number of edges = " + numOfEdges + "\n";
-//			return retMe;
-//		}
-//	}
 
-//	public List<GraphInfo> graphsInfo = new LinkedList<GraphInfo>();
-//
-//	public void addGraphInfo(String sinkName, int numOfNodes, int numOfEdges){
-//		PerfInfo.GraphInfo graphInfo = new PerfInfo.GraphInfo(sinkName
-//				, numOfNodes, numOfEdges);
-//		graphsInfo.add(graphInfo);
-//	}
 
 std::string PerfInfo::getInfo() const {
 	std::stringstream sb;
 
-	sb << "Time elapsed in seconds = "
-			<< (((double) sinkRunningTime) / ((double) 1000)) << "\n";
-
-	sb << "Forward analysis time in seconds = "
-			<< (((double) forwardTime) / ((double) 1000)) << "\n";
-
-	sb << "Backward analysis time in seconds = "
-			<< (((double) backwardTime) / ((double) 1000)) << "\n";
-
-	sb << "Forward multi analysis time in seconds = "
-			<< (((double) multiTime) / ((double) 1000)) << "\n";
-
-	sb << "String length = " << stringLength << "\n";
-
-	sb << "Number of concat = " << numOfConcat << "\n";
-	sb << "Time of concat in seconds = "
-			<< (((double) concatTime) / ((double) 1000)) << "\n";
-
-	sb << "Number of union = " << numOfUnion << "\n";
-	sb << "Time of union in seconds = "
-			<< (((double) unionTime) / ((double) 1000)) << "\n";
-
-	sb << "Number of replace = " << numOfReplace << "\n";
-	sb << "Time of replace in seconds = "
-			<< (((double) replaceTime) / ((double) 1000)) << "\n";
-
-	sb << "Number of preconcat = " << numOfPreConcat << "\n";
-	sb << "Time of preconcat in seconds = "
-			<< (((double) preconcatTime) / ((double) 1000)) << "\n";
-
-	sb << "Number of constPreconcat = " << numOfConstPreConcat << "\n";
-	sb << "Time of constPreconcat in seconds = "
-			<< (((double) constpreconcatTime) / ((double) 1000)) << "\n";
-
-	sb << "Total number of preConcat = "
-			<< (numOfPreConcat + numOfConstPreConcat) << "\n";
-	sb << "Total time of preconcat in seconds = "
-			<< ((((double) preconcatTime) + ((double) constpreconcatTime))
-					/ ((double) 1000)) << "\n";
-
-	sb << "Number of prereplace = " << numOfPreReplace << "\n";
-	sb << "Time of prereplace in seconds = "
-			<< (((double) prereplaceTime) / ((double) 1000)) << "\n";
-
-	sb << "-------------     GRAPHS INFO      -----------" << "\n";
+//	sb << "Time elapsed in seconds = "
+//			<< (((double) sinkRunningTime) / ((double) 1000)) << "\n";
+//
+//	sb << "Forward analysis time in seconds = "
+//			<< (((double) forwardTime) / ((double) 1000)) << "\n";
+//
+//	sb << "Backward analysis time in seconds = "
+//			<< (((double) backwardTime) / ((double) 1000)) << "\n";
+//
+//	sb << "Forward multi analysis time in seconds = "
+//			<< (((double) multiTime) / ((double) 1000)) << "\n";
+//
+//	sb << "String length = " << stringLength << "\n";
+//
+//	sb << "Number of concat = " << numOfConcat << "\n";
+//	sb << "Time of concat in seconds = "
+//			<< (((double) concatTime) / ((double) 1000)) << "\n";
+//
+//	sb << "Number of union = " << numOfUnion << "\n";
+//	sb << "Time of union in seconds = "
+//			<< (((double) unionTime) / ((double) 1000)) << "\n";
+//
+//	sb << "Number of replace = " << numOfReplace << "\n";
+//	sb << "Time of replace in seconds = "
+//			<< (((double) replaceTime) / ((double) 1000)) << "\n";
+//
+//	sb << "Number of preconcat = " << numOfPreConcat << "\n";
+//	sb << "Time of preconcat in seconds = "
+//			<< (((double) preconcatTime) / ((double) 1000)) << "\n";
+//
+//	sb << "Number of constPreconcat = " << numOfConstPreConcat << "\n";
+//	sb << "Time of constPreconcat in seconds = "
+//			<< (((double) constpreconcatTime) / ((double) 1000)) << "\n";
+//
+//	sb << "Total number of preConcat = "
+//			<< (numOfPreConcat + numOfConstPreConcat) << "\n";
+//	sb << "Total time of preconcat in seconds = "
+//			<< ((((double) preconcatTime) + ((double) constpreconcatTime))
+//					/ ((double) 1000)) << "\n";
+//
+//	sb << "Number of prereplace = " << numOfPreReplace << "\n";
+//	sb << "Time of prereplace in seconds = "
+//			<< (((double) prereplaceTime) / ((double) 1000)) << "\n";
+//
+//	sb << "-------------     GRAPHS INFO      -----------" << "\n";
 //		for (GraphInfo graphInfo: graphsInfo){
 //			sb << graphInfo.toString());
 //			sb << "------------------------" <<  "\n");
@@ -159,8 +141,12 @@ void PerfInfo::addGraphInfo(string dotName, int numOfNodes, int numOfEdges){
 }
 
 void PerfInfo::reset() {
-	sinkRunningTime = 0;
-	stringLength = 0;
+
+    num_of_forward_analysis = 0;
+    num_of_backward_analysis = 0;
+
+    sinkRunningTime = 0;
+    stringLength = 0;
 
 	numOfConcat = 0;
 	numOfUnion = 0;
@@ -195,10 +181,10 @@ void PerfInfo::reset() {
 }
 
 long PerfInfo::currentTimeMillis(){
-//		timeb tb;
-//		ftime(&tb);
-//		int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
-//		return nCount;
 		return 0;
+}
+
+boost::posix_time::ptime PerfInfo::current_time() {
+	return boost::posix_time::microsec_clock::local_time();
 }
 

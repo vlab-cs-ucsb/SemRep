@@ -1717,17 +1717,19 @@ StrangerAutomaton* StrangerAutomaton::restrictLengthByOtherAutomatonFinite(Stran
     P_DFAFiniteLengths pDFAFiniteLengths = dfaGetLengthsFiniteLang(otherAuto->dfa, num_ascii_track, indices_main);
     unsigned *lengths = pDFAFiniteLengths->lengths;
     const unsigned size = pDFAFiniteLengths->size;
-    unsigned i;
-    for(i = 0; i < size; i++)
-        cout << lengths[i] << ", ";
-    cout << endl;
+
+//    unsigned i;
+//    for(i = 0; i < size; i++)
+//        cout << lengths[i] << ", ";
+//    cout << endl;
+
 //    vector<unsigned> vec(lengths, lengths + size);
-    debug(stringbuilder() << id <<  " = dfaRestrictByFiniteLengths("  << this->ID << ", " << otherAuto->ID << ")");
+	debug(stringbuilder() << id <<  " = dfaRestrictByFiniteLengths("  << this->ID << ", " << otherAuto->ID << ")");
 //    cout << "lengths are: " << vec << endl;
-    StrangerAutomaton* retMe = new StrangerAutomaton(dfaRestrictByFiniteLengths(this->dfa, lengths, size, false, num_ascii_track, indices_main));
-    retMe->ID = id;
-    retMe->debugAutomaton();
-    
+	StrangerAutomaton* retMe = new StrangerAutomaton(dfaRestrictByFiniteLengths(this->dfa, lengths, size, false, num_ascii_track, indices_main));
+	retMe->ID = id;
+	retMe->debugAutomaton();
+
     free(pDFAFiniteLengths->lengths);
     free(pDFAFiniteLengths);
     
@@ -1917,13 +1919,31 @@ bool StrangerAutomaton::checkEquivalence(StrangerAutomaton* otherAuto) {
  */
 bool StrangerAutomaton::isLengthFinite(){
     std::string debugString = stringbuilder() << "isLengthFinite("  << this->ID << ") = ";
-    this->toDot();
     int result = ::isLengthFiniteTarjan(this->dfa, num_ascii_track, indices_main);
     debug(stringbuilder() << debugString << ( result == 0 ? false : true ));
     if (result == 0)
         return false;
     else
         return true;
+}
+
+/**
+ * returns maximum length if length is finite, exception otherwise
+ */
+unsigned StrangerAutomaton::getMaxLength() {
+	if( !(this->isLengthFinite()) ) {
+		throw new std::runtime_error("Length of this automaton is infinite! ID: " + this->ID);
+	}
+
+	P_DFAFiniteLengths finiteLengths = dfaGetLengthsFiniteLang(this->dfa, num_ascii_track, indices_main);
+	const unsigned size = finiteLengths->size;
+	unsigned *lengths = finiteLengths->lengths;
+	unsigned max_length = lengths[size-1];
+
+	free(finiteLengths->lengths);
+	free(finiteLengths);
+
+	return max_length;
 }
 
 /**
@@ -1953,7 +1973,7 @@ bool StrangerAutomaton::checkEmptiness() {
         debug(stringbuilder() << debugStr << "false");
         return false;
     }
-    
+
     debugToFile(stringbuilder() << "check_emptiness(M[" << this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//check_emptiness("  << this->ID <<  ")");
     int result = check_emptiness(this->dfa, num_ascii_track,
                                  indices_main);
@@ -2153,11 +2173,11 @@ StrangerAutomaton* StrangerAutomaton::pre_addslashes(StrangerAutomaton* subjectA
 	return retMe;
 }
 
-StrangerAutomaton* StrangerAutomaton::htmlSpecialChars(StrangerAutomaton* subjectAuto, int id)
+StrangerAutomaton* StrangerAutomaton::htmlSpecialChars(StrangerAutomaton* subjectAuto, string flag, int id)
 {
-    
+    hscflags_t _flag = ENT_COMPAT;
     debug(stringbuilder() << id << " = htmlSpecialChars(" << subjectAuto->ID << ");");
-    StrangerAutomaton* retMe = new StrangerAutomaton(dfaHtmlSpecialChars(subjectAuto->dfa, num_ascii_track, indices_main));
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfaHtmlSpecialChars(subjectAuto->dfa, num_ascii_track, indices_main, _flag));
     {
         retMe->ID = id;
         retMe->debugAutomaton();
@@ -2168,11 +2188,11 @@ StrangerAutomaton* StrangerAutomaton::htmlSpecialChars(StrangerAutomaton* subjec
 
 
 
-StrangerAutomaton* StrangerAutomaton::preHtmlSpecialChars(StrangerAutomaton* subjectAuto, int id)
+StrangerAutomaton* StrangerAutomaton::preHtmlSpecialChars(StrangerAutomaton* subjectAuto, string flag, int id)
 {
-    
+	hscflags_t _flag = ENT_COMPAT;
 	debug(stringbuilder() << id << " = preHtmlSpecialChars(" << subjectAuto->ID << ");");
-	StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreHtmlSpecialChars(subjectAuto->dfa, num_ascii_track, indices_main));
+	StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreHtmlSpecialChars(subjectAuto->dfa, num_ascii_track, indices_main, _flag));
 	{
 		retMe->ID = id;
         retMe->debugAutomaton();

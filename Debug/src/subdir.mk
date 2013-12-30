@@ -15,6 +15,7 @@ CPP_SRCS += \
 ../src/RegExp.cpp \
 ../src/StrangerAutomaton.cpp \
 ../src/StrangerAutomatonException.cpp \
+../src/StrangerDebugger.cpp \
 ../src/StrangerPatcher.cpp \
 ../src/StrangerWrapper.cpp \
 ../src/StringAnalyzer.cpp \
@@ -32,6 +33,7 @@ OBJS += \
 ./src/RegExp.o \
 ./src/StrangerAutomaton.o \
 ./src/StrangerAutomatonException.o \
+./src/StrangerDebugger.o \
 ./src/StrangerPatcher.o \
 ./src/StrangerWrapper.o \
 ./src/StringAnalyzer.o \
@@ -49,6 +51,7 @@ CPP_DEPS += \
 ./src/RegExp.d \
 ./src/StrangerAutomaton.d \
 ./src/StrangerAutomatonException.d \
+./src/StrangerDebugger.d \
 ./src/StrangerPatcher.d \
 ./src/StrangerWrapper.d \
 ./src/StringAnalyzer.d \
