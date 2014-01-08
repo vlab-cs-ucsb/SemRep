@@ -11,7 +11,7 @@
 #include <string>
 #include <iostream>
 
-#define PRINT_SINK 1
+#define PRINT_SINK 0
 #define DEBUG_ASCII 1
 
 #if DEBUG_ASCII==1
@@ -31,9 +31,9 @@ extern const unsigned char DEBUG_MASK_INITIALIZATION;
 
 extern unsigned char DEBUG_ENABLED_VP;
 extern unsigned char DEBUG_ENABLED_1F;
-extern unsigned char DEBUG_ENABLED_LB;
-extern unsigned char DEBUG_ENABLED_LF;
-extern unsigned char DEBUG_ENABLED_LAB;
+extern unsigned char DEBUG_ENABLED_LENB;
+extern unsigned char DEBUG_ENABLED_LENF;
+extern unsigned char DEBUG_ENABLED_LASTB;
 extern unsigned char DEBUG_ENABLED_INIT;
 
 void DEBUG_MESSAGE(std::string msg);

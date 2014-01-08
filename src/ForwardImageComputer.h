@@ -103,7 +103,7 @@ public:
                                                                         DepGraphNode* childNode,
                                                   AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint);
 
-    static PerfInfo perfInfo;
+    static PerfInfo* perfInfo;
     
 private:
     static int numOfProcessedNodes;

@@ -29,7 +29,7 @@ bool ForwardImageComputer::initialized = false;
 int ForwardImageComputer::autoDebugLevel = 1;
 int ForwardImageComputer::debugLevel = 1;
 
-PerfInfo ForwardImageComputer::perfInfo;
+PerfInfo* ForwardImageComputer::perfInfo;
 //static
 void ForwardImageComputer::staticInit() {
     initialized =  true;
@@ -58,8 +58,8 @@ void ForwardImageComputer::debugAuto(StrangerAutomaton* dfa, int dlevel, int pri
 }
 
 void ForwardImageComputer::debugMemoryUsage(int dlevel){
-    if (debugLevel >= dlevel)
-        PerfInfo::printMemoryUsage();
+//    if (debugLevel >= dlevel)
+//        PerfInfo::printMemoryUsage();
 }
 
 /*******************************************************************************************************************************/
@@ -70,12 +70,11 @@ void ForwardImageComputer::debugMemoryUsage(int dlevel){
  *
  * Initial Pre-Image computation for validation check
  * 1- Start from first __vlab_restrict function
- * 2- Union negation of all restrict functions, (in case third parameter is true, you do not need to negate since it is already negated)
+ * 2- Union negation of all restrict functions, (in the case where third parameter of restrict function is true, you do not need to negate since it is already negated)
  * 3- If there are some other ops after first restrict, do pre-image computation for them and intersect result.
  */
 AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes) {
 
-	long start_validation_phase = perfInfo.currentTimeMillis();
 	AnalysisResult bwValidationPatchResult;
 
 	// initially all nodes are bottom, we are computing the rejected sets.
@@ -111,8 +110,6 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph
 		// basically server accepts anystring
 		cout << "\t\t: do not have any validation!, no __vlab_restrict function" << endl;
 	}
-	long stop_validation_phase = perfInfo.currentTimeMillis();
-//	perfInfo.validation_phase_time = stop_validation_phase - start_validation_phase;
 	return bwValidationPatchResult;
 }
 
@@ -200,7 +197,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 	if (!opNode->isBuiltin()) {
 		// __vlab_restrict
         if (opName.find("__vlab_restrict") != string::npos) {
-
+        	boost::posix_time::ptime start_time = perfInfo->current_time();
 			if (successors.size() != 3) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments: "
 						"makeBackwardAutoForOpChild_ValidationPhase()");
@@ -266,6 +263,8 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 
 				delete regx;
 //				return retMe;
+				perfInfo->pre_vlab_restrict_total_time += perfInfo->current_time() - start_time;
+				perfInfo->number_of_pre_vlab_restrict++;
 
 			} else {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
@@ -368,6 +367,8 @@ void ForwardImageComputer::doForwardAnalysis_RegularPhase(
 		}
 		doForwardNodeComputation_RegularPhase(origDepGraph, inputDepGraph, node, analysisResult);
 	}
+
+	cout << "$$$$$$$$$$$$$$$$$$$$$$$$$ " << perfInfo->number_of_htmlspecialchars << endl;
 	return;
 }
 
@@ -461,6 +462,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 	if (!opNode->isBuiltin()) {
 		// __vlab_restrict
 		if (opName.find("__vlab_restrict") != string::npos) {
+			boost::posix_time::ptime start_time = perfInfo->current_time();
 			if (successors.size() != 3) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments: "
 						"makeForwardAutoForOp_RegularPhase()");
@@ -531,6 +533,8 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 			}
 			delete regx;
 //			return retMe;
+			perfInfo->vlab_restrict_total_time += perfInfo->current_time() - start_time;
+			perfInfo->number_of_vlab_restrict++;
 
 		} else {
         	throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not __vlab_restrict.\n"
@@ -642,13 +646,13 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 				DepGraphNormalNode* fNode = dynamic_cast<DepGraphNormalNode*>(flagNode);
 				if (fNode == NULL) {
 					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag node: "
-							"makeBackwardAutoForOpChild_ValidationPhase()");
+							"makeForwardAutoForOp_RegularPhase()");
 				}
 
 				Constant* flagConst = dynamic_cast<Constant*>(fNode->getPlace());
 				if (flagConst == NULL) {
 					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag constant value: "
-							"makeBackwardAutoForOpChild_ValidationPhase()");
+							"makeForwardAutoForOp_RegularPhase()");
 				}
 				flagString = flagConst->toString();
 			}
@@ -658,7 +662,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 
 		} else {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: successors[0] of htmlspecialchars (" << opNode->getID() << ") is not calculated,\ncheck implementation: "
-					"makeBackwardAutoForOpChild_ValidationPhase()");
+					"makeForwardAutoForOp_RegularPhase()");
 		}
 
 	} else if (opName == "nl2br"){
@@ -828,7 +832,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 	if (!opNode->isBuiltin()) {
 		// __vlab_restrict
 		if (opName.find("__vlab_restrict") != string::npos) {
-
+			boost::posix_time::ptime start_time = perfInfo->current_time();
 			if (successors.size() != 3) {
 				throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict invalid number of arguments: "
 						"makeBackwardAutoForOpChild_RegularPhase()");
@@ -844,9 +848,11 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 				throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") should not be handled,\ncheck implementation: "
 						"makeBackwardAutoForOpChild_RegularPhase()");
 			} else {
-				throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
+				throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
 						"makeBackwardAutoForOpChild_RegularPhase()");
 			}
+			perfInfo->pre_vlab_restrict_total_time += perfInfo->current_time() - start_time;
+			perfInfo->number_of_pre_vlab_restrict++;
 		} else {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: function " << opName << " is not __vlab_restrict.\n"
 					"makeBackwardAutoForOpChild_RegularPhase()");
@@ -923,20 +929,20 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 				DepGraphNormalNode* fNode = dynamic_cast<DepGraphNormalNode*>(flagNode);
 				if (fNode == NULL) {
 					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag node: "
-							"makeBackwardAutoForOpChild_ValidationPhase()");
+							"makeBackwardAutoForOpChild_RegularPhase()");
 				}
 
 				Constant* flagConst = dynamic_cast<Constant*>(fNode->getPlace());
 				if (flagConst == NULL) {
 					throw StrangerStringAnalysisException(stringbuilder() << "SNH: htmlspecialchars cannot find flag constant value: "
-							"makeBackwardAutoForOpChild_ValidationPhase()");
+							"makeBackwardAutoForOpChild_RegularPhase()");
 				}
 				flagString = flagConst->toString();
 			}
 			retMe = StrangerAutomaton::preHtmlSpecialChars(opAuto, flagString, childNode->getID());
 		} else {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of htmlspecialchars (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
-					"makeBackwardAutoForOpChild_ValidationPhase()");
+					"makeBackwardAutoForOpChild_RegularPhase()");
 		}
 	} else if (opName == "mysql_escape_string") {
 		// has one parameter
@@ -966,8 +972,8 @@ AnalysisResult ForwardImageComputer::computeFwImage(
 		// used to remove the auto from deco after processing all its parents
 		numOfProcessedNodes = 0;
 
-		perfInfo.addGraphInfo(origDepGraph.getRoot()->dotName()
-				, origDepGraph.getNumOfNodes(), origDepGraph.getNumOfEdges());
+//		perfInfo->addGraphInfo(origDepGraph.getRoot()->dotName()
+//				, origDepGraph.getNumOfNodes(), origDepGraph.getNumOfEdges());
 
     StrangerAutomaton::debugToFile(stringbuilder() << "//*******************************************************************************\n");
     StrangerAutomaton::debugToFile(stringbuilder() << "// starting a new SINK analysis: " << origDepGraph.getRoot()->dotName());
@@ -1009,8 +1015,6 @@ void ForwardImageComputer::doForwardAnalysis(
                 /*SccNodes& sccNodes,*/ AnalysisResult& inputValuesMap,
                 bool multiTrack, AnalysisResult& analysisResult){
 
-		// reset the timer
-		long startForward = perfInfo.currentTimeMillis();
 
 		// Start decorating nodes. Note that we decorate nodes in
 		// topological order
@@ -1031,17 +1035,16 @@ void ForwardImageComputer::doForwardAnalysis(
 //			} else {// a regular node in the graph
 				doNodeComputation(acyclicWorkGraph, origDepGraph, analysisResult, node, inputValuesMap, multiTrack);
 				//debugAuto(forwardDeco.get(node));
-				//perfInfo.printInfo();
+				//perfInfo->printInfo();
 //			}
 			//debugMemoryUsage();
 			//debug("--------------------------", 2);
 		}
 
-		long stopForward = perfInfo.currentTimeMillis();
 //		if (!multiTrack)
-//			perfInfo.forwardTime = (stopForward - startForward);
+//			perfInfo->forwardTime = (stopForward - startForward);
 //		else
-//			perfInfo.multiTime = (stopForward - startForward);
+//			perfInfo->multiTime = (stopForward - startForward);
 	}
 //
 //	//******************************************************************************************/
@@ -1054,7 +1057,6 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 		cout << "\n***  Stranger Sanit Backward Analysis BEGIN ***\n" << endl;
 
 		string graphNameBase;
-    long startBackward = perfInfo.currentTimeMillis();
 
 
 		DepGraph inputDepGraph = acyclicWorkGraph.getInputRelevantGraph(inputNode);
@@ -1082,8 +1084,6 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 		 //backwardDeco.get(node).printAutomatonVitals();
 		 cout << "----------------------------" << endl;
 
-		 long stopBackward = perfInfo.currentTimeMillis();
-//		 perfInfo.backwardTime += stopBackward - startBackward;
 
 		 cout << "\n***  Stranger Sanit Backward Analysis End ***\n\n" << endl;
 
@@ -1138,7 +1138,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //			 }
 //
 //			 long stopBackward = System.currentTimeMillis();
-//			 perfInfo.backwardTime = stopBackward - startBackward;
+//			 perfInfo->backwardTime = stopBackward - startBackward;
 //
 //	}
 //	//************************************************************************/
@@ -1222,7 +1222,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //					StrangerAutomaton intersectionAuto = rootAuto.intersect(this.undesir, -1);
 //
 //					long stopIntersection = System.currentTimeMillis();
-//					perfInfo.forwardTime += (stopIntersection - startIntersection);
+//					perfInfo->forwardTime += (stopIntersection - startIntersection);
 //
 //					debug("\nIntersection result: \n-------------------------", 2);
 //					debugAuto(intersectionAuto, 2, 4);
@@ -1293,7 +1293,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //				/***************************************/
 //				/** get performance info for this sink **/
 //				long stop = System.currentTimeMillis();
-//				perfInfo.sinkRunningTime = stop - start;
+//				perfInfo->sinkRunningTime = stop - start;
 //				printPerfInfo();
 //				// we gather perf into per depgraph (per sink)
 //				resetPerfInfo();
@@ -1357,7 +1357,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //		// used to remove the auto from deco after processing all its parents
 //		numOfProcessedNodes = 0;
 //
-//		perfInfo.addGraphInfo(origDepGraph.getRoot().dotName()
+//		perfInfo->addGraphInfo(origDepGraph.getRoot().dotName()
 //				, origDepGraph.getNumOfNodes(), origDepGraph.getNumOfEdges());
 //
 //		cout << "\n\n*** " +name.toUpperCase()
@@ -1398,7 +1398,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //		//intersectionMultiAuto.toDot();
 //		intersectionMultiAuto = intersectionMultiAuto.removeLastTrack(-1);
 //		long stopForward = System.currentTimeMillis();
-//		perfInfo.multiTime += (stopForward - startForward);
+//		perfInfo->multiTime += (stopForward - startForward);
 //		debugAuto(intersectionMultiAuto, 0, autoDebugLevel);
 //
 //		int num_of_tracks = inputValuesMap.size();
@@ -1437,7 +1437,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //	}
 //	// **************************************************************************************
 //	private void resetPerfInfo() {
-//		perfInfo.reset();
+//		perfInfo->reset();
 //
 //	}
 //	// **************************************************************************************
@@ -1460,7 +1460,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //		cout << "============================================================================"+"\n" << endl;
 //		System.out.print("vitals for attack pattern" << endl;
 //		this.undesir.printAutomatonVitals();
-//		debug(perfInfo.getInfo(), 1);
+//		debug(perfInfo->getInfo(), 1);
 //		debugMemoryUsage(1);
 //		cout << "============================================================================"+"\n" << endl;
 //	}
@@ -1557,7 +1557,7 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //			// used to remove the auto from deco after processing all its parents
 //			numOfProcessedNodes = 0;
 //
-//			perfInfo.addGraphInfo(origDepGraph.getRoot().dotName()
+//			perfInfo->addGraphInfo(origDepGraph.getRoot().dotName()
 //					, origDepGraph.getNumOfNodes(), origDepGraph.getNumOfEdges());
 //
 //			StrangerAutomaton::debugToFile("// *******************************************************************************" << endl;
@@ -1607,14 +1607,14 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //				} else {// a regular node in the graph
 //					doNodeComputation(acyclicWorkGraph, origDepGraph, forwardDeco, node);
 //					//debugAuto(forwardDeco.get(node));
-//					//perfInfo.printInfo();
+//					//perfInfo->printInfo();
 //				}
 //				//debugMemoryUsage();
 //				//debug("--------------------------", 2);
 //			}
 //
 //			long stopForward = System.currentTimeMillis();
-//			perfInfo.forwardTime += (stopForward - startForward);
+//			perfInfo->forwardTime += (stopForward - startForward);
 //
 //			long startIntersection = System.currentTimeMillis();
 //			// intersect root automaton with the undesired stuff;
@@ -1636,10 +1636,10 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //				//debugAuto(intersectionAuto, 1, 4);
 //				//intersectionAuto.printAutomatonVitals();
 //				debug("", 2);
-//				perfInfo.printInfo();
+//				perfInfo->printInfo();
 //
 //				long stopIntersection = System.currentTimeMillis();
-//				perfInfo.forwardTime += (stopIntersection - startIntersection);
+//				perfInfo->forwardTime += (stopIntersection - startIntersection);
 //				//outputDotAuto(rootAuto);
 //
 //
@@ -1676,8 +1676,8 @@ AnalysisResult ForwardImageComputer::computeBwImage(DepGraph& origDepGraph, DepG
 //		cout << endl;
 //
 //		long stop = System.currentTimeMillis();
-//		perfInfo.totalRunningTime = stop - start;
-//		perfInfo.printInfo();
+//		perfInfo->totalRunningTime = stop - start;
+//		perfInfo->printInfo();
 //		// only to output c trace file. One file per all sink places(depgraphs)
 //		StrangerAutomaton::closeFiles();
 //	*/
@@ -2398,7 +2398,7 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis(DepGraph& origDepGraph,
 			//if (backwardDeco.get(node).checkEmptiness())
 			//	throw new StrangerStringAnalysisException("SNH: and empty automaton in backward analysis." << endl;
 			//debugAuto(backwardDeco.get(node));
-			//perfInfo.printInfo();
+			//perfInfo->printInfo();
 //			}
 		 ++it;
 		//debugMemoryUsage();

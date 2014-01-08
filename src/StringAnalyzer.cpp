@@ -44,7 +44,7 @@ void StringAnalyzer::analyze(){
     
 
         try {
-            long start = imageComputer.perfInfo.currentTimeMillis();
+//            long start = imageComputer.perfInfo.currentTimeMillis();
             
             
             OpNodesList f_unmodeled;
@@ -95,7 +95,7 @@ void StringAnalyzer::analyze(){
             AnalysisResult forwardDeco2 = imageComputer.computeFwImage(this->depGraph2, acyclicWorkGraph2,/* sccNodes,*/ inputValuesMap2, false);
             /**************************************************/
             
-            long startIntersection = imageComputer.perfInfo.currentTimeMillis();
+//            long startIntersection = imageComputer.perfInfo.currentTimeMillis();
             // intersect root automaton with the undesired stuff;
             // if the intersection is empty, it means that we are safe!
             StrangerAutomaton* rootAuto = forwardDeco[acyclicWorkGraph.getRoot()->getID()];
@@ -148,8 +148,8 @@ void StringAnalyzer::analyze(){
             
             /***************************************/
             /** get performance info for this sink **/
-            long stop = imageComputer.perfInfo.currentTimeMillis();
-            imageComputer.perfInfo.sinkRunningTime = stop - start;
+//            long stop = imageComputer.perfInfo.currentTimeMillis();
+//            imageComputer.perfInfo.sinkRunningTime = stop - start;
 //            printPerfInfo();
             // we gather perf into per depgraph (per sink)
 //            resetPerfInfo();

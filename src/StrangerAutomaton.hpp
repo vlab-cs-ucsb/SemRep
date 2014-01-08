@@ -122,6 +122,7 @@ public:
     bool checkEquivalence(StrangerAutomaton* auto_);
     bool isLengthFinite();
     unsigned getMaxLength();
+    unsigned getMinLength();
     bool equals(StrangerAutomaton* other);
     bool checkEmptiness();
     bool isEmpty();
@@ -198,7 +199,7 @@ public:
 //    static void setPerfInfo(PerfInfo& pInfo) { perfInfo = pInfo; };
 //    static PerfInfo& getPerfInfo() { return perfInfo; };
     static void staticInit();
-    static PerfInfo perfInfo;
+    static PerfInfo* perfInfo;
     
     StrangerAutomaton* restrict(StrangerAutomaton* otherAuto, int id){
         StrangerAutomaton* retMe = this->intersect(otherAuto);

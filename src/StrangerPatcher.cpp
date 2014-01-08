@@ -57,7 +57,7 @@ StrangerPatcher::StrangerPatcher(string patcher_dep_graph_file_name,string patch
 
 	}
 
-	ForwardImageComputer::perfInfo = StrangerPatcher::perfInfo;
+	ForwardImageComputer::perfInfo = &StrangerPatcher::perfInfo;
 	ForwardImageComputer::staticInit();
 }
 
@@ -90,6 +90,7 @@ void StrangerPatcher::printNodeList(NodesList nodes) {
 }
 
 bool StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto) {
+	boost::posix_time::ptime start_time = perfInfo.current_time();
 	bool result = false;
 	if(patcherAuto->isLengthFinite()) {
 		if (patcheeAuto->isLengthFinite()) {
@@ -101,44 +102,46 @@ bool StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAu
 			result = true;
 		}
 	}
-
+	perfInfo.sanitization_length_issue_check_time = perfInfo.current_time() - start_time;
 	return result;
 }
 
 /**
- * TODO extract both validations and generate better patch
  * Initial backward analysis phase for extracting validation behavior
  */
 StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 
 	message("BEGIN VALIDATION EXTRACTION PHASE........................................");
 
-	boost::posix_time::ptime start_time = perfInfo.current_time();
-
 	ForwardImageComputer analyzer;
-
+	boost::posix_time::ptime start_time;
 	try {
 		message("extracting validation from patcher");
+		start_time = perfInfo.current_time();
 		AnalysisResult patcher_validationExtractionResults =
 				analyzer.doBackwardAnalysis_ValidationPhase(patcher_dep_graph, patcher_field_relevant_graph, patcher_sorted_field_relevant_nodes);
 		StrangerAutomaton* patcher_negVPatch = patcher_validationExtractionResults[patcher_uninit_field_node->getID()];
 		StrangerAutomaton* patcher_validation = patcher_negVPatch->complement(patcher_uninit_field_node->getID());
+		perfInfo.validation_patcher_backward_time = perfInfo.current_time() - start_time;
 		if (DEBUG_ENABLED_VP != 0) {
 			DEBUG_MESSAGE("patcher validation auto:");
 			DEBUG_AUTO(patcher_validation);
 		}
 
 		message("extracting validation from patchee");
+		start_time = perfInfo.current_time();
 		AnalysisResult patchee_validationExtractionResults =
 				analyzer.doBackwardAnalysis_ValidationPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes);
 		StrangerAutomaton* patchee_negVPatch = patchee_validationExtractionResults[patchee_uninit_field_node->getID()];
 		StrangerAutomaton* patchee_validation = patchee_negVPatch->complement(patchee_uninit_field_node->getID());
+		perfInfo.validation_patchee_backward_time = perfInfo.current_time() - start_time;
 		if (DEBUG_ENABLED_VP != 0) {
 			DEBUG_MESSAGE("patchee validation auto:");
 			DEBUG_AUTO(patchee_validation);
 		}
 
 		message("computing validation patch");
+		start_time = perfInfo.current_time();
 		StrangerAutomaton* diffAuto = patchee_validation->difference(patcher_validation, patchee_uninit_field_node->getID());
 		if (DEBUG_ENABLED_VP != 0) {
 			DEBUG_MESSAGE("difference auto:");
@@ -174,7 +177,7 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 				DEBUG_MESSAGE("validation patch is intersection auto...");
 			}
 		}
-
+		perfInfo.validation_comparison_time = perfInfo.current_time() - start_time;
 
 		delete patcher_validation;
 		delete patchee_validation;
@@ -185,8 +188,7 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 		exit(EXIT_FAILURE);
 	}
 
-	perfInfo.validation_patch_extraction = perfInfo.current_time() - start_time;
-
+	perfInfo.calculate_total_validation_extraction_time();
 	message("........................................END VALIDATION EXTRACTION PHASE");
 	return validation_patch_auto;
 }
@@ -241,7 +243,7 @@ AnalysisResult StrangerPatcher::computePatcheeFWAnalysis_1() {
 	// initialize uninit node that we are interested in with validation patch_auto
 	message(stringbuilder() << "initializing input node(" << patchee_uninit_field_node->getID() << ") with validation patch auto");
 	delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
-	patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto_1;
+	patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
 
 	ForwardImageComputer patcheeAnalyzer;
 
@@ -275,22 +277,39 @@ AnalysisResult StrangerPatcher::computePatcheeBwFwAnalysis_2(StrangerAutomaton* 
 	try {
 
 		message("starting backward analysis to patch length constraints...");
-		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
 
+//		fwAnalysisResult[patchee_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(-5);
+
+		boost::posix_time::ptime start_time = perfInfo.current_time();
+		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
+		perfInfo.sanitization_length_backward_time = perfInfo.current_time() - start_time;
 		validation_patch_auto_2 = bwResult[patchee_uninit_field_node->getID()];
-		if (DEBUG_ENABLED_LB != 0) {
+//		StrangerAutomaton* negPatchAuto = bwResult[patchee_uninit_field_node->getID()];
+//		validation_patch_auto_2 = negPatchAuto->complement(-5);
+
+		if (DEBUG_ENABLED_LENB != 0) {
 			DEBUG_MESSAGE("Length validation patch:");
 			DEBUG_AUTO(validation_patch_auto_2);
 		}
-		fwAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto_2;
+
+		delete validation_patch_auto;
+		validation_patch_auto = validation_patch_auto_1->intersect(validation_patch_auto_2, -5);
+
+		if (DEBUG_ENABLED_LENB != 0) {
+			DEBUG_MESSAGE("New validation patch:");
+			DEBUG_AUTO(validation_patch_auto);
+		}
+
+		fwAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
 		message("...validation patch is updated using length constraints");
 
 		message("second forward analysis begins for patchee...");
 		delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
-		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto_2;
+		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
+		start_time = perfInfo.current_time();
 		patcheeAnalyzer.doForwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysisResult);
+		perfInfo.sanitization_length_forward_time = perfInfo.current_time() - start_time;
 		message("...second forward analysis ends for pathcee.");
-
 
 	} catch (StrangerStringAnalysisException const &e) {
         cerr << e.what();
@@ -313,50 +332,72 @@ StrangerAutomaton* StrangerPatcher::computePatcheeBWAnalysis_3(StrangerAutomaton
  */
 StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 
+	boost::posix_time::ptime start_time = perfInfo.current_time();
 	StrangerAutomaton* patcherSinkAuto = computePatcherFWAnalysis();
+	perfInfo.sanitization_patcher_first_forward_time = perfInfo.current_time() - start_time;
 	if (DEBUG_ENABLED_1F != 0) {
 		DEBUG_MESSAGE("Patcher Sink Auto - First forward analysis");
 		DEBUG_AUTO(patcherSinkAuto);
 	}
+	start_time = perfInfo.current_time();
 	AnalysisResult patcheeAnalysisResult = computePatcheeFWAnalysis_1();
 	StrangerAutomaton* patcheeSinkAuto = patcheeAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
+	perfInfo.sanitization_patchee_first_forward_time = perfInfo.current_time() - start_time;
 	if (DEBUG_ENABLED_1F != 0) {
 		DEBUG_MESSAGE("Patchee Sink Auto - First forward analysis");
 		DEBUG_AUTO(patcheeSinkAuto);
 	}
 
 	message("checking difference between patcher and patchee");
+	boost::posix_time::ptime comp_time = perfInfo.current_time();
 	StrangerAutomaton* differenceAuto = patcheeSinkAuto->difference(patcherSinkAuto, -3);
+	bool isDifferenceAutoEmpty = differenceAuto->isEmpty();
+	perfInfo.sanitization_comparison_time = perfInfo.current_time() - comp_time;
 	if (DEBUG_ENABLED_1F != 0) {
 		DEBUG_MESSAGE("Difference auto after first forward analysis:");
 		DEBUG_AUTO(differenceAuto);
 	}
 
-
-	if (differenceAuto->isEmpty()) {
+	if (isDifferenceAutoEmpty) {
 		message("no difference, no sanitization patch required!");
 		delete differenceAuto;
 		sanitization_patch_auto = NULL;
 		is_sanitization_patch_required = false;
 	} else if(isLengthAnIssue(patcherSinkAuto,patcheeSinkAuto)) {
 		message("length constraints contribute to the difference, fixing issue...");
+		start_time = perfInfo.current_time();
 		StrangerAutomaton* lengthRestrictAuto =
 				patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcherSinkAuto, -4);
-		if (DEBUG_ENABLED_LB != 0) {
+		perfInfo.sanitization_length_issue_check_time += perfInfo.current_time() - start_time; // adding to length issue check in if statements
+		if (DEBUG_ENABLED_LENB != 0) {
 			DEBUG_MESSAGE("Length restricted patchee sink automaton:");
 			DEBUG_AUTO(lengthRestrictAuto);
 		}
 
 		try {
+			//TODO discuss what happens to that backward analysis if there are _vlab_restrict functions as intermediate nodes.
+			// use negation of length restricted auto to solve the problem of overapproximation
+//			StrangerAutomaton* negLengthRestrictAuto = lengthRestrictAuto->complement(-4);
+			// That may cause false positives
 			AnalysisResult patcheeAnalysisResult_2 = computePatcheeBwFwAnalysis_2(lengthRestrictAuto, patcheeAnalysisResult);
 
 			patcheeSinkAuto = patcheeAnalysisResult_2[patchee_field_relevant_graph.getRoot()->getID()];
 
+			if (DEBUG_ENABLED_LENF != 0) {
+				DEBUG_MESSAGE("Patchee sink auto with length patch update");
+				DEBUG_AUTO(patcheeSinkAuto);
+			}
 			message("checking difference between patcher and patchee second time");
 			delete differenceAuto;
+			comp_time = perfInfo.current_time();
 			differenceAuto = patcheeSinkAuto->difference(patcherSinkAuto, -3);
-
-			if (differenceAuto->isEmpty() ){
+			isDifferenceAutoEmpty = differenceAuto->isEmpty();
+			perfInfo.sanitization_comparison_time += perfInfo.current_time() - comp_time; // added to older comparison time
+			if (DEBUG_ENABLED_LENF != 0) {
+				DEBUG_MESSAGE("Difference auto after length patch");
+				DEBUG_AUTO(differenceAuto);
+			}
+			if (isDifferenceAutoEmpty){
 				message("no difference, no sanitization patch required 2!");
 				delete differenceAuto;
 				sanitization_patch_auto = NULL;
@@ -366,7 +407,13 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 			else {
 				message("starting last backward analysis for sanitization patch with diff auto(length constraint included)...");
 				validation_patch_auto = validation_patch_auto_2;
+				start_time = perfInfo.current_time();
 				sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult_2);
+				perfInfo.sanitization_last_backward_time = perfInfo.current_time() - start_time;
+				if (DEBUG_ENABLED_LASTB != 0) {
+					DEBUG_MESSAGE("Sanitization patch auto (length fix applied)");
+					DEBUG_AUTO(sanitization_patch_auto);
+				}
 				message("...finished last backward analysis for sanitization patch with diff auto(length constraint included).");
 				is_sanitization_patch_required = true;
 				is_validation_patch_for_length_issue_required = true;
@@ -379,12 +426,18 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 
 	} else {
 		message("starting last backward analysis for sanitization patch with diff auto...");
+		start_time = perfInfo.current_time();
 		sanitization_patch_auto = computePatcheeBWAnalysis_3(differenceAuto, patcheeAnalysisResult);
+		perfInfo.sanitization_last_backward_time = perfInfo.current_time() - start_time;
+		if (DEBUG_ENABLED_LASTB != 0) {
+			DEBUG_MESSAGE("Sanitization patch auto");
+			DEBUG_AUTO(sanitization_patch_auto);
+		}
 		message("...finished last backward analysis for sanitization patch with diff auto.");
 		is_sanitization_patch_required = true;
 		is_validation_patch_for_length_issue_required = false;
 	}
-
+	perfInfo.calculate_total_sanitization_extraction_time();
 	return sanitization_patch_auto;
 }
 

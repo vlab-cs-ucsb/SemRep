@@ -24,6 +24,7 @@
 ~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(7) with sigma star
 
 ~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patcher...
+$$$$$$$$$$$$$$$$$$$$$$$$$ 0
 
 ~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patcher.
 
@@ -34,6 +35,9 @@
 ~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(8) with validation patch auto
 
 ~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patchee
+**********************************************************************************************************
+perfinfo: 1
+$$$$$$$$$$$$$$$$$$$$$$$$$ 1
 
 ~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patchee.
 
@@ -48,6 +52,9 @@
 ~~~~~~~~~~~>>> StrangerPatcher says: ...validation patch is updated using length constraints
 
 ~~~~~~~~~~~>>> StrangerPatcher says: second forward analysis begins for patchee...
+**********************************************************************************************************
+perfinfo: 2
+$$$$$$$$$$$$$$$$$$$$$$$$$ 2
 
 ~~~~~~~~~~~>>> StrangerPatcher says: ...second forward analysis ends for pathcee.
 
@@ -61,6 +68,56 @@
 	    Patcher: /home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header__schoolname.dot
 	    Patchee: /home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_header.dot
 	    - validation patch is generated
-	    - validation patch analysis time: 58
 	    - second validation patch for length issue is generated
 	    - sanitization patch is generated
+
+	 Validation Patch Analysis Info
+	 time : patchee backward analysis time : 00:00:00.000671 (0 ms)
+	 time : patcher backward analysis time : 00:00:00.001043 (1 ms)
+	 time : validation comparison time : 00:00:00.000155 (0 ms)
+	 time : validation patch extraction total time : 00:00:00.001869 (1 ms)
+
+	 Sanitization Patch Analysis Info
+	 time : patchee first forward analysis time : 00:00:00.004715 (4 ms)
+	 time : patcher first forward analysis time : 00:00:00.000794 (0 ms)
+	 time : length issue check time : 00:00:00.002635 (2 ms)
+	 time : length issue backward time : 00:00:00.003345 (3 ms)
+	 time : length issue forward time : 00:00:00.002858 (2 ms)
+	 time : last backward time : 00:00:00.003156 (3 ms)
+	 time : sanitization comparison time : 00:00:00.000741 (0 ms)
+	 time : sanitization patch extraction total time : 00:00:00.018244 (18 ms)
+
+	 Stranger Automaton Operations Info
+	 intersection : #20 : 00:00:00.002454 (2 ms)
+	 union : #11 : 00:00:00.000257 (0 ms)
+	 closure : #0 : 00:00:00 (0 ms)
+	 complement : #6 : 00:00:00.000229 (0 ms)
+	 precisewiden : #0 : 00:00:00 (0 ms)
+	 coarsewiden : #0 : 00:00:00 (0 ms)
+	 concat : #10 : 00:00:00.000745 (0 ms)
+	 pre concat : #0 : 00:00:00 (0 ms)
+	 const pre concat : #0 : 00:00:00 (0 ms)
+	 replace : #0 : 00:00:00 (0 ms)
+	 pre replace : #0 : 00:00:00 (0 ms)
+	 vlab_restrict : #1 : 00:00:00.000591 (0 ms)
+	 pre vlab_restrict : #1 : 00:00:00.000782 (0 ms)
+	 addslahses : #0 : 00:00:00 (0 ms)
+	 pre addslahses : #0 : 00:00:00 (0 ms)
+	 htmlspecialchars : #2 : 00:00:00.006699 (6 ms)
+	 pre htmlspecialchars : #2 : 00:00:00.003749 (3 ms)
+	 stripslashes : #0 : 00:00:00 (0 ms)
+	 pre stripslashes : #0 : 00:00:00 (0 ms)
+	 mysql_escape_string : #0 : 00:00:00 (0 ms)
+	 pre mysql_escape_string : #0 : 00:00:00 (0 ms)
+	 to_uppercase : #0 : 00:00:00 (0 ms)
+	 pre to_uppercase : #0 : 00:00:00 (0 ms)
+	 to_lowercase : #0 : 00:00:00 (0 ms)
+	 pre to_lowercase : #0 : 00:00:00 (0 ms)
+	 trim_spaces : #0 : 00:00:00 (0 ms)
+	 pre trim_spaces : #0 : 00:00:00 (0 ms)
+	 trim_spaces_left : #0 : 00:00:00 (0 ms)
+	 pre trim_spaces_left : #0 : 00:00:00 (0 ms)
+	 trim_spaces_rigth : #0 : 00:00:00 (0 ms)
+	 pre trim_spaces_rigth : #0 : 00:00:00 (0 ms)
+	 trim_set : #0 : 00:00:00 (0 ms)
+	 pre trim_set : #0 : 00:00:00 (0 ms)

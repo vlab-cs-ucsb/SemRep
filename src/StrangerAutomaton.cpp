@@ -72,7 +72,7 @@ char StrangerAutomaton::slash = '/';
 
 bool StrangerAutomaton::coarseWidening = false;
 
-PerfInfo StrangerAutomaton::perfInfo;
+PerfInfo* StrangerAutomaton::perfInfo;
 
 
 DFA* StrangerAutomaton::getDfa()
@@ -583,21 +583,14 @@ StrangerAutomaton* StrangerAutomaton::closure(int id) {
     if (isTop() || isBottom()) return this->clone(id);
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_closure_extrabit(M["<< this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//"<<id << " = closure("  << this->ID <<  ")");
-    perfInfo.numOfClosure++;
-    long start = PerfInfo::currentTimeMillis();
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_closure_extrabit(this->dfa, num_ascii_track, indices_main));
+    perfInfo->closure_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_closure++;
     
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_closure_extrabit(this->dfa,
-                                                                          num_ascii_track,
-                                                                          indices_main));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.closureTime += (stop - start);
-    
-    {
-        retMe->setID(id);
-        retMe->debugAutomaton();
-    }
+    retMe->setID(id);
+    retMe->debugAutomaton();
     return retMe;
 }
 
@@ -620,7 +613,9 @@ StrangerAutomaton* StrangerAutomaton::closure() {
 StrangerAutomaton* StrangerAutomaton::closure(StrangerAutomaton* otherAuto, int id) {
     debug(stringbuilder() << id <<  " = closure(" << otherAuto->ID << ")");
     
+    boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = otherAuto->closure(id);
+
     {
         retMe->setID(id);
         retMe->debugAutomaton();
@@ -786,18 +781,11 @@ StrangerAutomaton* StrangerAutomaton::complement(int id) {
         return makeAnyString(id);
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_negate(M[" << this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//"<<id << " = complement("  << this->ID <<  ")");
-    perfInfo.numOfComplement++;
-    long start = PerfInfo::currentTimeMillis();
     
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_negate(this->dfa,
-                                                                num_ascii_track,
-                                                                indices_main));
-    
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.complementTime += (stop - start);
-    
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_negate(this->dfa, num_ascii_track, indices_main));
+    perfInfo->complement_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_complement++;
     
     
     {
@@ -844,20 +832,11 @@ StrangerAutomaton* StrangerAutomaton::union_(StrangerAutomaton* otherAuto, int i
     
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_union_with_emptycheck(M[" << this->autoTraceID << "], M["<< otherAuto->autoTraceID  << "], NUM_ASCII_TRACKS, indices_main);//"<<id << " = union_("  << this->ID <<  ", " << otherAuto->ID << ")");
-    perfInfo.numOfUnion++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_union_with_emptycheck(this->dfa,
-                                                                               otherAuto->dfa,
-                                                                               num_ascii_track,
-                                                                               indices_main)
-                                                     );
-    
-    
-    
-    long finish = PerfInfo::currentTimeMillis();
-    perfInfo.unionTime += (finish - start);
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_union_with_emptycheck(this->dfa, otherAuto->dfa, num_ascii_track, indices_main));
+    perfInfo->union_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_union++;
     
     
     
@@ -927,16 +906,11 @@ StrangerAutomaton* StrangerAutomaton::intersect(StrangerAutomaton* otherAuto, in
         return this->clone(id);
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_intersect(M[" << this->autoTraceID << "], M["<< otherAuto->autoTraceID  << "]);//"<<id << " = intersect("  << this->ID <<  ", " << otherAuto->ID << ")");
-    perfInfo.numOfIntersect++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_intersect(this->dfa, otherAuto->dfa));
-    
-    
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.intersectTime += (stop - start);
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_intersect(this->dfa, otherAuto->dfa));
+    perfInfo->intersect_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_intersect++;
     
     {
         retMe->setID(id);
@@ -985,14 +959,11 @@ StrangerAutomaton* StrangerAutomaton::preciseWiden(StrangerAutomaton* otherAuto,
     }
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfaWiden(M[" << this->autoTraceID << "], M["<< otherAuto->autoTraceID  << "]);//"<<id << " = precise_widen("  << this->ID <<  ", " << otherAuto->ID << ")");
-    perfInfo.numOfPreciseWiden++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfaWiden(this->dfa, otherAuto->dfa));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.preciseWidenTime += (stop - start);
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfaWiden(this->dfa, otherAuto->dfa));
+    perfInfo->precisewiden_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_precisewiden++;
     
     {
         retMe->setID(id);
@@ -1040,15 +1011,11 @@ StrangerAutomaton* StrangerAutomaton::coarseWiden(StrangerAutomaton* otherAuto, 
     }
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfaWiden(M[" << this->autoTraceID << "], M["<< otherAuto->autoTraceID  << "]);//"<<id << " = coarse_widen("  << this->ID <<  ", " << otherAuto->ID << ")");
-    perfInfo.numOfCoarseWiden++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfaWiden(this->dfa, otherAuto->dfa));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.coarseWidenTime += (stop - start);
-    
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfaWiden(this->dfa, otherAuto->dfa));
+    perfInfo->coarsewiden_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_coarsewiden++;
     {
         retMe->setID(id);
         retMe->debugAutomaton();
@@ -1094,19 +1061,14 @@ StrangerAutomaton* StrangerAutomaton::concatenate(StrangerAutomaton* otherAuto, 
         return makeBottom(id);
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_concat(M[" << this->autoTraceID << "], M["<< otherAuto->autoTraceID  << "], NUM_ASCII_TRACKS, indices_main);//"<<id << " = concatenate("  << this->ID <<  ", " << otherAuto->ID << ")");
-    perfInfo.numOfConcat++;
-    long start = PerfInfo::currentTimeMillis();
-    
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
     // dfa_concat_extrabit returns new dfa structure in memory so no need to
     // worry about the two dfas of this and auto
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_concat(this->dfa,
-                                                                otherAuto->dfa, num_ascii_track,
-                                                                indices_main));
-    
-    long finish = PerfInfo::currentTimeMillis();
-    perfInfo.concatTime += (finish - start);
-    
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_concat(this->dfa, otherAuto->dfa, num_ascii_track, indices_main));
+    perfInfo->concat_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_concat++;
+
     {
         retMe->setID(id);
         retMe->debugAutomaton();
@@ -1155,18 +1117,11 @@ StrangerAutomaton* StrangerAutomaton::leftPreConcat(StrangerAutomaton* rightSibl
         return makeTop(id);
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_pre_concat(M[" << this->autoTraceID << "], M[" << rightSiblingAuto->autoTraceID << "], 1, NUM_ASCII_TRACKS, indices_main);//" << id << " = leftPreConcat("  << this->ID <<  ", " << rightSiblingAuto->ID << ")");
-    perfInfo.numOfPreConcat++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_pre_concat(this->dfa,
-                                                                    rightSiblingAuto->dfa, 1,
-                                                                    num_ascii_track,
-                                                                    indices_main));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.preconcatTime += (stop - start);
-    
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_pre_concat(this->dfa, rightSiblingAuto->dfa, 1, num_ascii_track, indices_main));
+    perfInfo->pre_concat_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_pre_concat++;
     {
         retMe->setID(id);
         retMe->debugAutomaton();
@@ -1211,23 +1166,11 @@ StrangerAutomaton* StrangerAutomaton::leftPreConcatConst(std::string rightSiblin
         return makeTop(id);
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_pre_concat_const(M[" << this->autoTraceID << "], \"" << escapeSpecialChars(rightSiblingString) << "\", 1, NUM_ASCII_TRACKS, indices_main);//" <<id << " = rightPreConcatConst("  << this->ID <<  ", " << escapeSpecialChars(rightSiblingString) << ")");
-    perfInfo.numOfConstPreConcat++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_pre_concat_const(this->dfa,
-                                                                          StrangerAutomaton::strToCharStar(rightSiblingString), 1,
-                                                                          num_ascii_track,
-                                                                          indices_main));
-    
-    //		StrangerAutomaton* retMe = new StrangerAutomaton(
-    //				dfa_pre_concat(this->dfa,
-    //						makeString(rightSiblingString, -1).dfa, 1,
-    //						num_ascii_track,
-    //						indices_main));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.constpreconcatTime += (stop - start);
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_pre_concat_const(this->dfa, StrangerAutomaton::strToCharStar(rightSiblingString), 1, num_ascii_track, indices_main));
+    perfInfo->const_pre_concat_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_const_pre_concat++;
     
     
     {
@@ -1274,18 +1217,11 @@ StrangerAutomaton* StrangerAutomaton::rightPreConcat(StrangerAutomaton* leftSibl
     
     debugToFile(stringbuilder() << "M[" << (traceID) << "] = dfa_pre_concat(M[" << this->autoTraceID << "], M[" << leftSiblingAuto->autoTraceID << "], 2, NUM_ASCII_TRACKS, indices_main);//"<<id << " = rightPreConcat("  << this->ID <<  ", " << leftSiblingAuto->ID
 				<< ")");
-    perfInfo.numOfPreConcat++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_pre_concat(this->dfa,
-                                                                    leftSiblingAuto->dfa, 2,
-                                                                    num_ascii_track,
-                                                                    indices_main));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.preconcatTime += (stop - start);
-    
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_pre_concat(this->dfa, leftSiblingAuto->dfa, 2, num_ascii_track, indices_main));
+    perfInfo->pre_concat_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_pre_concat++;
     {
         retMe->setID(id);
         retMe->debugAutomaton();
@@ -1330,23 +1266,11 @@ StrangerAutomaton* StrangerAutomaton::rightPreConcatConst(std::string leftSiblin
     
     debugToFile(stringbuilder() << "M[" << traceID << "] = dfa_pre_concat_const(M[" << this->autoTraceID << "], \"" << escapeSpecialChars(leftSiblingString) << "\", 2, NUM_ASCII_TRACKS, indices_main);//" << id << " = rightPreConcatConst("  << this->ID <<  ", "
 				<< escapeSpecialChars(leftSiblingString) << ")");
-    perfInfo.numOfConstPreConcat++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_pre_concat_const(this->dfa,
-                                                                          StrangerAutomaton::strToCharStar(leftSiblingString), 2, num_ascii_track,
-                                                                          indices_main));
-    
-    //		StrangerAutomaton* retMe = new StrangerAutomaton(
-    //				dfa_pre_concat(this->dfa,
-    //						makeString(leftSiblingString, -1).dfa, 2, num_ascii_track,
-    //						indices_main));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.constpreconcatTime += (stop - start);
-    
-    
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_pre_concat_const(this->dfa, StrangerAutomaton::strToCharStar(leftSiblingString), 2, num_ascii_track, indices_main));
+    perfInfo->const_pre_concat_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_const_pre_concat++;
     
     {
         retMe->setID(id);
@@ -1498,17 +1422,11 @@ StrangerAutomaton* StrangerAutomaton::reg_replace(StrangerAutomaton* patternAuto
     
     debugToFile(stringbuilder() << "M[" << (traceID) << "] = dfa_replace_extrabit(M["<< subjectAuto->autoTraceID  << "], M[" << patternAuto->autoTraceID << "], \"" << replaceStr << "\" , NUM_ASCII_TRACKS, indices_main);//"<<id << " = reg_replace(" << patternAuto->ID << ", " << replaceStr
 				<< ", " << subjectAuto->ID << ")");
-    perfInfo.numOfReplace++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_replace_extrabit(subjectAuto->dfa,
-                                                                          patternAuto->dfa, StrangerAutomaton::strToCharStar(replaceStr),
-                                                                          num_ascii_track,
-                                                                          indices_main));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.replaceTime += (stop - start);
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_replace_extrabit(subjectAuto->dfa, patternAuto->dfa, StrangerAutomaton::strToCharStar(replaceStr), num_ascii_track, indices_main));
+    perfInfo->replace_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_replace++;
     
     {
         retMe->ID = id;
@@ -1582,17 +1500,11 @@ StrangerAutomaton* StrangerAutomaton::str_replace(StrangerAutomaton* searchAuto,
     
     debugToFile(stringbuilder() << "M[" << (traceID) << "] = dfa_replace_extrabit(M["<< subjectAuto->autoTraceID  << "], M[" << searchAuto->autoTraceID << "], \"" << replaceStr << "\" , NUM_ASCII_TRACKS, indices_main);//"<<id << " = str_replace(" << searchAuto->ID << ", " << replaceStr << ", "
 				<< subjectAuto->ID << ")");
-    perfInfo.numOfReplace++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_replace_extrabit(subjectAuto->dfa,
-                                                                          searchAuto->dfa, StrangerAutomaton::strToCharStar(replaceStr),
-                                                                          num_ascii_track,
-                                                                          indices_main));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.replaceTime += (stop - start);
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_replace_extrabit(subjectAuto->dfa,searchAuto->dfa, StrangerAutomaton::strToCharStar(replaceStr), num_ascii_track, indices_main));
+    perfInfo->replace_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_replace++;
     
     {
         retMe->ID = id;
@@ -1654,17 +1566,11 @@ StrangerAutomaton* StrangerAutomaton::preReplace(StrangerAutomaton* searchAuto,
     
     
     debugToFile(stringbuilder() << "M[" << (traceID) << "] = dfa_pre_replace_str(M[" << this->autoTraceID << "], M[" << searchAuto->autoTraceID << "], \"" << replaceString << "\" , NUM_ASCII_TRACKS, indices_main);//"<<id << " = preReplace("  << this->ID <<  ", " << searchAuto->ID << ")");
-    perfInfo.numOfPreReplace++;
-    long start = PerfInfo::currentTimeMillis();
-    
-    StrangerAutomaton* retMe = new StrangerAutomaton(
-                                                     dfa_pre_replace_str(this->dfa,
-                                                                         searchAuto->dfa, StrangerAutomaton::strToCharStar(replaceString),
-                                                                         num_ascii_track,
-                                                                         indices_main));
-    
-    long stop = PerfInfo::currentTimeMillis();
-    perfInfo.prereplaceTime += (stop - start);
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_pre_replace_str(this->dfa, searchAuto->dfa, StrangerAutomaton::strToCharStar(replaceString), num_ascii_track, indices_main));
+    perfInfo->pre_replace_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_pre_replace++;
     
     {
         retMe->setID(id);
@@ -1947,6 +1853,25 @@ unsigned StrangerAutomaton::getMaxLength() {
 }
 
 /**
+ * returns minimum length, if length is finite, otherwise handle it
+ * TODO update this function to return min length even the length is infinite
+ */
+unsigned StrangerAutomaton::getMinLength() {
+	if( !(this->isLengthFinite()) ) {
+		throw new std::runtime_error("Length of this automaton is infinite! ID: " + this->ID);
+	}
+
+	P_DFAFiniteLengths finiteLengths = dfaGetLengthsFiniteLang(this->dfa, num_ascii_track, indices_main);
+	unsigned *lengths = finiteLengths->lengths;
+	unsigned min_length = lengths[0];
+
+	free(finiteLengths->lengths);
+	free(finiteLengths);
+
+	return min_length;
+}
+
+/**
  * returns the result of this->checkEquivalence(other)
  */
 bool StrangerAutomaton::equals(StrangerAutomaton* otherAuto) {
@@ -2050,84 +1975,137 @@ bool StrangerAutomaton::isTop() {
 
 
 StrangerAutomaton* StrangerAutomaton::toUpperCase(int id){
+
     debug(stringbuilder() << id <<  " = dfaToUpperCase("  << this->ID << ")");
-    StrangerAutomaton* retMe = new StrangerAutomaton(dfaToUpperCase(this->dfa, num_ascii_track, indices_main));
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
+	StrangerAutomaton* retMe = new StrangerAutomaton(dfaToUpperCase(this->dfa, num_ascii_track, indices_main));
+	perfInfo->to_uppercase_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_to_uppercase++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::toLowerCase(int id){
+
     debug(stringbuilder() << id <<  " = dfaToLowerCase("  << this->ID << ")");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaToLowerCase(this->dfa, num_ascii_track, indices_main));
+	perfInfo->to_lowercase_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_to_lowercase++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::preToUpperCase(int id){
+
     debug(stringbuilder() << id <<  " = dfaPreToUpperCase("  << this->ID << ")");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreToUpperCase(this->dfa, num_ascii_track, indices_main));
+	perfInfo->pre_to_uppercase_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_to_uppercase++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::preToLowerCase(int id){
+
     debug(stringbuilder() << id <<  " = dfaPreToLowerCase("  << this->ID << ")");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreToLowerCase(this->dfa, num_ascii_track, indices_main));
+	perfInfo->pre_to_lowercase_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_to_lowercase++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::trimSpaces(int id){
+
     debug(stringbuilder() << id <<  " = dfaTrim(' ', "  << this->ID << ")");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaTrim(this->dfa, ' ', num_ascii_track, indices_main));
+	perfInfo->trim_spaces_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_trim_spaces++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
+
 StrangerAutomaton* StrangerAutomaton::trimSpacesLeft(int id){
+
     debug(stringbuilder() << id <<  " = dfaLeftTrim(' ', "  << this->ID << ")");
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaLeftTrim(this->dfa, ' ', num_ascii_track, indices_main));
+	perfInfo->trim_spaces_left_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_trim_spaces_left++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
+
 StrangerAutomaton* StrangerAutomaton::trimSpacesRight(int id){
+
     debug(stringbuilder() << id <<  " = dfaRightTrim(' ', "  << this->ID << ")");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaRightTrim(this->dfa, ' ', num_ascii_track, indices_main));
+	perfInfo->trim_spaces_right_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_trim_spaces_right++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
+
 StrangerAutomaton* StrangerAutomaton::trim(char c, int id){
+
     debug(stringbuilder() << id <<  " = dfaTrim(" << this->ID << "," << c << ")");
+
+//    boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaTrim(this->dfa, c, num_ascii_track, indices_main));
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 StrangerAutomaton* StrangerAutomaton::trimLeft(char c, int id){
+
     debug(stringbuilder() << id <<  " = dfaLeftTrim(" << this->ID << "," << c << ")");
+
+//	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaLeftTrim(this->dfa, c, num_ascii_track, indices_main));
+
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 StrangerAutomaton* StrangerAutomaton::trimRight(char c, int id){
+
     debug(stringbuilder() << id <<  " = dfaRightTrim(" << this->ID << "," << c << ")");
+
+//    boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaRightTrim(this->dfa, c, num_ascii_track, indices_main));
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 StrangerAutomaton* StrangerAutomaton::trim(char chars[], int id){
+
     debug(stringbuilder() << id <<  " = dfaTrimSet(" << this->ID << ",chars )\n");
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaTrimSet(this->dfa, chars, (int)strlen(chars), num_ascii_track, indices_main));
+	perfInfo->trim_set_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_trim_set++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 //	    StrangerAutomaton* StrangerAutomaton::trimLeft(char chars[]){
@@ -2138,23 +2116,30 @@ StrangerAutomaton* StrangerAutomaton::trim(char chars[], int id){
 //	    }
 
 StrangerAutomaton* StrangerAutomaton::preTrimSpaces(int id){
+
     debug(stringbuilder() << id <<  " = dfaPreTrim(" << this->ID << ",' ')\n");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreTrim(this->dfa, ' ', num_ascii_track, indices_main));
+	perfInfo->pre_trim_spaces_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_trim_spaces++;
+
     retMe->setID(id);
-    retMe->debugAutomaton();
     return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::addslashes(StrangerAutomaton* subjectAuto, int id)
 {
-    
+
     debug(stringbuilder() << id << " = addSlashes(" << subjectAuto->ID << ");");
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaAddSlashes(subjectAuto->dfa, num_ascii_track, indices_main));
-    {
-        retMe->ID = id;
-        retMe->debugAutomaton();
-    }
-    
+    perfInfo->addslashes_total_time += perfInfo->current_time() - start_time;
+    perfInfo->number_of_addslashes++;
+
+	retMe->ID = id;
+	retMe->debugAutomaton();
     return retMe;
 }
 
@@ -2162,27 +2147,42 @@ StrangerAutomaton* StrangerAutomaton::addslashes(StrangerAutomaton* subjectAuto,
 
 StrangerAutomaton* StrangerAutomaton::pre_addslashes(StrangerAutomaton* subjectAuto, int id)
 {
-    
+
 	debug(stringbuilder() << id << " = pre_addSlashes(" << subjectAuto->ID << ");");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
 	StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreAddSlashes(subjectAuto->dfa, num_ascii_track, indices_main));
-	{
-		retMe->ID = id;
-        retMe->debugAutomaton();
-	}
-    
+	perfInfo->pre_addslashes_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_addslashes++;
+
+	retMe->ID = id;
+	retMe->debugAutomaton();
 	return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::htmlSpecialChars(StrangerAutomaton* subjectAuto, string flag, int id)
 {
-    hscflags_t _flag = ENT_COMPAT;
+	cout << "**********************************************************************************************************" << endl;
+    hscflags_t _flag;
+    if (flag == "ENT_COMPAT")
+		_flag = ENT_COMPAT;
+    else if (flag == "ENT_QUOTES")
+		_flag = ENT_QUOTES;
+    else if (flag == "ENT_NOQUOTES")
+		_flag = ENT_NOQUOTES;
+    else
+		throw new std::runtime_error(stringbuilder() << "htmlspecialchar is not supporting the flag: " << flag);
+
     debug(stringbuilder() << id << " = htmlSpecialChars(" << subjectAuto->ID << ");");
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaHtmlSpecialChars(subjectAuto->dfa, num_ascii_track, indices_main, _flag));
-    {
-        retMe->ID = id;
-        retMe->debugAutomaton();
-    }
-    
+    perfInfo->htmlspecialchars_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_htmlspecialchars++;
+
+	cout << "perfinfo: " << perfInfo->number_of_htmlspecialchars << endl;
+	retMe->ID = id;
+	retMe->debugAutomaton();
     return retMe;
 }
 
@@ -2190,73 +2190,101 @@ StrangerAutomaton* StrangerAutomaton::htmlSpecialChars(StrangerAutomaton* subjec
 
 StrangerAutomaton* StrangerAutomaton::preHtmlSpecialChars(StrangerAutomaton* subjectAuto, string flag, int id)
 {
-	hscflags_t _flag = ENT_COMPAT;
+
+    hscflags_t _flag;
+    if (flag == "ENT_COMPAT")
+		_flag = ENT_COMPAT;
+    else if (flag == "ENT_QUOTES")
+		_flag = ENT_QUOTES;
+    else if (flag == "ENT_NOQUOTES")
+		_flag = ENT_NOQUOTES;
+    else
+		throw new std::runtime_error(stringbuilder() << "htmlspecialchar is not supporting the flag: " << flag);
+
 	debug(stringbuilder() << id << " = preHtmlSpecialChars(" << subjectAuto->ID << ");");
+	boost::posix_time::ptime start_time = perfInfo->current_time();
 	StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreHtmlSpecialChars(subjectAuto->dfa, num_ascii_track, indices_main, _flag));
-	{
-		retMe->ID = id;
-        retMe->debugAutomaton();
-	}
-    
+	perfInfo->pre_htmlspecialchars_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_htmlspecialchars++;
+
+	retMe->ID = id;
+	retMe->debugAutomaton();
 	return retMe;
 }
 
 
 StrangerAutomaton* StrangerAutomaton::stripslashes(StrangerAutomaton* subjectAuto, int id)
 {
+	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton *sigmaStar = StrangerAutomaton::regExToAuto("/(.*('|\\\"|\\\\).*)+/", true, id);
-    sigmaStar->toDotAscii(0);
+//    sigmaStar->toDotAscii(0);
     StrangerAutomaton *sigmaStarSlashed = addslashes(sigmaStar, id);
-    sigmaStarSlashed->toDotAscii(0);
+//    sigmaStarSlashed->toDotAscii(0);
     delete sigmaStar;
     StrangerAutomaton *sigmaStarNotSlashed = sigmaStarSlashed->complement(id);
-    sigmaStarNotSlashed->toDotAscii(0);
+//    sigmaStarNotSlashed->toDotAscii(0);
     StrangerAutomaton *slashed = subjectAuto->intersect(sigmaStarSlashed, id);
-    slashed->toDotAscii(0);
+//    slashed->toDotAscii(0);
     delete sigmaStarSlashed;
     StrangerAutomaton *notSlashed = subjectAuto->intersect(sigmaStarNotSlashed, id);
-    notSlashed->toDotAscii(0);
+//    notSlashed->toDotAscii(0);
     delete sigmaStarNotSlashed;
     StrangerAutomaton *slashedPre = pre_addslashes(slashed, id);
-    slashedPre->toDotAscii(0);
+//    slashedPre->toDotAscii(0);
     delete slashed;
     StrangerAutomaton *retMe = notSlashed->union_(slashedPre, id);
     delete slashedPre;
-    {
-		retMe->ID = id;
-        retMe->debugAutomaton();
-	}
+
+    perfInfo->stripslashes_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_stripslashes++;
+
+
+	retMe->ID = id;
+	retMe->debugAutomaton();
 
     return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::pre_stripslashes(StrangerAutomaton* subjectAuto, int id)
 {
+
     StrangerAutomaton *slashed = addslashes(subjectAuto, id);
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton *result = slashed->union_(subjectAuto, id);
+    perfInfo->pre_stripslashes_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_stripslashes++;
+
     delete slashed;
     return result;
 }
 
 StrangerAutomaton* StrangerAutomaton::mysql_escape_string(StrangerAutomaton* subjectAuto, int id) {
-    debug(stringbuilder() << id << " = mysql_escape_string(" << subjectAuto->ID << ");");
-    StrangerAutomaton* retMe = new StrangerAutomaton(dfaMysqlEscapeString(subjectAuto->dfa, num_ascii_track, indices_main));
-    {
-        retMe->ID = id;
-        retMe->debugAutomaton();
-    }
 
+    debug(stringbuilder() << id << " = mysql_escape_string(" << subjectAuto->ID << ");");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfaMysqlEscapeString(subjectAuto->dfa, num_ascii_track, indices_main));
+    perfInfo->mysql_escape_string_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_mysql_escape_string++;
+
+	retMe->ID = id;
+	retMe->debugAutomaton();
     return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::pre_mysql_escape_string(StrangerAutomaton* subjectAuto, int id) {
-	debug(stringbuilder() << id << " = pre_mysql_escape_string(" << subjectAuto->ID << ");");
-	StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreMysqlEscapeString(subjectAuto->dfa, num_ascii_track, indices_main));
-	{
-		retMe->ID = id;
-        retMe->debugAutomaton();
-	}
 
+	debug(stringbuilder() << id << " = pre_mysql_escape_string(" << subjectAuto->ID << ");");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
+	StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreMysqlEscapeString(subjectAuto->dfa, num_ascii_track, indices_main));
+    perfInfo->pre_mysql_escape_string_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_mysql_escape_string++;
+
+
+	retMe->ID = id;
+	retMe->debugAutomaton();
 	return retMe;
 }
 

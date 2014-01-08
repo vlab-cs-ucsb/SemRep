@@ -1289,7 +1289,6 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 			cout << "\t    - no validation patch" << endl;
 		}
 
-		cout << "\t    - validation patch analysis time: " << StrangerPatcher::perfInfo.validation_patch_extraction.total_milliseconds() << endl;
 
 		if (strangerPatcher.is_validation_patch_for_length_issue_required) {
 			cout << "\t    - second validation patch for length issue is generated" << endl;
@@ -1302,6 +1301,10 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		} else {
 			cout << "\t    - no sanitization patch" << endl;
 		}
+
+		strangerPatcher.perfInfo.print_validation_extraction_info();
+		strangerPatcher.perfInfo.print_sanitization_extraction_info();
+		strangerPatcher.perfInfo.print_operations_info();
 
 	} catch (StrangerStringAnalysisException const &e) {
 		cerr << e.what();
