@@ -100,6 +100,7 @@ AnalysisResult ForwardImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph
 		}
 	}
 
+
 	if (it != sortedNodes.rend()) { // if it is not NULL it can't be the last node, now continue analysis with the rest of the nodes
 		while ( ++it != sortedNodes.rend()) {
 			DepGraphNode* node = (DepGraphNode*)(*it);
@@ -193,7 +194,6 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 	NodesList successors = depGraph.getSuccessors(opNode);
 	StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
 	string opName = opNode->getName();
-
 	if (!opNode->isBuiltin()) {
 		// __vlab_restrict
         if (opName.find("__vlab_restrict") != string::npos) {
@@ -328,6 +328,78 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of htmlspecialchars (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
 					"makeBackwardAutoForOpChild_ValidationPhase()");
 		}
+
+	} else if (opName == "preg_replace") {
+
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace invalid number of arguments: "
+					"makeBackwardAutoForOpChild_ValidationPhase()");
+		}
+
+		DepGraphNode* subjectNode = successors[2];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* replaceNode = successors[1];
+
+		StrangerAutomaton* subjectAuto = opAuto;
+
+		if (childNode->equals(subjectNode)) {
+
+			DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
+			if (pNode == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find pattern node: "
+						"makeBackwardAutoForOpChild_ValidationPhase()");
+			}
+
+			Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
+			if (patternLit == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find literal as pattern node: "
+						"makeBackwardAutoForOpChild_ValidationPhase()");
+			}
+			string regString = patternLit->getLiteralValue();
+
+			if (regString.find_first_of('/') == 0 &&
+					regString.find_last_of('/') == (regString.length() -1) ) {
+				regString = regString.substr( 1,regString.length()-2);
+			}
+
+			if(regString.find_first_of('^') == 0 &&
+					regString.find_last_of('$') == (regString.length() -1)){
+				regString = "/" + regString.substr( 1,regString.length()-2) + "/";
+			}
+			else {
+				regString = "/.*(" + regString + ").*/";
+			}
+
+			StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
+
+			DepGraphNormalNode* rNode = dynamic_cast<DepGraphNormalNode*>(replaceNode);
+			if (rNode == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find replace node: "
+						"makeBackwardAutoForOpChild_ValidationPhase()");
+			}
+
+			Literal* replaceLit = dynamic_cast<Literal*>(rNode->getPlace());
+			if (replaceLit == NULL) {
+				throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find literal as replace node: "
+						"makeBackwardAutoForOpChild_ValidationPhase()");
+			}
+
+			string replaceStr = replaceLit->getLiteralValue();
+
+			StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(subjectAuto->getID());
+			StrangerAutomaton* forward = StrangerAutomaton::reg_replace(regx, replaceStr, sigmaStar, subjectAuto->getID());
+			StrangerAutomaton* intersection = subjectAuto->intersect(forward, childNode->getID());
+			retMe = intersection->preReplace(regx, replaceStr, childNode->getID());
+			delete sigmaStar;
+			delete forward;
+			delete intersection;
+			delete regx;
+
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: child node (" << childNode->getID() << ") of preg_replace (" << opNode->getID() << ") is not in backward path,\ncheck implementation: "
+					"makeBackwardAutoForOpChild_ValidationPhase()");
+		}
+
 
 	} else if (opName == "strip_tags") {
 		cout << endl << "!!!!! strip_tags is not implemented yet" << endl;
@@ -563,8 +635,69 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 		}
 
 	} else if (opName == "preg_replace") {
-		throw StrangerStringAnalysisException("Implement preg_replace: "
-				"makeForwardAutoForOp_RegularPhase()");
+
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace invalid number of arguments: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		DepGraphNode* subjectNode = successors[2];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* replaceNode = successors[1];
+
+		AnalysisResultIterator rit = analysisResult.find(subjectNode->getID());
+		if (rit == analysisResult.end()) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find subject auto: "
+									"makeForwardAutoForOp_RegularPhase()");
+		}
+		StrangerAutomaton* subjectAuto = rit->second;
+
+		DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
+		if (pNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find pattern node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
+		if (patternLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find literal as pattern node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+		string regString = patternLit->getLiteralValue();
+
+		if (regString.find_first_of('/') == 0 &&
+				regString.find_last_of('/') == (regString.length() -1) ) {
+			regString = regString.substr( 1,regString.length()-2);
+		}
+
+		if(regString.find_first_of('^') == 0 &&
+				regString.find_last_of('$') == (regString.length() -1)){
+			regString = "/" + regString.substr( 1,regString.length()-2) + "/";
+		}
+		else {
+			regString = "/.*(" + regString + ").*/";
+		}
+
+		StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
+
+		DepGraphNormalNode* rNode = dynamic_cast<DepGraphNormalNode*>(replaceNode);
+		if (rNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find replace node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		Literal* replaceLit = dynamic_cast<Literal*>(rNode->getPlace());
+		if (replaceLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find literal as replace node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		string replaceStr = replaceLit->getLiteralValue();
+
+		retMe = StrangerAutomaton::reg_replace(regx,replaceStr,subjectAuto, opNode->getID());
+
+		delete regx;
+
 	} else if (opName == "ereg_replace") {
 		throw StrangerStringAnalysisException("ereg_replace is not supported yet: "
 						"makeForwardAutoForOp_RegularPhase()");
@@ -947,6 +1080,65 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 	} else if (opName == "mysql_escape_string") {
 		// has one parameter
 		retMe = StrangerAutomaton::pre_mysql_escape_string(opAuto, childNode->getID());
+	} else if (opName == "preg_replace") {
+
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace invalid number of arguments: "
+					"makeBackwardAutoForOpChild_RegularPhase()");
+		}
+
+		DepGraphNode* subjectNode = successors[2];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* replaceNode = successors[1];
+
+		StrangerAutomaton* subjectAuto = opAuto;
+
+		DepGraphNormalNode* pNode = dynamic_cast<DepGraphNormalNode*>(patternNode);
+		if (pNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find pattern node: "
+					"makeBackwardAutoForOpChild_RegularPhase()");
+		}
+
+		Literal* patternLit = dynamic_cast<Literal*>(pNode->getPlace());
+		if (patternLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find literal as pattern node: "
+					"makeBackwardAutoForOpChild_RegularPhase()");
+		}
+		string regString = patternLit->getLiteralValue();
+
+		if (regString.find_first_of('/') == 0 &&
+				regString.find_last_of('/') == (regString.length() -1) ) {
+			regString = regString.substr( 1,regString.length()-2);
+		}
+
+		if(regString.find_first_of('^') == 0 &&
+				regString.find_last_of('$') == (regString.length() -1)){
+			regString = "/" + regString.substr( 1,regString.length()-2) + "/";
+		}
+		else {
+			regString = "/.*(" + regString + ").*/";
+		}
+
+		StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
+
+		DepGraphNormalNode* rNode = dynamic_cast<DepGraphNormalNode*>(replaceNode);
+		if (rNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find replace node: "
+					"makeBackwardAutoForOpChild_RegularPhase()");
+		}
+
+		Literal* replaceLit = dynamic_cast<Literal*>(rNode->getPlace());
+		if (replaceLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace cannot find literal as replace node: "
+					"makeBackwardAutoForOpChild_RegularPhase()");
+		}
+
+		string replaceStr = replaceLit->getLiteralValue();
+
+		retMe = subjectAuto->preReplace(regx, replaceStr, childNode->getID());
+
+		delete regx;
+
 	} else if (opName == "md5") {
 		cout << endl << "!!!!! md5 cannot be implemented, continues with previous node results" << endl;
 		retMe = bwAnalysisResult.find( childNode->getID() )->second;
@@ -2133,7 +2325,7 @@ StrangerAutomaton* ForwardImageComputer::makeAutoForOp(DepGraphOpNode* opNode, A
 			string replaceStr = analysisResult[successors[1]->getID()]->getStr();
 
 			StrangerAutomaton* replacement = StrangerAutomaton::reg_replace(
-					patternAuto, replaceStr, subjectAuto, true, opNode->getID());
+					patternAuto, replaceStr, subjectAuto, opNode->getID());
             delete patternAuto;
 			return replacement;
 

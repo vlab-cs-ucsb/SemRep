@@ -1,7 +1,7 @@
 //============================================================================
 // Name        : StrangerWrapper.cpp
-// Author      : 
-// Version     :
+// Author      : Abdulbaki Aydin
+// Version     : 0.1b
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
 //============================================================================
@@ -2524,11 +2524,67 @@ void patch_schoolmate_validatelogin__username(bool reversed) {
 	}
 }
 
+/****************************************************************************************************/
+/*********** useBB *********************************************/
+/****************************************************************************************************/
+
+void patch_usebb_login_user(bool reversed) {
+	string field_name = "user";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_login.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_login_user.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_usebb_register_user(bool reversed) {
+	string field_name = "user";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register_user.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+void patch_usebb_register_email(bool reversed) {
+	string field_name = "email";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register_email.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+/****************************************************************************************************/
+/*********** SERVER-SERVER Comparisons *********************************************/
+/****************************************************************************************************/
+
+void patch_(bool reversed) {
+	string field_name = "username";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_validatelogin.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/schoolmate/schoolmate_validatelogin__username.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
 
 int main(int argc, char *argv[]) {
 
 /***********	Client - Server Patching	***********/
 	bool patchClient = false;
+	bool reversed = false;
 //	patch_paperexample_email(patchClient);
 
 //	patch_snipe_frame__form_frame_name(patchClient);
@@ -2571,7 +2627,7 @@ int main(int argc, char *argv[]) {
 //	patch_schoolmate_header__numperiods(patchClient);
 //	patch_schoolmate_header__numsemesters(patchClient);
 //	patch_schoolmate_header__schooladdress(patchClient);
-	patch_schoolmate_header__schoolname(patchClient);
+//	patch_schoolmate_header__schoolname(patchClient);
 //	patch_schoolmate_header__schoolphone(patchClient);
 //	patch_schoolmate_header__sitemessage(patchClient);
 //	patch_schoolmate_header__sitetext(patchClient);
@@ -2633,5 +2689,8 @@ int main(int argc, char *argv[]) {
 //	patch_schoolmate_manageusers_39__userid(patchClient);
 //	patch_schoolmate_validatelogin__username(patchClient);
 
+	patch_usebb_login_user(patchClient);
+//	patch_usebb_register_user(patchClient);
+//	patch_usebb_register_email(patchClient);
 	return 0;
 }

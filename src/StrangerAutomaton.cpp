@@ -1400,8 +1400,7 @@ StrangerAutomaton* StrangerAutomaton::regExToAuto(std::string phpRegexOrig) {
  */
 //TODO: merge this with str_replace as we no longer need preg
 StrangerAutomaton* StrangerAutomaton::reg_replace(StrangerAutomaton* patternAuto,
-                                                  std::string replaceStr, StrangerAutomaton* subjectAuto, bool preg,
-                                                  int id) {
+                                                  std::string replaceStr, StrangerAutomaton* subjectAuto, int id) {
     
     debug(stringbuilder() << id <<  " = reg_replace(" << patternAuto->ID << ", " << replaceStr << ", " << subjectAuto->ID << ")");
     // Note: the replaceAuto parameter should be of type
@@ -1430,7 +1429,7 @@ StrangerAutomaton* StrangerAutomaton::reg_replace(StrangerAutomaton* patternAuto
     
     {
         retMe->ID = id;
-        retMe->debugAutomaton();
+//        retMe->debugAutomaton();
     }
     return retMe;
 }
@@ -1454,7 +1453,7 @@ StrangerAutomaton* StrangerAutomaton::reg_replace(StrangerAutomaton* patternAuto
 //TODO: merge this with str_replace as we no longer need preg
 StrangerAutomaton* StrangerAutomaton::reg_replace(StrangerAutomaton* patternAuto,
                                                   std::string replaceStr, StrangerAutomaton* subjectAuto) {
-    return reg_replace(patternAuto, replaceStr, subjectAuto, true, traceID);
+    return reg_replace(patternAuto, replaceStr, subjectAuto, traceID);
 }
 
 /**
@@ -1508,7 +1507,7 @@ StrangerAutomaton* StrangerAutomaton::str_replace(StrangerAutomaton* searchAuto,
     
     {
         retMe->ID = id;
-        retMe->debugAutomaton();
+//        retMe->debugAutomaton();
     }
     return retMe;
 }

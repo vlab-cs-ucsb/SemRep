@@ -92,7 +92,7 @@ public:
     StrangerAutomaton* rightPreConcatConst(std::string leftSiblingString);
     static StrangerAutomaton* regExToAuto(std::string phpRegexOrig, bool preg, int id);
     static StrangerAutomaton* regExToAuto(std::string phpRegexOrig);
-    static StrangerAutomaton* reg_replace(StrangerAutomaton* patternAuto, std::string replaceStr, StrangerAutomaton* subjectAuto, bool preg, int id);
+    static StrangerAutomaton* reg_replace(StrangerAutomaton* patternAuto, std::string replaceStr, StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* reg_replace(StrangerAutomaton* patternAuto, std::string replaceStr, StrangerAutomaton* subjectAuto);
     static StrangerAutomaton* str_replace(StrangerAutomaton* searchAuto, std::string replaceStr, StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* str_replace(StrangerAutomaton* searchAuto, std::string replaceStr, StrangerAutomaton* subjectAuto);
