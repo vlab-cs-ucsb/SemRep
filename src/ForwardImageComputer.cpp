@@ -440,7 +440,6 @@ void ForwardImageComputer::doForwardAnalysis_RegularPhase(
 		doForwardNodeComputation_RegularPhase(origDepGraph, inputDepGraph, node, analysisResult);
 	}
 
-	cout << "$$$$$$$$$$$$$$$$$$$$$$$$$ " << perfInfo->number_of_htmlspecialchars << endl;
 	return;
 }
 
