@@ -196,6 +196,12 @@ public:
     static int* getIndices(int length) { return allocateAscIIIndexWithExtraBit(length);};
     static unsigned *getUnsignedIndices(int length);
     static char* strToCharStar(const std::string s);
+    int get_num_of_states(){
+		return this->dfa->ns;
+    }
+	unsigned get_num_of_bdd_nodes(){
+		return bdd_size(this->dfa->bddm);
+	}
 //    static void setPerfInfo(PerfInfo& pInfo) { perfInfo = pInfo; };
 //    static PerfInfo& getPerfInfo() { return perfInfo; };
     static void staticInit();

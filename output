@@ -1,269 +1,19 @@
 
-~~~~~~~~~~~>>> StrangerPatcher says: patcher uninit node(7) found for field user.
+~~~~~~~~~~~>>> StrangerPatcher says: patcher uninit node(22) found for field email.
 
-~~~~~~~~~~~>>> StrangerPatcher says: patchee uninit node(33) found for field user.
+~~~~~~~~~~~>>> StrangerPatcher says: patchee uninit node(7) found for field email.
 
 ~~~~~~~~~~~>>> StrangerPatcher says: BEGIN VALIDATION EXTRACTION PHASE........................................
 
 ~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patcher
 		: validation function found!
 
------------>>> DEBUGGER says: patcher validation auto:
-digraph MONA_DFA {
- rankdir = LR;
- center = true;
- size = "700.5,1000.5";
- edge [fontname = Courier];
- node [height = .5, width = .5];
- node [shape = doublecircle]; 0; 1; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20; 21; 22; 23; 24; 25; 26;
- node [shape = circle];
- node [shape = box];
- init [shape = plaintext, label = ""];
- init -> 0;
- 0 -> 1 [label=" [NUL-253]"];
- 1 -> 3 [label=" [NUL-253]"];
- 3 -> 4 [label=" [NUL-253]"];
- 4 -> 5 [label=" [NUL-253]"];
- 5 -> 6 [label=" [NUL-253]"];
- 6 -> 7 [label=" [NUL-253]"];
- 7 -> 8 [label=" [NUL-253]"];
- 8 -> 9 [label=" [NUL-253]"];
- 9 -> 10 [label=" [NUL-253]"];
- 10 -> 11 [label=" [NUL-253]"];
- 11 -> 12 [label=" [NUL-253]"];
- 12 -> 13 [label=" [NUL-253]"];
- 13 -> 14 [label=" [NUL-253]"];
- 14 -> 15 [label=" [NUL-253]"];
- 15 -> 16 [label=" [NUL-253]"];
- 16 -> 17 [label=" [NUL-253]"];
- 17 -> 18 [label=" [NUL-253]"];
- 18 -> 19 [label=" [NUL-253]"];
- 19 -> 20 [label=" [NUL-253]"];
- 20 -> 21 [label=" [NUL-253]"];
- 21 -> 22 [label=" [NUL-253]"];
- 22 -> 23 [label=" [NUL-253]"];
- 23 -> 24 [label=" [NUL-253]"];
- 24 -> 25 [label=" [NUL-253]"];
- 25 -> 26 [label=" [NUL-253]"];
-}
-
 ~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patchee
-Insert sharp1 and sharp2 for duplicate M1
-Generate M2 bar sharp1 M2 and sharp2
-Generate Intersection
-Check Intersection
-Start Replacement!
-Replacement [ ]!
-len in dfa_replace_char = 10, max_exeps = 1024
-Minimize final replace result
-
-
-
-dfa after left trim
-0 -> 0: ', ", \, 
 		: validation function found!
-
------------>>> DEBUGGER says: patchee validation auto:
-digraph MONA_DFA {
- rankdir = LR;
- center = true;
- size = "700.5,1000.5";
- edge [fontname = Courier];
- node [height = .5, width = .5];
- node [shape = doublecircle]; 2;
- node [shape = circle]; 0;
- node [shape = box];
- init [shape = plaintext, label = ""];
- init -> 0;
- 0 -> 0 [label=" \\s"];
- 0 -> 2 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 2 -> 2 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
-}
 
 ~~~~~~~~~~~>>> StrangerPatcher says: computing validation patch
 
------------>>> DEBUGGER says: difference auto:
-digraph MONA_DFA {
- rankdir = LR;
- center = true;
- size = "700.5,1000.5";
- edge [fontname = Courier];
- node [height = .5, width = .5];
- node [shape = doublecircle]; 52;
- node [shape = circle]; 0; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20; 21; 22; 23; 24; 25; 26; 27; 28; 29; 30; 31; 32; 33; 34; 35; 36; 37; 38; 39; 40; 41; 42; 43; 44; 45; 46; 47; 48; 49; 50; 51;
- node [shape = box];
- init [shape = plaintext, label = ""];
- init -> 0;
- 0 -> 2 [label=" \\s"];
- 0 -> 3 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 2 -> 4 [label=" \\s"];
- 2 -> 5 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 3 -> 5 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 4 -> 6 [label=" \\s"];
- 4 -> 7 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 5 -> 7 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 6 -> 8 [label=" \\s"];
- 6 -> 9 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 7 -> 9 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 8 -> 10 [label=" \\s"];
- 8 -> 11 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 9 -> 11 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 10 -> 12 [label=" \\s"];
- 10 -> 13 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 11 -> 13 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 12 -> 14 [label=" \\s"];
- 12 -> 15 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 13 -> 15 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 14 -> 16 [label=" \\s"];
- 14 -> 17 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 15 -> 17 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 16 -> 18 [label=" \\s"];
- 16 -> 19 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 17 -> 19 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 18 -> 20 [label=" \\s"];
- 18 -> 21 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 19 -> 21 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 20 -> 22 [label=" \\s"];
- 20 -> 23 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 21 -> 23 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 22 -> 24 [label=" \\s"];
- 22 -> 25 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 23 -> 25 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 24 -> 26 [label=" \\s"];
- 24 -> 27 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 25 -> 27 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 26 -> 28 [label=" \\s"];
- 26 -> 29 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 27 -> 29 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 28 -> 30 [label=" \\s"];
- 28 -> 31 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 29 -> 31 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 30 -> 32 [label=" \\s"];
- 30 -> 33 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 31 -> 33 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 32 -> 34 [label=" \\s"];
- 32 -> 35 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 33 -> 35 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 34 -> 36 [label=" \\s"];
- 34 -> 37 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 35 -> 37 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 36 -> 38 [label=" \\s"];
- 36 -> 39 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 37 -> 39 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 38 -> 40 [label=" \\s"];
- 38 -> 41 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 39 -> 41 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 40 -> 42 [label=" \\s"];
- 40 -> 43 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 41 -> 43 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 42 -> 44 [label=" \\s"];
- 42 -> 45 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 43 -> 45 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 44 -> 46 [label=" \\s"];
- 44 -> 47 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 45 -> 47 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 46 -> 48 [label=" \\s"];
- 46 -> 49 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 47 -> 49 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 48 -> 50 [label=" \\s"];
- 48 -> 51 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 49 -> 51 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 50 -> 50 [label=" \\s"];
- 50 -> 52 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 51 -> 52 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 52 -> 52 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
-}
-
------------>>> DEBUGGER says: intersection auto:
-digraph MONA_DFA {
- rankdir = LR;
- center = true;
- size = "700.5,1000.5";
- edge [fontname = Courier];
- node [height = .5, width = .5];
- node [shape = doublecircle]; 3; 5; 7; 9; 11; 13; 15; 17; 19; 21; 23; 25; 27; 29; 31; 33; 35; 37; 39; 41; 43; 45; 47; 49; 50;
- node [shape = circle]; 0; 2; 4; 6; 8; 10; 12; 14; 16; 18; 20; 22; 24; 26; 28; 30; 32; 34; 36; 38; 40; 42; 44; 46; 48;
- node [shape = box];
- init [shape = plaintext, label = ""];
- init -> 0;
- 0 -> 2 [label=" \\s"];
- 0 -> 3 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 2 -> 4 [label=" \\s"];
- 2 -> 5 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 3 -> 5 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 4 -> 6 [label=" \\s"];
- 4 -> 7 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 5 -> 7 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 6 -> 8 [label=" \\s"];
- 6 -> 9 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 7 -> 9 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 8 -> 10 [label=" \\s"];
- 8 -> 11 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 9 -> 11 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 10 -> 12 [label=" \\s"];
- 10 -> 13 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 11 -> 13 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 12 -> 14 [label=" \\s"];
- 12 -> 15 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 13 -> 15 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 14 -> 16 [label=" \\s"];
- 14 -> 17 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 15 -> 17 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 16 -> 18 [label=" \\s"];
- 16 -> 19 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 17 -> 19 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 18 -> 20 [label=" \\s"];
- 18 -> 21 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 19 -> 21 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 20 -> 22 [label=" \\s"];
- 20 -> 23 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 21 -> 23 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 22 -> 24 [label=" \\s"];
- 22 -> 25 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 23 -> 25 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 24 -> 26 [label=" \\s"];
- 24 -> 27 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 25 -> 27 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 26 -> 28 [label=" \\s"];
- 26 -> 29 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 27 -> 29 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 28 -> 30 [label=" \\s"];
- 28 -> 31 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 29 -> 31 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 30 -> 32 [label=" \\s"];
- 30 -> 33 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 31 -> 33 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 32 -> 34 [label=" \\s"];
- 32 -> 35 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 33 -> 35 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 34 -> 36 [label=" \\s"];
- 34 -> 37 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 35 -> 37 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 36 -> 38 [label=" \\s"];
- 36 -> 39 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 37 -> 39 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 38 -> 40 [label=" \\s"];
- 38 -> 41 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 39 -> 41 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 40 -> 42 [label=" \\s"];
- 40 -> 43 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 41 -> 43 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 42 -> 44 [label=" \\s"];
- 42 -> 45 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 43 -> 45 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 44 -> 46 [label=" \\s"];
- 44 -> 47 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 45 -> 47 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 46 -> 48 [label=" \\s"];
- 46 -> 49 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 47 -> 49 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
- 48 -> 50 [label=" -, [0-9], [A-Z], _, [a-z]"];
- 49 -> 50 [label=" \\s, -, [0-9], [A-Z], _, [a-z]\n"];
-}
-
-~~~~~~~~~~~>>> StrangerPatcher says: validation patch is generated for input: user
-
------------>>> DEBUGGER says: validation patch is intersection auto...
+~~~~~~~~~~~>>> StrangerPatcher says: validation patch is generated for input: email
 
 ~~~~~~~~~~~>>> StrangerPatcher says: ........................................END VALIDATION EXTRACTION PHASE
 
@@ -271,16 +21,9 @@ digraph MONA_DFA {
 
 ~~~~~~~~~~~>>> StrangerPatcher says: initializing patcher inputs with bottom
 
-~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(7) with sigma star
+~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(22) with sigma star
 
 ~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patcher...
-##### : 7
-##### : 6
-##### : 5
-##### : 3
-##### : 2
-##### : 1
-##### : 0
 
 ~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patcher.
 
@@ -288,10 +31,71 @@ digraph MONA_DFA {
 
 ~~~~~~~~~~~>>> StrangerPatcher says: initializing patchee inputs with bottom
 
-~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(33) with validation patch auto
+~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(7) with validation patch auto
 
 ~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patchee
-##### : 33
-##### : 32
-##### : 31
-StrangerWrapper: ../function_models.c:2236: dfa_escape: Assertion `statePairs->index < 2147483647 && statePairs->sorted' failed.
+
+~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patchee.
+
+~~~~~~~~~~~>>> StrangerPatcher says: checking difference between patcher and patchee
+
+~~~~~~~~~~~>>> StrangerPatcher says: no difference, no sanitization patch required!
+
+	------ OVERALL RESULT for: email ------
+	    Patcher: /home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_1.dot
+	    Patchee: /home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_2.dot
+	    - validation patch is generated
+	size: #states 282 : #bddnodes 4195
+	    - no second validation patch for length issue
+	    - no sanitization patch
+
+	 Validation Patch Analysis Info
+	 time : patchee backward analysis time : 00:00:00.004073 (4 ms)
+	 time : patcher backward analysis time : 00:00:00.040808 (40 ms)
+	 time : validation comparison time : 00:00:00.037854 (37 ms)
+	 time : validation patch extraction total time : 00:00:00.082735 (82 ms)
+
+	 Sanitization Patch Analysis Info
+	 time : patchee first forward analysis time : 00:00:00.014049 (14 ms)
+	 time : patcher first forward analysis time : 00:00:00.039940 (39 ms)
+	 time : length issue check time : 00:00:00 (0 ms)
+	 time : length issue backward time : 00:00:00 (0 ms)
+	 time : length issue forward time : 00:00:00 (0 ms)
+	 time : last backward time : 00:00:00 (0 ms)
+	 time : sanitization comparison time : 00:00:00.005825 (5 ms)
+	 time : sanitization patch extraction total time : 00:00:00.059814 (59 ms)
+
+	 Stranger Automaton Operations Info
+	 intersection : #15 : 00:00:00.049749 (49 ms)
+	 union : #133 : 00:00:00.018948 (18 ms)
+	 closure : #20 : 00:00:00.001682 (1 ms)
+	 complement : #15 : 00:00:00.015212 (15 ms)
+	 precisewiden : #0 : 00:00:00 (0 ms)
+	 coarsewiden : #0 : 00:00:00 (0 ms)
+	 concat : #94 : 00:00:00.031756 (31 ms)
+	 pre concat : #0 : 00:00:00 (0 ms)
+	 const pre concat : #0 : 00:00:00 (0 ms)
+	 replace : #0 : 00:00:00 (0 ms)
+	 pre replace : #0 : 00:00:00 (0 ms)
+	 vlab_restrict : #5 : 00:00:00.040998 (40 ms)
+	 pre vlab_restrict : #5 : 00:00:00.033470 (33 ms)
+	 addslahses : #0 : 00:00:00 (0 ms)
+	 pre addslahses : #0 : 00:00:00 (0 ms)
+	 htmlspecialchars : #0 : 00:00:00 (0 ms)
+	 pre htmlspecialchars : #0 : 00:00:00 (0 ms)
+	 stripslashes : #0 : 00:00:00 (0 ms)
+	 pre stripslashes : #0 : 00:00:00 (0 ms)
+	 mysql_escape_string : #0 : 00:00:00 (0 ms)
+	 pre mysql_escape_string : #0 : 00:00:00 (0 ms)
+	 to_uppercase : #0 : 00:00:00 (0 ms)
+	 pre to_uppercase : #0 : 00:00:00 (0 ms)
+	 to_lowercase : #0 : 00:00:00 (0 ms)
+	 pre to_lowercase : #0 : 00:00:00 (0 ms)
+	 trim_spaces : #2 : 00:00:00.008667 (8 ms)
+	 pre trim_spaces : #1 : 00:00:00.003757 (3 ms)
+	 trim_spaces_left : #0 : 00:00:00 (0 ms)
+	 pre trim_spaces_left : #0 : 00:00:00 (0 ms)
+	 trim_spaces_rigth : #0 : 00:00:00 (0 ms)
+	 pre trim_spaces_rigth : #0 : 00:00:00 (0 ms)
+	 trim_set : #0 : 00:00:00 (0 ms)
+	 pre trim_set : #0 : 00:00:00 (0 ms)

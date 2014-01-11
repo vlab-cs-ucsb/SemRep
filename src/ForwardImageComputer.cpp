@@ -237,7 +237,6 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 
 
 				StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, patternNode->getID());
-
 				DepGraphNormalNode* cNode = dynamic_cast<DepGraphNormalNode*>(complementNode);
 				if (cNode == NULL) {
 					throw StrangerStringAnalysisException(stringbuilder() << "SNH: __vlab_restrict cannot find complement node: "

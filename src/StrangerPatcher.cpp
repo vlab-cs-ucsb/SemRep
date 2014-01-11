@@ -375,10 +375,8 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		}
 
 		try {
-			//TODO discuss what happens to that backward analysis if there are _vlab_restrict functions as intermediate nodes.
 			// use negation of length restricted auto to solve the problem of overapproximation
 //			StrangerAutomaton* negLengthRestrictAuto = lengthRestrictAuto->complement(-4);
-			// That may cause false positives
 			AnalysisResult patcheeAnalysisResult_2 = computePatcheeBwFwAnalysis_2(lengthRestrictAuto, patcheeAnalysisResult);
 
 			patcheeSinkAuto = patcheeAnalysisResult_2[patchee_field_relevant_graph.getRoot()->getID()];
@@ -398,6 +396,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 				DEBUG_AUTO(differenceAuto);
 			}
 			if (isDifferenceAutoEmpty){
+				// TODO length patch is still necessary for our goal, justification
 				message("no difference, no sanitization patch required 2!");
 				delete differenceAuto;
 				sanitization_patch_auto = NULL;

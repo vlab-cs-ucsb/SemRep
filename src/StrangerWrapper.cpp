@@ -35,6 +35,7 @@
 //#include "DepGraph.h"
 //#include "ForwardImageComputer.h"
 #include "StrangerPatcher.h"
+#include "jscodetest.h"
 
 using namespace std;
 
@@ -1285,6 +1286,8 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		cout << "\t    Patchee: " << patchee_name << endl;
 		if (strangerPatcher.is_validation_patch_required) {
 			cout << "\t    - validation patch is generated" << endl;
+			cout << "\tsize: #states " << strangerPatcher.getValidationPatchAuto()->get_num_of_states() << " : "
+					<< "#bddnodes " << strangerPatcher.getValidationPatchAuto()->get_num_of_bdd_nodes() << endl;
 		} else {
 			cout << "\t    - no validation patch" << endl;
 		}
@@ -1297,7 +1300,9 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		}
 
 		if (strangerPatcher.is_sanitization_patch_required) {
-			cout << "\t    - sanitization patch is generated" << endl;
+			cout << "\t    - sanitization patch is generated :" << endl;
+			cout << "\tsize: states " << strangerPatcher.getSanitizationPatchAuto()->get_num_of_states() << " : "
+					<< "bddnodes " << strangerPatcher.getSanitizationPatchAuto()->get_num_of_bdd_nodes() << endl;
 		} else {
 			cout << "\t    - no sanitization patch" << endl;
 		}
@@ -2525,10 +2530,26 @@ void patch_schoolmate_validatelogin__username(bool reversed) {
 }
 
 /****************************************************************************************************/
+/*********** MyBloggie *********************************************/
+/****************************************************************************************************/
+
+void patch_mybloggie_login__username(bool reversed) {
+	string field_name = "username";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/mybloggie/mybloggie_login_username_passwoord.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/mybloggie/mybloggie_login__username.dot";
+
+	if (reversed) {
+		call_patcher(server, client, field_name);
+	} else {
+		call_patcher(client, server, field_name);
+	}
+}
+
+/****************************************************************************************************/
 /*********** useBB *********************************************/
 /****************************************************************************************************/
 
-void patch_usebb_login_user(bool reversed) {
+void patch_usebb_login__user(bool reversed) {
 	string field_name = "user";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_login.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_login_user.dot";
@@ -2540,7 +2561,7 @@ void patch_usebb_login_user(bool reversed) {
 	}
 }
 
-void patch_usebb_register_user(bool reversed) {
+void patch_usebb_register__user(bool reversed) {
 	string field_name = "user";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register_user.dot";
@@ -2552,7 +2573,7 @@ void patch_usebb_register_user(bool reversed) {
 	}
 }
 
-void patch_usebb_register_email(bool reversed) {
+void patch_usebb_register__email(bool reversed) {
 	string field_name = "email";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register_email.dot";
@@ -2579,6 +2600,282 @@ void patch_(bool reversed) {
 		call_patcher(client, server, field_name);
 	}
 }
+
+/****************************************************************************************************/
+/*********** CLIENT-CLIENT Comparisons *********************************************/
+/****************************************************************************************************/
+
+void test_JS_email(){
+    string path = "/home/abaki/RA/PLDI/PLDI14/experiments/js/email/";
+    int numOfFuncs = 6;
+    StrangerAutomaton *sigmaStar = StrangerAutomaton::makeAnyString();
+    vector<function<StrangerAutomaton *(StrangerAutomaton *, vector<StrangerAutomaton*> &)>> fw_functors = getFwFuncs();
+    vector<function<StrangerAutomaton *()>> bw1_functors = getBw1Funcs();
+    vector<function<StrangerAutomaton *(StrangerAutomaton *, vector<StrangerAutomaton*> &)>> bw2_functors = getBw2Funcs();
+    //we patch i against j
+    for (int i = 1; i <= numOfFuncs; i++){
+        function<StrangerAutomaton *(StrangerAutomaton *, vector<StrangerAutomaton*> &)> fwi = fw_functors[i];
+        function<StrangerAutomaton *()> bwi1 = bw1_functors[i];
+        function<StrangerAutomaton *(StrangerAutomaton *, vector<StrangerAutomaton*> &)> bwi2 = bw2_functors[i];
+
+        for (int j = 1; j <= numOfFuncs ; j++){
+
+            if (i == j)
+                continue;
+
+            string vfilename = stringbuilder() << path << i << "_" << j << "_validPatch.dot";
+            string vfilenameascii = stringbuilder() << path << i << "_" << j << "_validPatchAscii.dot";
+            string sfilename = stringbuilder() << path << i << "_" << j << "_sanitPatch.dot";
+            string sfilenameascii = stringbuilder() << path << i << "_" << j << "_sanitPatchAscii.dot";
+            function<StrangerAutomaton *(StrangerAutomaton *, vector<StrangerAutomaton*> &)> fwj = fw_functors[j];
+            function<StrangerAutomaton *()> bwj1 = bw1_functors[j];
+
+            vector<StrangerAutomaton*> fwi_result(20);
+            vector<StrangerAutomaton*> fwj_result(20);
+            //get validation patch from j
+            StrangerAutomaton *m_bwj = bwj1()->complement();
+//            DEBUG_AUTO(m_bwj);
+            //do fw on j
+            StrangerAutomaton *m_fwj = fwj(sigmaStar, fwj_result);
+            //do fw on i
+            StrangerAutomaton *m_fwi = fwi(m_bwj, fwi_result);
+            StrangerAutomaton *diff = m_fwi->intersect(m_fwj->complement());
+            if (!diff->checkEmptiness()){
+                StrangerAutomaton *m_mincut = bwi2(diff, fwi_result);
+//                DEBUG_AUTO(m_mincut);
+            }
+        }
+    }
+}
+
+void test_JS_date(){
+    string path = "/home/abaki/RA/PLDI/PLDI14/experiments/js/date/";
+    int numOfFuncs = 2;
+    vector<function<StrangerAutomaton *()>> bw1_functors = getDateBw1Funcs();
+    //we patch i against j
+    for (int i = 1; i <= numOfFuncs; i++){
+        function<StrangerAutomaton *()> bwi1 = bw1_functors[i];
+        for (int j = 1; j <= numOfFuncs ; j++){
+            if (i == j)
+                continue;
+            string vfilename = stringbuilder() << path << i << "_" << j << "_validPatch.dot";
+            string vfilenameascii = stringbuilder() << path << i << "_" << j << "_validPatchAscii.dot";
+            string vitalsfilename = stringbuilder() << path << i << "_" << j << "_validPatch.vitals.txt";
+            function<StrangerAutomaton *()> bwj1 = bw1_functors[j];
+            //since I return the reject, we do diff Mi - Mj by complementing Mi first (to get accept) then intersect with complement of complement of Mj
+            StrangerAutomaton *m_bw1diff = bwi1()->complement()->intersect(bwj1());
+            if (!m_bw1diff->isEmpty()){
+                std::ofstream ofs;
+                // This is how a node line looks like
+                //  n18 [shape=box, label="/home/muath/pixy_output/test/vuln01.php : 13\nVar: $www\nFunc: _main\nID: 17, SCCID: -1, order: -1\n\n"];
+                try {
+                    ofs.open(vitalsfilename, std::ofstream::out);
+                    ofs << "num of states=" << m_bw1diff->get_num_of_states() << ",num of BDDs = " << m_bw1diff->get_num_of_bdd_nodes();
+                    ofs.close();
+                } catch (exception const &e) {
+                    cerr << "Can not open vitals file " << vitalsfilename << ". Following exception happened:\n" << e.what();
+                    if (ofs.is_open())
+                        ofs.close();
+                    exit(EXIT_FAILURE);
+                }
+                DEBUG_AUTO(m_bw1diff);
+            }
+        }
+    }
+}
+
+void patch_email_1__email_2(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_1.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_2.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_1__email_3(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_1.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_3.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_1__email_4(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_1.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_4.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_1__email_5(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_1.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_5.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_1__email_6(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_1.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_6.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_2__email_3(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_2.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_3.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_2__email_4(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_2.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_4.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_2__email_5(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_2.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_5.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_2__email_6(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_2.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_6.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_3__email_4(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_3.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_4.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_3__email_5(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_3.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_5.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_3__email_6(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_3.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_6.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_4__email_5(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_4.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_5.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_4__email_6(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_4.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_6.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_email_5__email_6(bool reversed) {
+	string field_name = "email";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_5.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_6.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_date_1__date_2(bool reversed) {
+	string field_name = "date";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_date_1.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_date_2.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
 
 int main(int argc, char *argv[]) {
 
@@ -2689,8 +2986,45 @@ int main(int argc, char *argv[]) {
 //	patch_schoolmate_manageusers_39__userid(patchClient);
 //	patch_schoolmate_validatelogin__username(patchClient);
 
-	patch_usebb_login_user(patchClient);
+//	patch_mybloggie_login_username(patchClient);
+
+//	patch_usebb_login_user(patchClient);
 //	patch_usebb_register_user(patchClient);
 //	patch_usebb_register_email(patchClient);
+
+//	Server-Server Comparisons ////////////////////////////////////////
+
+
+//	Client-Client Comparisons ////////////////////////////////////////
+
+//	PerfInfo perf;
+//	StrangerAutomaton::perfInfo = &perf;
+//	test_JS_email();
+//	cout << endl;
+//	perf.print_operations_info();
+//	perf.reset();
+//	cout << endl << endl << "\t -----------------------------------------------" << endl << endl;
+//
+//	test_JS_date();
+//	perf.print_operations_info();
+
+	patch_email_1__email_2(reversed);
+//	patch_email_1__email_3(reversed);
+//	patch_email_1__email_4(reversed);
+//	patch_email_1__email_5(reversed);
+//	patch_email_1__email_6(reversed);
+//	patch_email_2__email_3(reversed);
+//	patch_email_2__email_4(reversed);
+//	patch_email_2__email_5(reversed);
+//	patch_email_2__email_6(reversed);
+//	patch_email_3__email_4(reversed);
+//	patch_email_3__email_6(reversed);
+//	patch_email_3__email_6(reversed);
+//	patch_email_4__email_5(reversed);
+//	patch_email_4__email_6(reversed);
+//	patch_email_5__email_6(reversed);
+
+//	patch_date_1__date_2(reversed);
+
 	return 0;
 }
