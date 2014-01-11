@@ -42,9 +42,9 @@ public:
 	StrangerAutomaton* extractSanitizationPatch();
 
 	StrangerAutomaton* computePatcherFWAnalysis();
-	AnalysisResult computePatcheeFWAnalysis_1();
-	AnalysisResult computePatcheeBwFwAnalysis_2(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
-	StrangerAutomaton* computePatcheeBWAnalysis_3(StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
+	AnalysisResult computePatcheeFWAnalysis();
+	AnalysisResult computePatcheeLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
+	StrangerAutomaton* computePatcheeSanitizationPatch(StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
 
 	StrangerAutomaton* getValidationPatchAuto() { return validation_patch_auto; }
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
