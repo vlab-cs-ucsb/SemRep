@@ -45,39 +45,39 @@
 	    Patcher: /home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_1.dot
 	    Patchee: /home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_2.dot
 	    - validation patch is generated
-	size: states 282 : bddnodes 4195
+	 size: states 282 : bddnodes 4195
 	    - no length patch
 	    - no sanitization patch
 
 	 Validation Patch Analysis Info
-	 time : patchee backward analysis time : 00:00:00.003744 (3 ms)
-	 time : patcher backward analysis time : 00:00:00.040858 (40 ms)
-	 time : validation comparison time : 00:00:00.034561 (34 ms)
-	 time : validation patch extraction total time : 00:00:00.079163 (79 ms)
+	 time : patchee backward analysis time : 00:00:00.004276 (4 ms)
+	 time : patcher backward analysis time : 00:00:00.038296 (38 ms)
+	 time : validation comparison time : 00:00:00.037260 (37 ms)
+	 time : validation patch extraction total time : 00:00:00.079832 (79 ms)
 
 	 Sanitization Patch Analysis Info
-	 time : patchee first forward analysis time : 00:00:00.014748 (14 ms)
-	 time : patcher first forward analysis time : 00:00:00.039090 (39 ms)
+	 time : patchee first forward analysis time : 00:00:00.012922 (12 ms)
+	 time : patcher first forward analysis time : 00:00:00.040227 (40 ms)
 	 time : length issue check time : 00:00:00 (0 ms)
 	 time : length issue backward time : 00:00:00 (0 ms)
 	 time : sanitization backward time : 00:00:00 (0 ms)
-	 time : sanitization comparison time : 00:00:00.006115 (6 ms)
-	 time : sanitization patch extraction total time : 00:00:00.059953 (59 ms)
+	 time : sanitization comparison time : 00:00:00.005433 (5 ms)
+	 time : sanitization patch extraction total time : 00:00:00.058582 (58 ms)
 
 	 Stranger Automaton Operations Info
-	 intersection : #15 : 00:00:00.048281 (48 ms)
-	 union : #133 : 00:00:00.018289 (18 ms)
-	 closure : #20 : 00:00:00.001665 (1 ms)
-	 complement : #15 : 00:00:00.015187 (15 ms)
+	 intersection : #15 : 00:00:00.048710 (48 ms)
+	 union : #133 : 00:00:00.018428 (18 ms)
+	 closure : #20 : 00:00:00.001537 (1 ms)
+	 complement : #15 : 00:00:00.014884 (14 ms)
 	 precisewiden : #0 : 00:00:00 (0 ms)
 	 coarsewiden : #0 : 00:00:00 (0 ms)
-	 concat : #94 : 00:00:00.030412 (30 ms)
+	 concat : #94 : 00:00:00.030941 (30 ms)
 	 pre concat : #0 : 00:00:00 (0 ms)
 	 const pre concat : #0 : 00:00:00 (0 ms)
 	 replace : #0 : 00:00:00 (0 ms)
 	 pre replace : #0 : 00:00:00 (0 ms)
-	 vlab_restrict : #5 : 00:00:00.040325 (40 ms)
-	 pre vlab_restrict : #5 : 00:00:00.033078 (33 ms)
+	 vlab_restrict : #5 : 00:00:00.040194 (40 ms)
+	 pre vlab_restrict : #5 : 00:00:00.032106 (32 ms)
 	 addslahses : #0 : 00:00:00 (0 ms)
 	 pre addslahses : #0 : 00:00:00 (0 ms)
 	 htmlspecialchars : #0 : 00:00:00 (0 ms)
@@ -90,8 +90,8 @@
 	 pre to_uppercase : #0 : 00:00:00 (0 ms)
 	 to_lowercase : #0 : 00:00:00 (0 ms)
 	 pre to_lowercase : #0 : 00:00:00 (0 ms)
-	 trim_spaces : #2 : 00:00:00.008719 (8 ms)
-	 pre trim_spaces : #1 : 00:00:00.003878 (3 ms)
+	 trim_spaces : #2 : 00:00:00.008659 (8 ms)
+	 pre trim_spaces : #1 : 00:00:00.003203 (3 ms)
 	 trim_spaces_left : #0 : 00:00:00 (0 ms)
 	 pre trim_spaces_left : #0 : 00:00:00 (0 ms)
 	 trim_spaces_rigth : #0 : 00:00:00 (0 ms)
