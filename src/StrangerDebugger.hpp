@@ -22,19 +22,19 @@
 
 
 extern const unsigned char DEBUG_LEVEL_WRAPPER;
-extern const unsigned char DEBUG_MASK_VALIDATION_PHASE;
-extern const unsigned char DEBUG_MASK_1ST_FORWARD;
-extern const unsigned char DEBUG_MASK_LENGTH_BACKWARD;
-extern const unsigned char DEBUG_MASK_LENGTH_FORWARD;
-extern const unsigned char DEBUG_MASK_LAST_BACKWARD;
+extern const unsigned char DEBUG_MASK_VALIDATION_PATCH;
+extern const unsigned char DEBUG_MASK_SINK_COMPUTATION;
+extern const unsigned char DEBUG_MASK_LENGTH_PATCH;
+extern const unsigned char DEBUG_MASK_SANITIZATION_PATCH;
 extern const unsigned char DEBUG_MASK_INITIALIZATION;
+extern const unsigned char DEBUG_MASK_RESULTS;
 
 extern unsigned char DEBUG_ENABLED_VP;
-extern unsigned char DEBUG_ENABLED_1F;
-extern unsigned char DEBUG_ENABLED_LENB;
-extern unsigned char DEBUG_ENABLED_LENF;
-extern unsigned char DEBUG_ENABLED_LASTB;
+extern unsigned char DEBUG_ENABLED_SC;
+extern unsigned char DEBUG_ENABLED_LP;
+extern unsigned char DEBUG_ENABLED_SP;
 extern unsigned char DEBUG_ENABLED_INIT;
+extern unsigned char DEBUG_ENABLED_RESULTS;
 
 void DEBUG_MESSAGE(std::string msg);
 

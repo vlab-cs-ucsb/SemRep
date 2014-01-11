@@ -42,8 +42,7 @@ public:
 	 boost::posix_time::time_duration sanitization_patcher_first_forward_time;
 	 boost::posix_time::time_duration sanitization_length_issue_check_time;
 	 boost::posix_time::time_duration sanitization_length_backward_time;
-	 boost::posix_time::time_duration sanitization_length_forward_time;
-	 boost::posix_time::time_duration sanitization_last_backward_time;
+	 boost::posix_time::time_duration sanitization_patch_backward_time;
 	 boost::posix_time::time_duration sanitization_comparison_time;
 	 boost::posix_time::time_duration sanitization_patch_extraction_total_time;
 

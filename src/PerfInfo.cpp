@@ -68,8 +68,7 @@ void PerfInfo::calculate_total_validation_extraction_time() {
 
 void PerfInfo::calculate_total_sanitization_extraction_time() {
 	sanitization_patch_extraction_total_time = sanitization_patchee_first_forward_time + sanitization_patcher_first_forward_time +
-			sanitization_length_issue_check_time + sanitization_length_backward_time + sanitization_length_forward_time +
-			sanitization_last_backward_time + sanitization_comparison_time;
+			sanitization_length_issue_check_time + sanitization_length_backward_time + sanitization_patch_backward_time + sanitization_comparison_time;
 }
 
 void PerfInfo::print_validation_extraction_info() {
@@ -87,8 +86,7 @@ void PerfInfo::print_sanitization_extraction_info() {
 	cout << "\t time : patcher first forward analysis time : " << sanitization_patcher_first_forward_time << " (" << sanitization_patcher_first_forward_time.total_milliseconds() << " ms)" << endl;
 	cout << "\t time : length issue check time : " << sanitization_length_issue_check_time << " (" << sanitization_length_issue_check_time.total_milliseconds() << " ms)" << endl;
 	cout << "\t time : length issue backward time : " << sanitization_length_backward_time << " (" << sanitization_length_backward_time.total_milliseconds() << " ms)" << endl;
-	cout << "\t time : length issue forward time : " << sanitization_length_forward_time << " (" << sanitization_length_forward_time.total_milliseconds() << " ms)" << endl;
-	cout << "\t time : last backward time : " << sanitization_last_backward_time << " (" << sanitization_last_backward_time.total_milliseconds() << " ms)" << endl;
+	cout << "\t time : sanitization backward time : " << sanitization_patch_backward_time << " (" << sanitization_patch_backward_time.total_milliseconds() << " ms)" << endl;
 	cout << "\t time : sanitization comparison time : " << sanitization_comparison_time << " (" << sanitization_comparison_time.total_milliseconds() << " ms)" << endl;
 	cout << "\t time : sanitization patch extraction total time : " << sanitization_patch_extraction_total_time << " (" << sanitization_patch_extraction_total_time.total_milliseconds() << " ms)" << endl;
 

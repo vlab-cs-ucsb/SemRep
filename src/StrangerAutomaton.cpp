@@ -2161,7 +2161,6 @@ StrangerAutomaton* StrangerAutomaton::pre_addslashes(StrangerAutomaton* subjectA
 
 StrangerAutomaton* StrangerAutomaton::htmlSpecialChars(StrangerAutomaton* subjectAuto, string flag, int id)
 {
-	cout << "**********************************************************************************************************" << endl;
     hscflags_t _flag;
     if (flag == "ENT_COMPAT")
 		_flag = ENT_COMPAT;
@@ -2179,7 +2178,6 @@ StrangerAutomaton* StrangerAutomaton::htmlSpecialChars(StrangerAutomaton* subjec
     perfInfo->htmlspecialchars_total_time += perfInfo->current_time() - start_time;
 	perfInfo->number_of_htmlspecialchars++;
 
-	cout << "perfinfo: " << perfInfo->number_of_htmlspecialchars << endl;
 	retMe->ID = id;
 	retMe->debugAutomaton();
     return retMe;

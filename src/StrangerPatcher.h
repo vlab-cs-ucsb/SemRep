@@ -43,14 +43,18 @@ public:
 
 	StrangerAutomaton* computePatcherFWAnalysis();
 	AnalysisResult computePatcheeFWAnalysis();
-	AnalysisResult computePatcheeLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
+	StrangerAutomaton* computePatcheeLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
 	StrangerAutomaton* computePatcheeSanitizationPatch(StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
 
 	StrangerAutomaton* getValidationPatchAuto() { return validation_patch_auto; }
+	StrangerAutomaton* getLengthPatchAuto() { return length_patch_auto; }
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
 
+	void printResults();
+	void writeAutoforMinCut(string referenceName, string patchName);
+
 	bool is_validation_patch_required = false;
-	bool is_validation_patch_for_length_issue_required = false;
+	bool is_length_patch_required = false;
 	bool is_sanitization_patch_required = false;
 
 	static PerfInfo perfInfo;
@@ -72,8 +76,7 @@ private:
 
 	StrangerAutomaton* patcher_sink_auto;
 
-	StrangerAutomaton* validation_patch_auto_1;
-	StrangerAutomaton* validation_patch_auto_2;
+	StrangerAutomaton* length_patch_auto;
 	StrangerAutomaton* validation_patch_auto;
 	StrangerAutomaton* sanitization_patch_auto;
 
