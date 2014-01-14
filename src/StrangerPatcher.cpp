@@ -135,8 +135,21 @@ void StrangerPatcher::printResults() {
 	perfInfo.print_operations_info();
 }
 
-void StrangerPatcher::writeAutoforMinCut(string referenceName, string patchName) {
-	// TODO print patcher sink auto and sanitization patch to files named with parameters
+void StrangerPatcher::writeAutoforMinCut(string patcherName, string patcheeName) {
+	if (is_sanitization_patch_required) {
+		string path = "/home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/";
+		patcherName = patcherName.substr( patcherName.find_last_of('/') + 1,patcherName.find_last_of('.') - patcherName.find_last_of('/') - 1 );
+		patcheeName = patcheeName.substr( patcheeName.find_last_of('/') + 1,patcheeName.find_last_of('.') - patcheeName.find_last_of('/') - 1 );
+
+		string ref_auto_name = path + "references/" + patcherName + "_" + patcheeName + "_auto.dot";
+		string patch_auto_name = path + "patches/" + patcherName + "_" + patcheeName + "_auto.dot";
+		patcher_sink_auto->toDotFile(ref_auto_name);
+		sanitization_patch_auto->toDotFile(patch_auto_name);
+
+		cout << endl << "\t Automata for Mincut are written:" << endl;
+		cout << "\t Reference auto : " << ref_auto_name << endl;
+		cout << "\t Patch     auto : " << patch_auto_name << endl;
+	}
 }
 
 bool StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto) {
@@ -348,11 +361,11 @@ StrangerAutomaton* StrangerPatcher::computePatcheeSanitizationPatch(StrangerAuto
 StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 
 	boost::posix_time::ptime start_time = perfInfo.current_time();
-	StrangerAutomaton* patcherSinkAuto = computePatcherFWAnalysis();
+	patcher_sink_auto = computePatcherFWAnalysis();
 	perfInfo.sanitization_patcher_first_forward_time = perfInfo.current_time() - start_time;
 	if (DEBUG_ENABLED_SC != 0) {
 		DEBUG_MESSAGE("Patcher Sink Auto - First forward analysis");
-		DEBUG_AUTO(patcherSinkAuto);
+		DEBUG_AUTO(patcher_sink_auto);
 	}
 	start_time = perfInfo.current_time();
 	AnalysisResult patcheeAnalysisResult = computePatcheeFWAnalysis();
@@ -365,7 +378,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 
 	message("checking difference between patcher and patchee");
 	boost::posix_time::ptime comp_time = perfInfo.current_time();
-	StrangerAutomaton* differenceAuto = patcheeSinkAuto->difference(patcherSinkAuto, -3);
+	StrangerAutomaton* differenceAuto = patcheeSinkAuto->difference(patcher_sink_auto, -3);
 	bool isDifferenceAutoEmpty = differenceAuto->isEmpty();
 	perfInfo.sanitization_comparison_time = perfInfo.current_time() - comp_time;
 	if (DEBUG_ENABLED_SC != 0) {
@@ -380,11 +393,11 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		length_patch_auto = NULL;
 		is_sanitization_patch_required = false;
 		is_length_patch_required = false;
-	} else if(isLengthAnIssue(patcherSinkAuto,patcheeSinkAuto)) {
+	} else if(isLengthAnIssue(patcher_sink_auto,patcheeSinkAuto)) {
 		message("length constraints contribute to the difference, fixing issue...");
 		start_time = perfInfo.current_time();
 		StrangerAutomaton* lengthRestrictAuto =
-				patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcherSinkAuto, -4);
+				patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcher_sink_auto, -4);
 		perfInfo.sanitization_length_issue_check_time += perfInfo.current_time() - start_time; // adding to length issue check in if statements
 		if (DEBUG_ENABLED_LP != 0) {
 			DEBUG_MESSAGE("Length restricted patchee sink automaton:");
@@ -404,7 +417,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 			message("checking difference between patcher and patchee after length restriction");
 			delete differenceAuto;
 			comp_time = perfInfo.current_time();
-			differenceAuto = lengthRestrictAuto->difference(patcherSinkAuto, -3);
+			differenceAuto = lengthRestrictAuto->difference(patcher_sink_auto, -3);
 			bool isDifferenceAutoEmpty = differenceAuto->isEmpty();
 			perfInfo.sanitization_comparison_time += perfInfo.current_time() - comp_time;
 			if (DEBUG_ENABLED_SP != 0) {

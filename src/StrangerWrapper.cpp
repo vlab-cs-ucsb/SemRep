@@ -23,8 +23,9 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		cout << endl << "\t------ OVERALL RESULT for: " << field_name << " ------" << endl;
 		cout << "\t    Patcher: " << patcher_name << endl;
 		cout << "\t    Patchee: " << patchee_name << endl;
-//		strangerPatcher.writeAutoforMinCut("name1", "name2");
+
 		strangerPatcher.printResults();
+		strangerPatcher.writeAutoforMinCut(patcher_name, patchee_name);
 
 
 	} catch (StrangerStringAnalysisException const &e) {

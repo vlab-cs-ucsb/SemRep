@@ -2751,6 +2751,14 @@ void StrangerAutomaton::toDot()
     std::cout.flush();
 }
 
+void StrangerAutomaton::toDotFile(std::string file_name) {
+	unsigned* indices_main_unsigned = getUnsignedIndices(num_ascii_track);
+    debugToFile(stringbuilder() << "dfaPrintGraphvizFile(M[" << this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//dfaPrintGraphviz( this->ID)");
+    dfaPrintGraphvizFile(this->dfa, file_name.c_str(), num_ascii_track, indices_main_unsigned);
+    delete indices_main_unsigned;
+}
+
+
 /**
  * Prints the current automaton to the out stream in a dot format (see Graphviz).
  * Unfortunately until now there is no interface to provide a file to the C library
@@ -2771,6 +2779,16 @@ void StrangerAutomaton::toDotAscii(int printSink)
     std::cout.flush();
 }
 
+void StrangerAutomaton::toDotFileAscii(std::string file_name, int printSink) {
+	unsigned* indices_main_unsigned = getUnsignedIndices(num_ascii_track);
+    debugToFile(stringbuilder() << "dfaPrintGraphvizAsciiRangeFile(M[" << this->autoTraceID << "], NUM_ASCII_TRACKS, indices_main);//dfaPrintGraphviz( this->ID)");
+    //if the automaton is the empty language then we must enable printing the sink
+    // if there is one state and it is a rejecting state
+    if (this->dfa->ns == 1 && this->dfa->f[0] == -1)
+        printSink = 2;
+    dfaPrintGraphvizAsciiRangeFile(this->dfa, file_name.c_str(), num_ascii_track, indices_main, printSink);
+    delete indices_main_unsigned;
+}
 
 int StrangerAutomaton::debugLevel = 1;
 
