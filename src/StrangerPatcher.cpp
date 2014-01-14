@@ -92,7 +92,7 @@ void StrangerPatcher::printNodeList(NodesList nodes) {
 void StrangerPatcher::printResults() {
 	if (is_validation_patch_required) {
 		cout << "\t    - validation patch is generated" << endl;
-		cout << "\t size: states " << validation_patch_auto->get_num_of_states() << " : "
+		cout << "\t size : states " << validation_patch_auto->get_num_of_states() << " : "
 				<< "bddnodes " << validation_patch_auto->get_num_of_bdd_nodes() << endl;
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("validation patch auto:");
@@ -100,12 +100,13 @@ void StrangerPatcher::printResults() {
 		}
 	} else {
 		cout << "\t    - no validation patch" << endl;
+		cout << "\t size : states 0 : bddnodes 0" << endl;
 	}
 
 
 	if (is_length_patch_required) {
 		cout << "\t    - length patch is generated" << endl;
-		cout << "\t size: states " << length_patch_auto->get_num_of_states() << " : "
+		cout << "\t size : states " << length_patch_auto->get_num_of_states() << " : "
 						<< "bddnodes " << length_patch_auto->get_num_of_bdd_nodes() << endl;
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("length patch auto:");
@@ -113,11 +114,12 @@ void StrangerPatcher::printResults() {
 		}
 	} else {
 		cout << "\t    - no length patch" << endl;
+		cout << "\t size : states 0 : bddnodes 0" << endl;
 	}
 
 	if (is_sanitization_patch_required) {
 		cout << "\t    - sanitization patch is generated :" << endl;
-		cout << "\t size: states " << sanitization_patch_auto->get_num_of_states() << " : "
+		cout << "\t size : states " << sanitization_patch_auto->get_num_of_states() << " : "
 				<< "bddnodes " << sanitization_patch_auto->get_num_of_bdd_nodes() << endl;
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("sanitization patch auto:");
@@ -125,6 +127,7 @@ void StrangerPatcher::printResults() {
 		}
 	} else {
 		cout << "\t    - no sanitization patch" << endl;
+		cout << "\t size : states 0 : bddnodes 0" << endl;
 	}
 
 	perfInfo.print_validation_extraction_info();

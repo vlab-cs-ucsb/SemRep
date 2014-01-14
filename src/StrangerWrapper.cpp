@@ -15,6 +15,7 @@ using namespace std;
 
 void call_patcher(string patcher_name, string patchee_name, string field_name){
 	try {
+		cout << endl << "\t------ Starting Analysis for: " << field_name << " ------" << endl;
 		StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
 		strangerPatcher.extractValidationPatch();
 		strangerPatcher.extractSanitizationPatch();

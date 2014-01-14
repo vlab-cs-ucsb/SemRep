@@ -1,4 +1,6 @@
 
+	------ Starting Analysis for: email ------
+
 ~~~~~~~~~~~>>> StrangerPatcher says: patcher uninit node(22) found for field email.
 
 ~~~~~~~~~~~>>> StrangerPatcher says: patchee uninit node(7) found for field email.
@@ -6,12 +8,198 @@
 ~~~~~~~~~~~>>> StrangerPatcher says: BEGIN VALIDATION EXTRACTION PHASE........................................
 
 ~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patcher
+	 peak : union : states 3 : bddnodes 9 
+	 peak : union : states 4 : bddnodes 11 
+	 peak : union : states 4 : bddnodes 14 
+	 peak : union : states 4 : bddnodes 15 
+	 peak : union : states 4 : bddnodes 15 
+	 peak : union : states 4 : bddnodes 16 
+	 peak : union : states 4 : bddnodes 16 
+	 peak : union : states 4 : bddnodes 21 
+	 peak : union : states 4 : bddnodes 22 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 25 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : concat : states 4 : bddnodes 40 : before projection 
+	 peak : concat : states 4 : bddnodes 30 : after projection 
+	 peak : concat : states 3 : bddnodes 39 : before projection 
+	 peak : concat : states 5 : bddnodes 57 : after projection 
+	 peak : union : states 3 : bddnodes 36 
+	 peak : negate : states 4 : bddnodes 18 
+	 peak : intersect : states 5 : bddnodes 25 
+	 peak : union : states 4 : bddnodes 17 
+	 peak : negate : states 4 : bddnodes 23 
+	 peak : intersect : states 5 : bddnodes 30 
+	 peak : negate : states 4 : bddnodes 18 
+	 peak : intersect : states 5 : bddnodes 25 
+	 peak : union : states 3 : bddnodes 16 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 20 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 20 
+	 peak : concat : states 4 : bddnodes 37 : before projection 
+	 peak : concat : states 4 : bddnodes 35 : after projection 
+	 peak : concat : states 4 : bddnodes 49 : before projection 
+	 peak : concat : states 6 : bddnodes 71 : after projection 
+	 peak : concat : states 6 : bddnodes 91 : before projection 
+	 peak : concat : states 6 : bddnodes 59 : after projection 
+	 peak : concat : states 6 : bddnodes 83 : before projection 
+	 peak : concat : states 6 : bddnodes 78 : after projection 
+	 peak : concat : states 7 : bddnodes 105 : before projection 
+	 peak : concat : states 7 : bddnodes 87 : after projection 
+	 peak : concat : states 8 : bddnodes 108 : before projection 
+	 peak : concat : states 8 : bddnodes 102 : after projection 
+	 peak : negate : states 9 : bddnodes 110 
+	 peak : union : states 16 : bddnodes 273 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : concat : states 4 : bddnodes 27 : before projection 
+	 peak : concat : states 4 : bddnodes 17 : after projection 
+	 peak : concat : states 3 : bddnodes 19 : before projection 
+	 peak : concat : states 4 : bddnodes 17 : after projection 
+	 peak : negate : states 3 : bddnodes 9 
+	 peak : union : states 9 : bddnodes 149 
+	 peak : left_trim : states 3 : bddnodes 25 : before projection : loop 0 
+	 peak : left_trim : states 3 : bddnodes 17 : after projection : loop 0 
+	 peak : right_trim : states 4 : bddnodes 27 : before projection 
+	 peak : right_trim : states 5 : bddnodes 32 : after projection 
+	 peak : intersect : states 20 : bddnodes 311 
+	 peak : pre_right_trim : states 15 : bddnodes 200 : before projection 
+	 peak : pre_right_trim : states 17 : bddnodes 212 : after projection 
+	 peak : pre_left_trim : states 11 : bddnodes 176 
+	 peak : concat : states 3 : bddnodes 10 : before projection 
+	 peak : concat : states 3 : bddnodes 9 : after projection 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : concat : states 4 : bddnodes 19 : before projection 
+	 peak : concat : states 4 : bddnodes 17 : after projection 
+	 peak : union : states 4 : bddnodes 17 
+	 peak : concat : states 5 : bddnodes 28 : before projection 
+	 peak : concat : states 5 : bddnodes 25 : after projection 
+	 peak : union : states 5 : bddnodes 25 
+	 peak : concat : states 6 : bddnodes 37 : before projection 
+	 peak : concat : states 6 : bddnodes 33 : after projection 
+	 peak : union : states 6 : bddnodes 33 
+	 peak : concat : states 7 : bddnodes 46 : before projection 
+	 peak : concat : states 7 : bddnodes 41 : after projection 
+	 peak : union : states 7 : bddnodes 41 
+	 peak : concat : states 8 : bddnodes 55 : before projection 
+	 peak : concat : states 8 : bddnodes 49 : after projection 
+	 peak : union : states 8 : bddnodes 49 
+	 peak : concat : states 9 : bddnodes 64 : before projection 
+	 peak : concat : states 9 : bddnodes 57 : after projection 
+	 peak : union : states 9 : bddnodes 57 
+	 peak : concat : states 10 : bddnodes 73 : before projection 
+	 peak : concat : states 10 : bddnodes 65 : after projection 
+	 peak : union : states 10 : bddnodes 65 
+	 peak : concat : states 11 : bddnodes 82 : before projection 
+	 peak : concat : states 11 : bddnodes 73 : after projection 
+	 peak : union : states 11 : bddnodes 73 
+	 peak : concat : states 12 : bddnodes 91 : before projection 
+	 peak : concat : states 12 : bddnodes 81 : after projection 
+	 peak : union : states 12 : bddnodes 81 
+	 peak : concat : states 13 : bddnodes 100 : before projection 
+	 peak : concat : states 13 : bddnodes 89 : after projection 
+	 peak : union : states 13 : bddnodes 89 
+	 peak : concat : states 14 : bddnodes 109 : before projection 
+	 peak : concat : states 14 : bddnodes 97 : after projection 
+	 peak : union : states 14 : bddnodes 97 
+	 peak : concat : states 15 : bddnodes 118 : before projection 
+	 peak : concat : states 15 : bddnodes 105 : after projection 
+	 peak : union : states 15 : bddnodes 105 
+	 peak : concat : states 16 : bddnodes 127 : before projection 
+	 peak : concat : states 16 : bddnodes 113 : after projection 
+	 peak : union : states 16 : bddnodes 113 
+	 peak : concat : states 17 : bddnodes 136 : before projection 
+	 peak : concat : states 17 : bddnodes 121 : after projection 
+	 peak : union : states 17 : bddnodes 121 
+	 peak : concat : states 18 : bddnodes 145 : before projection 
+	 peak : concat : states 18 : bddnodes 129 : after projection 
+	 peak : union : states 18 : bddnodes 129 
+	 peak : concat : states 19 : bddnodes 154 : before projection 
+	 peak : concat : states 19 : bddnodes 137 : after projection 
+	 peak : union : states 19 : bddnodes 137 
+	 peak : concat : states 20 : bddnodes 163 : before projection 
+	 peak : concat : states 20 : bddnodes 145 : after projection 
+	 peak : union : states 20 : bddnodes 145 
+	 peak : concat : states 21 : bddnodes 172 : before projection 
+	 peak : concat : states 21 : bddnodes 153 : after projection 
+	 peak : union : states 21 : bddnodes 153 
+	 peak : concat : states 22 : bddnodes 181 : before projection 
+	 peak : concat : states 22 : bddnodes 161 : after projection 
+	 peak : union : states 22 : bddnodes 161 
+	 peak : concat : states 23 : bddnodes 190 : before projection 
+	 peak : concat : states 23 : bddnodes 169 : after projection 
+	 peak : union : states 23 : bddnodes 169 
+	 peak : concat : states 24 : bddnodes 199 : before projection 
+	 peak : concat : states 24 : bddnodes 177 : after projection 
+	 peak : union : states 24 : bddnodes 177 
+	 peak : concat : states 25 : bddnodes 208 : before projection 
+	 peak : concat : states 25 : bddnodes 185 : after projection 
+	 peak : union : states 25 : bddnodes 185 
+	 peak : concat : states 26 : bddnodes 217 : before projection 
+	 peak : concat : states 26 : bddnodes 193 : after projection 
+	 peak : union : states 26 : bddnodes 193 
+	 peak : concat : states 27 : bddnodes 226 : before projection 
+	 peak : concat : states 27 : bddnodes 201 : after projection 
+	 peak : union : states 27 : bddnodes 201 
+	 peak : concat : states 28 : bddnodes 235 : before projection 
+	 peak : concat : states 28 : bddnodes 209 : after projection 
+	 peak : union : states 28 : bddnodes 209 
+	 peak : concat : states 29 : bddnodes 244 : before projection 
+	 peak : concat : states 29 : bddnodes 217 : after projection 
+	 peak : union : states 29 : bddnodes 217 
+	 peak : concat : states 30 : bddnodes 253 : before projection 
+	 peak : concat : states 30 : bddnodes 225 : after projection 
+	 peak : union : states 30 : bddnodes 225 
+	 peak : concat : states 31 : bddnodes 262 : before projection 
+	 peak : concat : states 31 : bddnodes 233 : after projection 
+	 peak : union : states 31 : bddnodes 233 
+	 peak : concat : states 32 : bddnodes 271 : before projection 
+	 peak : concat : states 32 : bddnodes 241 : after projection 
+	 peak : union : states 32 : bddnodes 241 
+	 peak : negate : states 33 : bddnodes 249 
+	 peak : union : states 260 : bddnodes 4694 
 		: validation function found!
+	 peak : negate : states 200 : bddnodes 3900 
 
 ~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patchee
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 19 
+	 peak : union : states 4 : bddnodes 25 
+	 peak : union : states 4 : bddnodes 28 
+	 peak : union : states 4 : bddnodes 28 
+	 peak : union : states 4 : bddnodes 29 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 19 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 20 
+	 peak : union : states 4 : bddnodes 21 
+	 peak : concat : states 4 : bddnodes 41 : before projection 
+	 peak : concat : states 4 : bddnodes 39 : after projection 
+	 peak : concat : states 5 : bddnodes 61 : before projection 
+	 peak : concat : states 5 : bddnodes 58 : after projection 
+	 peak : union : states 5 : bddnodes 58 
+	 peak : concat : states 6 : bddnodes 81 : before projection 
+	 peak : concat : states 6 : bddnodes 77 : after projection 
+	 peak : union : states 6 : bddnodes 77 
+	 peak : concat : states 7 : bddnodes 91 : before projection 
+	 peak : concat : states 7 : bddnodes 86 : after projection 
+	 peak : concat : states 8 : bddnodes 112 : before projection 
+	 peak : concat : states 12 : bddnodes 196 : after projection 
+	 peak : concat : states 13 : bddnodes 229 : before projection 
+	 peak : concat : states 13 : bddnodes 205 : after projection 
+	 peak : concat : states 14 : bddnodes 242 : before projection 
+	 peak : concat : states 14 : bddnodes 230 : after projection 
+	 peak : negate : states 15 : bddnodes 238 
+	 peak : union : states 15 : bddnodes 238 
 		: validation function found!
+	 peak : negate : states 15 : bddnodes 238 
 
 ~~~~~~~~~~~>>> StrangerPatcher says: computing validation patch
+	 peak : negate : states 200 : bddnodes 3900 
+	 peak : intersect : states 896 : bddnodes 15657 
+	 peak : intersect : states 895 : bddnodes 15576 
 
 ~~~~~~~~~~~>>> StrangerPatcher says: validation patch is generated for input: email
 
@@ -24,6 +212,159 @@
 ~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(22) with sigma star
 
 ~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patcher...
+	 peak : concat : states 3 : bddnodes 10 : before projection 
+	 peak : concat : states 3 : bddnodes 9 : after projection 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : concat : states 4 : bddnodes 19 : before projection 
+	 peak : concat : states 4 : bddnodes 17 : after projection 
+	 peak : union : states 4 : bddnodes 17 
+	 peak : concat : states 5 : bddnodes 28 : before projection 
+	 peak : concat : states 5 : bddnodes 25 : after projection 
+	 peak : union : states 5 : bddnodes 25 
+	 peak : concat : states 6 : bddnodes 37 : before projection 
+	 peak : concat : states 6 : bddnodes 33 : after projection 
+	 peak : union : states 6 : bddnodes 33 
+	 peak : concat : states 7 : bddnodes 46 : before projection 
+	 peak : concat : states 7 : bddnodes 41 : after projection 
+	 peak : union : states 7 : bddnodes 41 
+	 peak : concat : states 8 : bddnodes 55 : before projection 
+	 peak : concat : states 8 : bddnodes 49 : after projection 
+	 peak : union : states 8 : bddnodes 49 
+	 peak : concat : states 9 : bddnodes 64 : before projection 
+	 peak : concat : states 9 : bddnodes 57 : after projection 
+	 peak : union : states 9 : bddnodes 57 
+	 peak : concat : states 10 : bddnodes 73 : before projection 
+	 peak : concat : states 10 : bddnodes 65 : after projection 
+	 peak : union : states 10 : bddnodes 65 
+	 peak : concat : states 11 : bddnodes 82 : before projection 
+	 peak : concat : states 11 : bddnodes 73 : after projection 
+	 peak : union : states 11 : bddnodes 73 
+	 peak : concat : states 12 : bddnodes 91 : before projection 
+	 peak : concat : states 12 : bddnodes 81 : after projection 
+	 peak : union : states 12 : bddnodes 81 
+	 peak : concat : states 13 : bddnodes 100 : before projection 
+	 peak : concat : states 13 : bddnodes 89 : after projection 
+	 peak : union : states 13 : bddnodes 89 
+	 peak : concat : states 14 : bddnodes 109 : before projection 
+	 peak : concat : states 14 : bddnodes 97 : after projection 
+	 peak : union : states 14 : bddnodes 97 
+	 peak : concat : states 15 : bddnodes 118 : before projection 
+	 peak : concat : states 15 : bddnodes 105 : after projection 
+	 peak : union : states 15 : bddnodes 105 
+	 peak : concat : states 16 : bddnodes 127 : before projection 
+	 peak : concat : states 16 : bddnodes 113 : after projection 
+	 peak : union : states 16 : bddnodes 113 
+	 peak : concat : states 17 : bddnodes 136 : before projection 
+	 peak : concat : states 17 : bddnodes 121 : after projection 
+	 peak : union : states 17 : bddnodes 121 
+	 peak : concat : states 18 : bddnodes 145 : before projection 
+	 peak : concat : states 18 : bddnodes 129 : after projection 
+	 peak : union : states 18 : bddnodes 129 
+	 peak : concat : states 19 : bddnodes 154 : before projection 
+	 peak : concat : states 19 : bddnodes 137 : after projection 
+	 peak : union : states 19 : bddnodes 137 
+	 peak : concat : states 20 : bddnodes 163 : before projection 
+	 peak : concat : states 20 : bddnodes 145 : after projection 
+	 peak : union : states 20 : bddnodes 145 
+	 peak : concat : states 21 : bddnodes 172 : before projection 
+	 peak : concat : states 21 : bddnodes 153 : after projection 
+	 peak : union : states 21 : bddnodes 153 
+	 peak : concat : states 22 : bddnodes 181 : before projection 
+	 peak : concat : states 22 : bddnodes 161 : after projection 
+	 peak : union : states 22 : bddnodes 161 
+	 peak : concat : states 23 : bddnodes 190 : before projection 
+	 peak : concat : states 23 : bddnodes 169 : after projection 
+	 peak : union : states 23 : bddnodes 169 
+	 peak : concat : states 24 : bddnodes 199 : before projection 
+	 peak : concat : states 24 : bddnodes 177 : after projection 
+	 peak : union : states 24 : bddnodes 177 
+	 peak : concat : states 25 : bddnodes 208 : before projection 
+	 peak : concat : states 25 : bddnodes 185 : after projection 
+	 peak : union : states 25 : bddnodes 185 
+	 peak : concat : states 26 : bddnodes 217 : before projection 
+	 peak : concat : states 26 : bddnodes 193 : after projection 
+	 peak : union : states 26 : bddnodes 193 
+	 peak : concat : states 27 : bddnodes 226 : before projection 
+	 peak : concat : states 27 : bddnodes 201 : after projection 
+	 peak : union : states 27 : bddnodes 201 
+	 peak : concat : states 28 : bddnodes 235 : before projection 
+	 peak : concat : states 28 : bddnodes 209 : after projection 
+	 peak : union : states 28 : bddnodes 209 
+	 peak : concat : states 29 : bddnodes 244 : before projection 
+	 peak : concat : states 29 : bddnodes 217 : after projection 
+	 peak : union : states 29 : bddnodes 217 
+	 peak : concat : states 30 : bddnodes 253 : before projection 
+	 peak : concat : states 30 : bddnodes 225 : after projection 
+	 peak : union : states 30 : bddnodes 225 
+	 peak : concat : states 31 : bddnodes 262 : before projection 
+	 peak : concat : states 31 : bddnodes 233 : after projection 
+	 peak : union : states 31 : bddnodes 233 
+	 peak : concat : states 32 : bddnodes 271 : before projection 
+	 peak : concat : states 32 : bddnodes 241 : after projection 
+	 peak : union : states 32 : bddnodes 241 
+	 peak : intersect : states 33 : bddnodes 249 
+	 peak : left_trim : states 33 : bddnodes 435 : before projection : loop 0 
+	 peak : left_trim : states 73 : bddnodes 717 : after projection : loop 0 
+	 peak : left_trim : states 32 : bddnodes 379 : before projection : loop 1 
+	 peak : left_trim : states 64 : bddnodes 624 : after projection : loop 1 
+	 peak : left_trim : states 32 : bddnodes 342 : before projection : loop 2 
+	 peak : left_trim : states 54 : bddnodes 502 : after projection : loop 2 
+	 peak : left_trim : states 32 : bddnodes 309 : before projection : loop 3 
+	 peak : left_trim : states 40 : bddnodes 342 : after projection : loop 3 
+	 peak : left_trim : states 32 : bddnodes 278 : before projection : loop 4 
+	 peak : left_trim : states 32 : bddnodes 248 : after projection : loop 4 
+	 peak : right_trim : states 33 : bddnodes 511 : before projection 
+	 peak : right_trim : states 61 : bddnodes 480 : after projection 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : concat : states 4 : bddnodes 27 : before projection 
+	 peak : concat : states 4 : bddnodes 17 : after projection 
+	 peak : concat : states 3 : bddnodes 19 : before projection 
+	 peak : concat : states 4 : bddnodes 17 : after projection 
+	 peak : intersect : states 61 : bddnodes 487 
+	 peak : negate : states 4 : bddnodes 18 
+	 peak : intersect : states 5 : bddnodes 25 
+	 peak : union : states 4 : bddnodes 17 
+	 peak : negate : states 4 : bddnodes 23 
+	 peak : intersect : states 5 : bddnodes 30 
+	 peak : negate : states 4 : bddnodes 18 
+	 peak : intersect : states 5 : bddnodes 25 
+	 peak : union : states 3 : bddnodes 16 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 20 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 20 
+	 peak : concat : states 4 : bddnodes 37 : before projection 
+	 peak : concat : states 4 : bddnodes 35 : after projection 
+	 peak : concat : states 4 : bddnodes 49 : before projection 
+	 peak : concat : states 6 : bddnodes 71 : after projection 
+	 peak : concat : states 6 : bddnodes 91 : before projection 
+	 peak : concat : states 6 : bddnodes 59 : after projection 
+	 peak : concat : states 6 : bddnodes 83 : before projection 
+	 peak : concat : states 6 : bddnodes 78 : after projection 
+	 peak : concat : states 7 : bddnodes 105 : before projection 
+	 peak : concat : states 7 : bddnodes 87 : after projection 
+	 peak : concat : states 8 : bddnodes 108 : before projection 
+	 peak : concat : states 8 : bddnodes 102 : after projection 
+	 peak : intersect : states 311 : bddnodes 3567 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : union : states 4 : bddnodes 11 
+	 peak : union : states 4 : bddnodes 14 
+	 peak : union : states 4 : bddnodes 15 
+	 peak : union : states 4 : bddnodes 15 
+	 peak : union : states 4 : bddnodes 16 
+	 peak : union : states 4 : bddnodes 16 
+	 peak : union : states 4 : bddnodes 21 
+	 peak : union : states 4 : bddnodes 22 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 25 
+	 peak : union : states 3 : bddnodes 9 
+	 peak : concat : states 4 : bddnodes 40 : before projection 
+	 peak : concat : states 4 : bddnodes 30 : after projection 
+	 peak : concat : states 3 : bddnodes 39 : before projection 
+	 peak : concat : states 5 : bddnodes 57 : after projection 
+	 peak : negate : states 3 : bddnodes 36 
+	 peak : intersect : states 303 : bddnodes 5706 
 
 ~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patcher.
 
@@ -34,10 +375,41 @@
 ~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(7) with validation patch auto
 
 ~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patchee
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 19 
+	 peak : union : states 4 : bddnodes 25 
+	 peak : union : states 4 : bddnodes 28 
+	 peak : union : states 4 : bddnodes 28 
+	 peak : union : states 4 : bddnodes 29 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 19 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 20 
+	 peak : union : states 4 : bddnodes 21 
+	 peak : concat : states 4 : bddnodes 41 : before projection 
+	 peak : concat : states 4 : bddnodes 39 : after projection 
+	 peak : concat : states 5 : bddnodes 61 : before projection 
+	 peak : concat : states 5 : bddnodes 58 : after projection 
+	 peak : union : states 5 : bddnodes 58 
+	 peak : concat : states 6 : bddnodes 81 : before projection 
+	 peak : concat : states 6 : bddnodes 77 : after projection 
+	 peak : union : states 6 : bddnodes 77 
+	 peak : concat : states 7 : bddnodes 91 : before projection 
+	 peak : concat : states 7 : bddnodes 86 : after projection 
+	 peak : concat : states 8 : bddnodes 112 : before projection 
+	 peak : concat : states 12 : bddnodes 196 : after projection 
+	 peak : concat : states 13 : bddnodes 229 : before projection 
+	 peak : concat : states 13 : bddnodes 205 : after projection 
+	 peak : concat : states 14 : bddnodes 242 : before projection 
+	 peak : concat : states 14 : bddnodes 230 : after projection 
+	 peak : intersect : states 357 : bddnodes 5969 
 
 ~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patchee.
 
 ~~~~~~~~~~~>>> StrangerPatcher says: checking difference between patcher and patchee
+	 peak : negate : states 153 : bddnodes 3328 
+	 peak : intersect : states 675 : bddnodes 12289 
 
 ~~~~~~~~~~~>>> StrangerPatcher says: no difference, no sanitization patch required!
 
@@ -45,39 +417,41 @@
 	    Patcher: /home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_1.dot
 	    Patchee: /home/abaki/RA/PLDI/PLDI14/experiments/js/client_email_2.dot
 	    - validation patch is generated
-	 size: states 282 : bddnodes 4195
+	 size : states 282 : bddnodes 4195
 	    - no length patch
+	 size : states 0 : bddnodes 0
 	    - no sanitization patch
+	 size : states 0 : bddnodes 0
 
 	 Validation Patch Analysis Info
-	 time : patchee backward analysis time : 00:00:00.004276 (4 ms)
-	 time : patcher backward analysis time : 00:00:00.038296 (38 ms)
-	 time : validation comparison time : 00:00:00.037260 (37 ms)
-	 time : validation patch extraction total time : 00:00:00.079832 (79 ms)
+	 time : patchee backward analysis time : 00:00:00.004938 (4 ms)
+	 time : patcher backward analysis time : 00:00:00.043473 (43 ms)
+	 time : validation comparison time : 00:00:00.037565 (37 ms)
+	 time : validation patch extraction total time : 00:00:00.085976 (85 ms)
 
 	 Sanitization Patch Analysis Info
-	 time : patchee first forward analysis time : 00:00:00.012922 (12 ms)
-	 time : patcher first forward analysis time : 00:00:00.040227 (40 ms)
+	 time : patchee first forward analysis time : 00:00:00.013662 (13 ms)
+	 time : patcher first forward analysis time : 00:00:00.043819 (43 ms)
 	 time : length issue check time : 00:00:00 (0 ms)
 	 time : length issue backward time : 00:00:00 (0 ms)
 	 time : sanitization backward time : 00:00:00 (0 ms)
-	 time : sanitization comparison time : 00:00:00.005433 (5 ms)
-	 time : sanitization patch extraction total time : 00:00:00.058582 (58 ms)
+	 time : sanitization comparison time : 00:00:00.005855 (5 ms)
+	 time : sanitization patch extraction total time : 00:00:00.063336 (63 ms)
 
 	 Stranger Automaton Operations Info
-	 intersection : #15 : 00:00:00.048710 (48 ms)
-	 union : #133 : 00:00:00.018428 (18 ms)
-	 closure : #20 : 00:00:00.001537 (1 ms)
-	 complement : #15 : 00:00:00.014884 (14 ms)
+	 intersection : #15 : 00:00:00.049442 (49 ms)
+	 union : #133 : 00:00:00.021522 (21 ms)
+	 closure : #20 : 00:00:00.001729 (1 ms)
+	 complement : #15 : 00:00:00.015894 (15 ms)
 	 precisewiden : #0 : 00:00:00 (0 ms)
 	 coarsewiden : #0 : 00:00:00 (0 ms)
-	 concat : #94 : 00:00:00.030941 (30 ms)
+	 concat : #94 : 00:00:00.035205 (35 ms)
 	 pre concat : #0 : 00:00:00 (0 ms)
 	 const pre concat : #0 : 00:00:00 (0 ms)
 	 replace : #0 : 00:00:00 (0 ms)
 	 pre replace : #0 : 00:00:00 (0 ms)
-	 vlab_restrict : #5 : 00:00:00.040194 (40 ms)
-	 pre vlab_restrict : #5 : 00:00:00.032106 (32 ms)
+	 vlab_restrict : #5 : 00:00:00.044364 (44 ms)
+	 pre vlab_restrict : #5 : 00:00:00.037008 (37 ms)
 	 addslahses : #0 : 00:00:00 (0 ms)
 	 pre addslahses : #0 : 00:00:00 (0 ms)
 	 htmlspecialchars : #0 : 00:00:00 (0 ms)
@@ -90,8 +464,8 @@
 	 pre to_uppercase : #0 : 00:00:00 (0 ms)
 	 to_lowercase : #0 : 00:00:00 (0 ms)
 	 pre to_lowercase : #0 : 00:00:00 (0 ms)
-	 trim_spaces : #2 : 00:00:00.008659 (8 ms)
-	 pre trim_spaces : #1 : 00:00:00.003203 (3 ms)
+	 trim_spaces : #2 : 00:00:00.008687 (8 ms)
+	 pre trim_spaces : #1 : 00:00:00.003942 (3 ms)
 	 trim_spaces_left : #0 : 00:00:00 (0 ms)
 	 pre trim_spaces_left : #0 : 00:00:00 (0 ms)
 	 trim_spaces_rigth : #0 : 00:00:00 (0 ms)
