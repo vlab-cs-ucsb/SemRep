@@ -127,7 +127,6 @@ void ForwardImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& o
 	NodesList successors = origDepGraph.getSuccessors(node);
 	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
 	DepGraphNormalNode* normalNode = NULL;
-
 	if (dynamic_cast< DepGraphNormalNode*>(node) || dynamic_cast< DepGraphUninitNode*>(node) || dynamic_cast< DepGraphOpNode*>(node)) {
 		if (predecessors.empty()) {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: node " << node->getID() << " does not have predecessors. ");
@@ -194,6 +193,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 	NodesList successors = depGraph.getSuccessors(opNode);
 	StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
 	string opName = opNode->getName();
+//	cout << "handling: " << opName << endl;
 	if (!opNode->isBuiltin()) {
 		// __vlab_restrict
         if (opName.find("__vlab_restrict") != string::npos) {
@@ -328,7 +328,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 					"makeBackwardAutoForOpChild_ValidationPhase()");
 		}
 
-	} else if (opName == "preg_replace") {
+	} else if (opName == "preg_replace" || opName == "str_replace") {
 
 		if (successors.size() != 3) {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace invalid number of arguments: "
@@ -402,7 +402,9 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 
 	} else if (opName == "strip_tags") {
 		cout << endl << "!!!!! strip_tags is not implemented yet" << endl;
-		retMe = bwAnalysisResult.find( childNode->getID() )->second;
+//		retMe = bwAnalysisResult.find( childNode->getID() )->second;
+		//treat is as it is not there for now
+		retMe = opAuto->clone(childNode->getID());
 	} else if (opName == "md5") {
 		cout << endl << "!!!!! md5 cannot be implemented, continues with previous node results" << endl;
 		retMe = bwAnalysisResult.find( childNode->getID() )->second;
@@ -410,6 +412,9 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 		throw StrangerStringAnalysisException( "Not implemented yet for validation phase: " + opName);
 	}
 
+//	cout << endl << "auto after each operation : " << opName << endl << endl;
+//	retMe->toDotAscii(0);
+//	cout << endl << endl;
 	return retMe;
 
 }
@@ -477,7 +482,7 @@ void ForwardImageComputer::doForwardNodeComputation_RegularPhase(
 
     			AnalysisResultIterator rit = analysisResult.find(succNode->getID());
     			if (rit == analysisResult.end()) {
-    				// if this is the case, either use the originial graph instead of input relevant graph
+    				// if this is the case, either use the original graph instead of input relevant graph
     				// or update the case here, compute all paths that passes through this node.
     				cout << endl << "!!! Not all successors of a normal node(" << node->getID() << ") is computed, not computed node("<< succNode->getID() <<") !!!:\n"
     						"doForwardNodeComputation_RegularPhase()" << endl;
@@ -632,7 +637,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 									"makeForwardAutoForOp_RegularPhase()");
 		}
 
-	} else if (opName == "preg_replace") {
+	} else if (opName == "preg_replace" || opName == "str_replace") {
 
 		if (successors.size() != 3) {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace invalid number of arguments: "
@@ -700,7 +705,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 		throw StrangerStringAnalysisException("ereg_replace is not supported yet: "
 						"makeForwardAutoForOp_RegularPhase()");
 	} else if (opName == "str_replace") {
-		throw StrangerStringAnalysisException("Implement str_replace: "
+		throw StrangerStringAnalysisException("Implemented above str_replace: "
 								"makeForwardAutoForOp_RegularPhase()");
 		 //Note: subjectAuto should be a string to use the replace function
 		 //from StrangerLibrary. Otherwise we need a method to return the
@@ -830,7 +835,7 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 		StrangerAutomaton* succAuto = analysisResult[successors[0]->getID()];
 		retMe = succAuto->clone(opNode->getID());
 	} else {
-		cout << "!!! Warning: Unmodeled builtin general function : " << opName;
+		cout << "!!! Warning: Unmodeled builtin general function : " << opName << endl;
 		f_unmodeled.push_back(opNode);
 
 		 //conservative decision for operations that have not been
@@ -1078,7 +1083,7 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 	} else if (opName == "mysql_escape_string") {
 		// has one parameter
 		retMe = StrangerAutomaton::pre_mysql_escape_string(opAuto, childNode->getID());
-	} else if (opName == "preg_replace") {
+	} else if (opName == "preg_replace" || opName == "str_replace") {
 
 		if (successors.size() != 3) {
 			throw StrangerStringAnalysisException(stringbuilder() << "SNH: preg_replace invalid number of arguments: "
@@ -2419,8 +2424,7 @@ StrangerAutomaton* ForwardImageComputer::makeAutoForOp(DepGraphOpNode* opNode, A
 			return resultAuto;
 
 		} else {
-			cout << "Warning: Unmodeled builtin general function : "
-					<< opName;
+			cout << "Warning: Unmodeled builtin general function : " << opName << endl;
 
 			f_unmodeled.push_back(opNode);
 

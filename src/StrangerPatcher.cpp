@@ -151,18 +151,28 @@ void StrangerPatcher::writeAutoforMinCut(string patcherName, string patcheeName)
 		cout << "\t Patch     auto : " << patch_auto_name << endl;
 	}
 }
-
-bool StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto) {
+/**
+ * checks if length has maximum restriction, or minimum restriction without a maximium restriction
+ * TODO currently that function only checks if the minimum restriction length is 1 or not, handle any minimum restriction later
+ * result 0 : no worries about length
+ * result 1 : there is a maximum length restriction (may also have minimum inside)
+ * result 2 : there is a minimum length restriction (max length is infinite in that case)
+ */
+int StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto) {
 	boost::posix_time::ptime start_time = perfInfo.current_time();
-	bool result = false;
+	int result = 0;
 	if(patcherAuto->isLengthFinite()) {
 		if (patcheeAuto->isLengthFinite()) {
 			if (patcherAuto->getMaxLength() < patcheeAuto->getMaxLength()) {
-				result = true;
+				result = 1;
 			}
 		}
 		else {
-			result = true;
+			result = 1;
+		}
+	} else if (patcherAuto->checkEmptyString()) {
+		if( !patcheeAuto->checkEmptyString() ) {
+			result = 2;
 		}
 	}
 	perfInfo.sanitization_length_issue_check_time = perfInfo.current_time() - start_time;
@@ -385,7 +395,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		DEBUG_MESSAGE("Difference auto after first forward analysis:");
 		DEBUG_AUTO(differenceAuto);
 	}
-
+	int length_check_result = 0;
 	if (isDifferenceAutoEmpty) {
 		message("no difference, no sanitization patch required!");
 		delete differenceAuto;
@@ -393,12 +403,23 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		length_patch_auto = NULL;
 		is_sanitization_patch_required = false;
 		is_length_patch_required = false;
-	} else if(isLengthAnIssue(patcher_sink_auto,patcheeSinkAuto)) {
+	} else if( (length_check_result = isLengthAnIssue(patcher_sink_auto,patcheeSinkAuto)) != 0) {
 		message("length constraints contribute to the difference, fixing issue...");
-		start_time = perfInfo.current_time();
-		StrangerAutomaton* lengthRestrictAuto =
-				patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcher_sink_auto, -4);
-		perfInfo.sanitization_length_issue_check_time += perfInfo.current_time() - start_time; // adding to length issue check in if statements
+		StrangerAutomaton* lengthRestrictAuto = NULL;
+		if (length_check_result == 1) {
+			start_time = perfInfo.current_time();
+			lengthRestrictAuto = patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcher_sink_auto, -4);
+			perfInfo.sanitization_length_issue_check_time += perfInfo.current_time() - start_time; // adding to length issue check in if statements
+		} else if (length_check_result == 2) {
+			start_time = perfInfo.current_time();
+			StrangerAutomaton* emptyAuto = StrangerAutomaton::makeEmptyString(-4);
+			StrangerAutomaton* negEmptyAuto = emptyAuto->complement(-4);
+			lengthRestrictAuto = patcheeSinkAuto->intersect(negEmptyAuto);
+			delete emptyAuto;
+			delete negEmptyAuto;
+			perfInfo.sanitization_length_issue_check_time += perfInfo.current_time() - start_time;
+		}
+
 		if (DEBUG_ENABLED_LP != 0) {
 			DEBUG_MESSAGE("Length restricted patchee sink automaton:");
 			DEBUG_AUTO(lengthRestrictAuto);
@@ -407,7 +428,10 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		try {
 			// use negation of length restricted auto to solve the problem of overapproximation
 			StrangerAutomaton* negLengthRestrictAuto = lengthRestrictAuto->complement(-4);
-			computePatcheeLengthPatch(negLengthRestrictAuto, patcheeAnalysisResult);
+			StrangerAutomaton* rejectedLengthAuto = patcheeSinkAuto->intersect(negLengthRestrictAuto, -4);
+			delete lengthRestrictAuto;
+			delete negLengthRestrictAuto;
+			computePatcheeLengthPatch(rejectedLengthAuto, patcheeAnalysisResult);
 
 			if (DEBUG_ENABLED_LP != 0) {
 				DEBUG_MESSAGE("Length patch automaton");

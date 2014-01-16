@@ -273,7 +273,7 @@ DepGraph DepGraph::parseDotFile(std::string fname){
         string inputLine;
         while (ifs.good()) {
             getline(ifs, inputLine);
-//            cout << "\t" << inputLine << endl;
+//            cout << "\t parsing : " << inputLine << endl;
             if (boost::regex_match(inputLine, sm, regxGraphLabel)){
                 depGraph.label = sm[1];
             }

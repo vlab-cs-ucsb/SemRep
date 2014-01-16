@@ -27,7 +27,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		strangerPatcher.printResults();
 		strangerPatcher.writeAutoforMinCut(patcher_name, patchee_name);
 
-
+		cout << endl << "\t------ END RESULT for: " << field_name << " ------" << endl;
 	} catch (StrangerStringAnalysisException const &e) {
 		cerr << e.what();
 		exit(EXIT_FAILURE);
@@ -1252,7 +1252,7 @@ void patch_schoolmate_validatelogin__username(bool reversed) {
 
 void patch_mybloggie_login__username(bool reversed) {
 	string field_name = "username";
-	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/mybloggie/mybloggie_login_username_passwoord.dot";
+	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/mybloggie/mybloggie_login_username_password.dot";
 	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/mybloggie/mybloggie_login__username.dot";
 
 	if (reversed) {
@@ -1514,12 +1514,49 @@ void patch_date_1__date_2(bool reversed) {
 	}
 }
 
+void patch_phone_1__phone_2(bool reversed) {
+	string field_name = "phone";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_phone_1.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_phone_2.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_phone_1__phone_3(bool reversed) {
+	string field_name = "phone";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_phone_1.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_phone_3.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
+void patch_phone_2__phone_3(bool reversed) {
+	string field_name = "phone";
+	string reference = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_phone_2.dot";
+	string target = "/home/abaki/RA/PLDI/PLDI14/experiments/js/client_phone_3.dot";
+
+	if (reversed) {
+		call_patcher(target, reference, field_name);
+	} else {
+		call_patcher(reference, target, field_name);
+	}
+}
+
 
 int main(int argc, char *argv[]) {
 
 /***********	Client - Server Patching	***********/
 	bool patchClient = false;
 	bool reversed = false;
+
 //	patch_paperexample_email(patchClient);
 
 //	patch_snipe_frame__form_frame_name(patchClient);
@@ -1624,7 +1661,7 @@ int main(int argc, char *argv[]) {
 //	patch_schoolmate_manageusers_39__userid(patchClient);
 //	patch_schoolmate_validatelogin__username(patchClient);
 
-//	patch_mybloggie_login_username(patchClient);
+	patch_mybloggie_login__username(patchClient);
 
 //	patch_usebb_login_user(patchClient);
 //	patch_usebb_register_user(patchClient);
@@ -1635,7 +1672,7 @@ int main(int argc, char *argv[]) {
 
 //	Client-Client Comparisons ////////////////////////////////////////
 
-	patch_email_1__email_2(reversed);
+//	patch_email_1__email_2(reversed);
 //	patch_email_1__email_3(reversed);
 //	patch_email_1__email_4(reversed);
 //	patch_email_1__email_5(reversed);
@@ -1650,8 +1687,13 @@ int main(int argc, char *argv[]) {
 //	patch_email_4__email_5(reversed);
 //	patch_email_4__email_6(reversed);
 //	patch_email_5__email_6(reversed);
-
+//
 //	patch_date_1__date_2(reversed);
+
+//	patch_phone_1__phone_2(reversed);
+//	patch_phone_1__phone_3(reversed);
+//	patch_phone_2__phone_3(reversed);
+
 
 	return 0;
 }

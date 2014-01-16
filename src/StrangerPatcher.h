@@ -83,7 +83,7 @@ private:
 	void message(string msg);
 	void printAnalysisResults(AnalysisResult& result);
 	void printNodeList(NodesList nodes);
-	bool isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto);
+	int isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto);
 };
 
 
