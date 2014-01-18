@@ -1,460 +1,295 @@
 
-	------ Starting Analysis for: username ------
+     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////////////////////////////////////////////////////////////////////////// WELLCOME TO MINCUT CALCULATOR ////////////////////////////////////////////////////////////////////////////////////
+     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-~~~~~~~~~~~>>> StrangerPatcher says: patcher uninit node(7) found for field username.
 
-~~~~~~~~~~~>>> StrangerPatcher says: patchee uninit node(44) found for field username.
+            ...mincut for : snipe_local_snipe_local__form_keywords_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_local_snipe_local__form_keywords_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_local_snipe_local__form_keywords_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [817->823] , [817->824] , [817->822] , [521->527] , [521->528] , [521->526] , [109->115] , [109->116] , [109->114] , [253->259] , [253->260] , [253->258] , [105->111] , [105->112] , [105->110] , [497->503] , [497->504] , [497->502] , [693->699] , [693->700] , [693->698] , [165->171] , [165->172] , [165->170] , [381->387] , [381->388] , [381->386] , [337->343] , [337->344] , [337->342] , [529->535] , [529->536] , [529->534] , [761->767] , [761->768] , [761->766] , [673->679] , [673->680] , [673->678] , [605->611] , [605->612] , [605->610] , [121->127] , [121->128] , [121->126] , [325->331] , [325->332] , [325->330] , [73->79] , [73->80] , [73->78] , [757->763] , [757->764] , [757->762] , [545->551] , [545->552] , [545->550] , [533->539] , [533->540] , [533->538] , [733->739] , [733->740] , [733->738] , [517->523] , [517->524] , [517->522] , [1->7] , [1->8] , [1->6] , [641->647] , [641->648] , [641->646] , [981->987] , [981->988] , [981->986] , [589->595] , [589->596] , [589->594] , [185->191] , [185->192] , [185->190] , [65->71] , [65->72] , [65->70] , [913->919] , [913->920] , [913->918] , [865->871] , [865->872] , [865->870] , [465->471] , [465->472] , [465->470] , [157->163] , [157->164] , [157->162] , [377->383] , [377->384] , [377->382] , [725->731] , [725->732] , [725->730] , [309->315] , [309->316] , [309->314] , [277->283] , [277->284] , [277->282] , [461->467] , [461->468] , [461->466] , [153->159] , [153->160] , [153->158] , [201->207] , [201->208] , [201->206] , [241->247] , [241->248] , [241->246] , [41->47] , [41->48] , [41->46] , [861->867] , [861->868] , [861->866] , [773->779] , [773->780] , [773->778] , [965->971] , [965->972] , [965->970] , [781->787] , [781->788] , [781->786] , [117->123] , [117->124] , [117->122] , [633->639] , [633->640] , [633->638] , [585->591] , [585->592] , [585->590] , [581->587] , [581->588] , [581->586] , [177->183] , [177->184] , [177->182] , [657->663] , [657->664] , [657->662] , [869->875] , [869->876] , [869->874] , [1013->1017] , [973->979] , [973->980] , [973->978] , [29->35] , [29->36] , [29->34] , [541->547] , [541->548] , [541->546] , [929->935] , [929->936] , [929->934] , [113->119] , [113->120] , [113->118] , [957->963] , [957->964] , [957->962] , [921->927] , [921->928] , [921->926] , [897->903] , [897->904] , [897->902] , [329->335] , [329->336] , [329->334] , [837->843] , [837->844] , [837->842] , [669->675] , [669->676] , [669->674] , [333->339] , [333->340] , [333->338] , [813->819] , [813->820] , [813->818] , [637->643] , [637->644] , [637->642] , [321->327] , [321->328] , [321->326] , [233->239] , [233->240] , [233->238] , [717->723] , [717->724] , [717->722] , [993->999] , [993->1000] , [993->998] , [989->995] , [989->996] , [989->994] , [285->291] , [285->292] , [285->290] , [449->455] , [449->456] , [449->454] , [969->975] , [969->976] , [969->974] , [189->195] , [189->196] , [189->194] , [677->683] , [677->684] , [677->682] , [809->815] , [809->816] , [809->814] , [881->887] , [881->888] , [881->886] , [217->223] , [217->224] , [217->222] , [685->691] , [685->692] , [685->690] , [5->11] , [5->12] , [5->10] , [45->51] , [45->52] , [45->50] , [689->695] , [689->696] , [689->694] , [421->427] , [421->428] , [421->426] , [985->991] , [985->992] , [985->990] , [557->563] , [557->564] , [557->562] , [909->915] , [909->916] , [909->914] , [489->495] , [489->496] , [489->494] , [609->615] , [609->616] , [609->614] , [549->555] , [549->556] , [549->554] , [441->447] , [441->448] , [441->446] , [125->131] , [125->132] , [125->130] , [17->23] , [17->24] , [17->22] , [829->835] , [829->836] , [829->834] , [97->103] , [97->104] , [97->102] , [901->907] , [901->908] , [901->906] , [821->827] , [821->828] , [821->826] , [485->491] , [485->492] , [485->490] , [417->423] , [417->424] , [417->422] , [741->747] , [741->748] , [741->746] , [413->419] , [413->420] , [413->418] , [245->251] , [245->252] , [245->250] , [85->91] , [85->92] , [85->90] , [1001->1007] , [1001->1008] , [1001->1006] , [777->783] , [777->784] , [777->782] , [357->363] , [357->364] , [357->362] , [57->63] , [57->64] , [57->62] , [565->571] , [565->572] , [565->570] , [429->435] , [429->436] , [429->434] , [181->187] , [181->188] , [181->186] , [925->931] , [925->932] , [925->930] , [561->567] , [561->568] , [561->566] , [737->743] , [737->744] , [737->742] , [49->55] , [49->56] , [49->54] , [25->31] , [25->32] , [25->30] , [365->371] , [365->372] , [365->370] , [305->311] , [305->312] , [305->310] , [697->703] , [697->704] , [697->702] , [101->107] , [101->108] , [101->106] , [553->559] , [553->560] , [553->558] , [525->531] , [525->532] , [525->530] , [21->27] , [21->28] , [21->26] , [313->319] , [313->320] , [313->318] , [213->219] , [213->220] , [213->218] , [389->395] , [389->396] , [389->394] , [513->519] , [513->520] , [513->518] , [169->175] , [169->176] , [169->174] , [721->727] , [721->728] , [721->726] , [961->967] , [961->968] , [961->966] , [433->439] , [433->440] , [433->438] , [801->807] , [801->808] , [801->806] , [749->755] , [749->756] , [749->754] , [437->443] , [437->444] , [437->442] , [701->707] , [701->708] , [701->706] , [785->791] , [785->792] , [785->790] , [617->623] , [617->624] , [617->622] , [797->803] , [797->804] , [797->802] , [373->379] , [373->380] , [373->378] , [477->483] , [477->484] , [477->482] , [345->351] , [345->352] , [345->350] , [613->619] , [613->620] , [613->618] , [133->139] , [133->140] , [133->138] , [649->655] , [649->656] , [649->654] , [205->211] , [205->212] , [205->210] , [645->651] , [645->652] , [645->650] , [597->603] , [597->604] , [597->602] , [393->399] , [393->400] , [393->398] , [953->959] , [953->960] , [953->958] , [273->279] , [273->280] , [273->278] , [505->511] , [505->512] , [505->510] , [385->391] , [385->392] , [385->390] , [509->515] , [509->516] , [509->514] , [849->855] , [849->856] , [849->854] , [905->911] , [905->912] , [905->910] , [33->39] , [33->40] , [33->38] , [129->135] , [129->136] , [129->134] , [349->355] , [349->356] , [349->354] , [601->607] , [601->608] , [601->606] , [621->627] , [621->628] , [621->626] , [765->771] , [765->772] , [765->770] , [977->983] , [977->984] , [977->982] , [0->2] , [0->3] , [941->947] , [941->948] , [941->946] , [173->179] , [173->180] , [173->178] , [661->667] , [661->668] , [661->666] , [361->367] , [361->368] , [361->366] , [401->407] , [401->408] , [401->406] , [629->635] , [629->636] , [629->634] , [593->599] , [593->600] , [593->598] , [425->431] , [425->432] , [425->430] , [301->307] , [301->308] , [301->306] , [537->543] , [537->544] , [537->542] , [69->75] , [69->76] , [69->74] , [37->43] , [37->44] , [37->42] , [209->215] , [209->216] , [209->214] , [197->203] , [197->204] , [197->202] , [949->955] , [949->956] , [949->954] , [237->243] , [237->244] , [237->242] , [221->227] , [221->228] , [221->226] , [997->1003] , [997->1004] , [997->1002] , [937->943] , [937->944] , [937->942] , [469->475] , [469->476] , [469->474] , [1005->1011] , [1005->1012] , [1005->1010] , [261->267] , [261->268] , [261->266] , [269->275] , [269->276] , [269->274] , [857->863] , [857->864] , [857->862] , [473->479] , [473->480] , [473->478] , [265->271] , [265->272] , [265->270] , [289->295] , [289->296] , [289->294] , [833->839] , [833->840] , [833->838] , [281->287] , [281->288] , [281->286] , [225->231] , [225->232] , [225->230] , [397->403] , [397->404] , [397->402] , [873->879] , [873->880] , [873->878] , [705->711] , [705->712] , [705->710] , [569->575] , [569->576] , [569->574] , [769->775] , [769->776] , [769->774] , [805->811] , [805->812] , [805->810] , [445->451] , [445->452] , [445->450] , [653->659] , [653->660] , [653->658] , [317->323] , [317->324] , [317->322] , [193->199] , [193->200] , [193->198] , [53->59] , [53->60] , [53->58] , [481->487] , [481->488] , [481->486] , [137->143] , [137->144] , [137->142] , [405->411] , [405->412] , [405->410] , [889->895] , [889->896] , [889->894] , [893->899] , [893->900] , [893->898] , [145->151] , [145->152] , [145->150] , [745->751] , [745->752] , [745->750] , [61->67] , [61->68] , [61->66] , [709->715] , [709->716] , [709->714] , [89->95] , [89->96] , [89->94] , [353->359] , [353->360] , [353->358] , [945->951] , [945->952] , [945->950] , [249->255] , [249->256] , [249->254] , [853->859] , [853->860] , [853->858] , [681->687] , [681->688] , [681->686] , [293->299] , [293->300] , [293->298] , [341->347] , [341->348] , [341->346] , [493->499] , [493->500] , [493->498] , [729->735] , [729->736] , [729->734] , [917->923] , [917->924] , [917->922] , [141->147] , [141->148] , [141->146] , [713->719] , [713->720] , [713->718] , [1009->1015] , [1009->1016] , [1009->1014] , [297->303] , [297->304] , [297->302] , [409->415] , [409->416] , [409->414] , [753->759] , [753->760] , [753->758] , [841->847] , [841->848] , [841->846] , [229->235] , [229->236] , [229->234] , [369->375] , [369->376] , [369->374] , [149->155] , [149->156] , [149->154] , [825->831] , [825->832] , [825->830] , [577->583] , [577->584] , [577->582] , [81->87] , [81->88] , [81->86] , [885->891] , [885->892] , [885->890] , [77->83] , [77->84] , [77->82] , [625->631] , [625->632] , [625->630] , [457->463] , [457->464] , [457->462] , [13->19] , [13->20] , [13->18] , [789->795] , [789->796] , [789->794] , [93->99] , [93->100] , [93->98] , [665->671] , [665->672] , [665->670] , [453->459] , [453->460] , [453->458] , [793->799] , [793->800] , [793->798] , [845->851] , [845->852] , [845->850] , [501->507] , [501->508] , [501->506] , [573->579] , [573->580] , [573->578] , [9->15] , [9->16] , [9->14] , [933->939] , [933->940] , [933->938] , [877->883] , [877->884] , [877->882] , [257->263] , [257->264] , [257->262] , [161->167] , [161->168] , [161->166] }
+\s
+"
+'
+\
+            .........result : trim
+This char is going out from state: 3
+In state 3 this char was preceded by more than one transition coming from states:0, 4, 1, 
+            .........result : preg_raplace('/[\Q"'\\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: BEGIN VALIDATION EXTRACTION PHASE........................................
+            ...mincut for : phpnews_admin_newsposter2_1780_email_username_phpnews_admin_poster__username_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/phpnews_admin_newsposter2_1780_email_username_phpnews_admin_poster__username_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/phpnews_admin_newsposter2_1780_email_username_phpnews_admin_poster__username_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [0->3] , [0->4] , [0->2] , [1->3] , [1->4] , [1->6] }
+\s
+"
+&
+<
+>
+            .........result : trim
+            .........result : preg_raplace('/[\Q"&<>\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patcher
-	 peak : concat : states 3 : bddnodes 10 : before projection 
-	 peak : concat : states 3 : bddnodes 9 : after projection 
-	 peak : union : states 3 : bddnodes 9 
-	 peak : concat : states 4 : bddnodes 19 : before projection 
-	 peak : concat : states 4 : bddnodes 17 : after projection 
-	 peak : union : states 4 : bddnodes 17 
-	 peak : concat : states 5 : bddnodes 28 : before projection 
-	 peak : concat : states 5 : bddnodes 25 : after projection 
-	 peak : union : states 5 : bddnodes 25 
-	 peak : concat : states 6 : bddnodes 37 : before projection 
-	 peak : concat : states 6 : bddnodes 33 : after projection 
-	 peak : union : states 6 : bddnodes 33 
-	 peak : concat : states 7 : bddnodes 46 : before projection 
-	 peak : concat : states 7 : bddnodes 41 : after projection 
-	 peak : union : states 7 : bddnodes 41 
-	 peak : concat : states 8 : bddnodes 55 : before projection 
-	 peak : concat : states 8 : bddnodes 49 : after projection 
-	 peak : union : states 8 : bddnodes 49 
-	 peak : concat : states 9 : bddnodes 64 : before projection 
-	 peak : concat : states 9 : bddnodes 57 : after projection 
-	 peak : union : states 9 : bddnodes 57 
-	 peak : concat : states 10 : bddnodes 73 : before projection 
-	 peak : concat : states 10 : bddnodes 65 : after projection 
-	 peak : union : states 10 : bddnodes 65 
-	 peak : concat : states 11 : bddnodes 82 : before projection 
-	 peak : concat : states 11 : bddnodes 73 : after projection 
-	 peak : union : states 11 : bddnodes 73 
-	 peak : concat : states 12 : bddnodes 91 : before projection 
-	 peak : concat : states 12 : bddnodes 81 : after projection 
-	 peak : union : states 12 : bddnodes 81 
-	 peak : concat : states 13 : bddnodes 100 : before projection 
-	 peak : concat : states 13 : bddnodes 89 : after projection 
-	 peak : union : states 13 : bddnodes 89 
-	 peak : concat : states 14 : bddnodes 109 : before projection 
-	 peak : concat : states 14 : bddnodes 97 : after projection 
-	 peak : union : states 14 : bddnodes 97 
-	 peak : concat : states 15 : bddnodes 118 : before projection 
-	 peak : concat : states 15 : bddnodes 105 : after projection 
-	 peak : union : states 15 : bddnodes 105 
-	 peak : concat : states 16 : bddnodes 127 : before projection 
-	 peak : concat : states 16 : bddnodes 113 : after projection 
-	 peak : union : states 16 : bddnodes 113 
-	 peak : concat : states 17 : bddnodes 136 : before projection 
-	 peak : concat : states 17 : bddnodes 121 : after projection 
-	 peak : union : states 17 : bddnodes 121 
-	 peak : concat : states 18 : bddnodes 145 : before projection 
-	 peak : concat : states 18 : bddnodes 129 : after projection 
-	 peak : union : states 18 : bddnodes 129 
-	 peak : concat : states 19 : bddnodes 154 : before projection 
-	 peak : concat : states 19 : bddnodes 137 : after projection 
-	 peak : union : states 19 : bddnodes 137 
-	 peak : concat : states 20 : bddnodes 163 : before projection 
-	 peak : concat : states 20 : bddnodes 145 : after projection 
-	 peak : union : states 20 : bddnodes 145 
-	 peak : concat : states 21 : bddnodes 172 : before projection 
-	 peak : concat : states 21 : bddnodes 153 : after projection 
-	 peak : union : states 21 : bddnodes 153 
-	 peak : concat : states 22 : bddnodes 181 : before projection 
-	 peak : concat : states 22 : bddnodes 161 : after projection 
-	 peak : union : states 22 : bddnodes 161 
-	 peak : concat : states 23 : bddnodes 190 : before projection 
-	 peak : concat : states 23 : bddnodes 169 : after projection 
-	 peak : union : states 23 : bddnodes 169 
-	 peak : concat : states 24 : bddnodes 199 : before projection 
-	 peak : concat : states 24 : bddnodes 177 : after projection 
-	 peak : union : states 24 : bddnodes 177 
-	 peak : concat : states 25 : bddnodes 208 : before projection 
-	 peak : concat : states 25 : bddnodes 185 : after projection 
-	 peak : union : states 25 : bddnodes 185 
-	 peak : concat : states 26 : bddnodes 217 : before projection 
-	 peak : concat : states 26 : bddnodes 193 : after projection 
-	 peak : union : states 26 : bddnodes 193 
-	 peak : concat : states 27 : bddnodes 226 : before projection 
-	 peak : concat : states 27 : bddnodes 201 : after projection 
-	 peak : union : states 27 : bddnodes 201 
-	 peak : concat : states 28 : bddnodes 235 : before projection 
-	 peak : concat : states 28 : bddnodes 209 : after projection 
-	 peak : union : states 28 : bddnodes 209 
-	 peak : concat : states 29 : bddnodes 244 : before projection 
-	 peak : concat : states 29 : bddnodes 217 : after projection 
-	 peak : union : states 29 : bddnodes 217 
-	 peak : concat : states 30 : bddnodes 253 : before projection 
-	 peak : concat : states 30 : bddnodes 225 : after projection 
-	 peak : union : states 30 : bddnodes 225 
-	 peak : concat : states 31 : bddnodes 262 : before projection 
-	 peak : concat : states 31 : bddnodes 233 : after projection 
-	 peak : union : states 31 : bddnodes 233 
-	 peak : concat : states 32 : bddnodes 271 : before projection 
-	 peak : concat : states 32 : bddnodes 241 : after projection 
-	 peak : union : states 32 : bddnodes 241 
-	 peak : concat : states 33 : bddnodes 280 : before projection 
-	 peak : concat : states 33 : bddnodes 249 : after projection 
-	 peak : union : states 33 : bddnodes 249 
-	 peak : concat : states 34 : bddnodes 289 : before projection 
-	 peak : concat : states 34 : bddnodes 257 : after projection 
-	 peak : union : states 34 : bddnodes 257 
-	 peak : concat : states 35 : bddnodes 298 : before projection 
-	 peak : concat : states 35 : bddnodes 265 : after projection 
-	 peak : union : states 35 : bddnodes 265 
-	 peak : concat : states 36 : bddnodes 307 : before projection 
-	 peak : concat : states 36 : bddnodes 273 : after projection 
-	 peak : union : states 36 : bddnodes 273 
-	 peak : concat : states 37 : bddnodes 316 : before projection 
-	 peak : concat : states 37 : bddnodes 281 : after projection 
-	 peak : union : states 37 : bddnodes 281 
-	 peak : concat : states 38 : bddnodes 325 : before projection 
-	 peak : concat : states 38 : bddnodes 289 : after projection 
-	 peak : union : states 38 : bddnodes 289 
-	 peak : concat : states 39 : bddnodes 334 : before projection 
-	 peak : concat : states 39 : bddnodes 297 : after projection 
-	 peak : union : states 39 : bddnodes 297 
-	 peak : concat : states 40 : bddnodes 343 : before projection 
-	 peak : concat : states 40 : bddnodes 305 : after projection 
-	 peak : union : states 40 : bddnodes 305 
-	 peak : concat : states 41 : bddnodes 352 : before projection 
-	 peak : concat : states 41 : bddnodes 313 : after projection 
-	 peak : union : states 41 : bddnodes 313 
-	 peak : concat : states 42 : bddnodes 361 : before projection 
-	 peak : concat : states 42 : bddnodes 321 : after projection 
-	 peak : union : states 42 : bddnodes 321 
-	 peak : concat : states 43 : bddnodes 370 : before projection 
-	 peak : concat : states 43 : bddnodes 329 : after projection 
-	 peak : union : states 43 : bddnodes 329 
-	 peak : concat : states 44 : bddnodes 379 : before projection 
-	 peak : concat : states 44 : bddnodes 337 : after projection 
-	 peak : union : states 44 : bddnodes 337 
-	 peak : concat : states 45 : bddnodes 388 : before projection 
-	 peak : concat : states 45 : bddnodes 345 : after projection 
-	 peak : union : states 45 : bddnodes 345 
-	 peak : concat : states 46 : bddnodes 397 : before projection 
-	 peak : concat : states 46 : bddnodes 353 : after projection 
-	 peak : union : states 46 : bddnodes 353 
-	 peak : concat : states 47 : bddnodes 406 : before projection 
-	 peak : concat : states 47 : bddnodes 361 : after projection 
-	 peak : union : states 47 : bddnodes 361 
-	 peak : concat : states 48 : bddnodes 415 : before projection 
-	 peak : concat : states 48 : bddnodes 369 : after projection 
-	 peak : union : states 48 : bddnodes 369 
-	 peak : concat : states 49 : bddnodes 424 : before projection 
-	 peak : concat : states 49 : bddnodes 377 : after projection 
-	 peak : union : states 49 : bddnodes 377 
-	 peak : concat : states 50 : bddnodes 433 : before projection 
-	 peak : concat : states 50 : bddnodes 385 : after projection 
-	 peak : union : states 50 : bddnodes 385 
-	 peak : concat : states 51 : bddnodes 442 : before projection 
-	 peak : concat : states 51 : bddnodes 393 : after projection 
-	 peak : union : states 51 : bddnodes 393 
-	 peak : concat : states 52 : bddnodes 451 : before projection 
-	 peak : concat : states 52 : bddnodes 401 : after projection 
-	 peak : union : states 52 : bddnodes 401 
-	 peak : negate : states 53 : bddnodes 409 
-	 peak : union : states 53 : bddnodes 409 
-		: validation function found!
-	 peak : negate : states 53 : bddnodes 409 
+            ...mincut for : schoolmate_header_schoolmate_header__schoolname_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/schoolmate_header_schoolmate_header__schoolname_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/schoolmate_header_schoolmate_header__schoolname_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [200->210] , [200->211] , [146->156] , [146->157] , [218->228] , [218->229] , [29->39] , [29->40] , [119->129] , [119->130] , [1->6] , [1->7] , [155->165] , [155->166] , [11->21] , [11->22] , [227->237] , [227->238] , [74->84] , [74->85] , [344->354] , [344->355] , [281->291] , [281->292] , [245->255] , [245->256] , [110->120] , [110->121] , [182->192] , [182->193] , [0->2] , [0->3] , [290->300] , [290->301] , [128->138] , [128->139] , [209->219] , [209->220] , [65->75] , [65->76] , [308->318] , [308->319] , [5->12] , [5->13] , [317->327] , [317->328] , [299->309] , [299->310] , [398->408] , [398->409] , [101->111] , [101->112] , [353->363] , [353->364] , [371->381] , [371->382] , [236->246] , [236->247] , [164->174] , [164->175] , [38->48] , [38->49] , [407->416] , [191->201] , [191->202] , [420->423] , [389->399] , [389->400] , [380->390] , [380->391] , [56->66] , [56->67] , [173->183] , [173->184] , [20->30] , [20->31] , [83->93] , [83->94] , [415->421] , [254->264] , [254->265] , [47->57] , [47->58] , [272->282] , [272->283] , [137->147] , [137->148] , [92->102] , [92->103] , [326->336] , [326->337] , [362->372] , [362->373] , [263->273] , [263->274] , [335->345] , [335->346] }
+"
+&
+<
+>
+            .........result : preg_raplace('/[\Q"&<>\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patchee
-		: do not have any validation!, no __vlab_restrict function
-	 peak : negate : states 2 : bddnodes 9 
+            ...mincut for : phpnews_admin_modifypost3_2382_subject_phpnews_admin_post__subject_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/phpnews_admin_modifypost3_2382_subject_phpnews_admin_post__subject_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/phpnews_admin_modifypost3_2382_subject_phpnews_admin_post__subject_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [0->2] , [0->3] , [0->5] , [0->4] , [1->2] , [1->7] , [1->5] , [1->4] }
+LF
+CR
+SUB
+\s
+"
+&
+'
+<
+>
+\
+            .........result : trim
+This char is going out from state: 4
+In state 4 this char was preceded by more than one transition coming from states:1, 0, 5, 
+            .........result : preg_raplace('/[\Q
+"&'<>\\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: computing validation patch
-	 peak : negate : states 53 : bddnodes 409 
-	 peak : intersect : states 53 : bddnodes 409 
-	 peak : intersect : states 53 : bddnodes 409 
+            ...mincut for : phpnews_admin_post2_1527_subject_phpnews_admin_post__subject_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/phpnews_admin_post2_1527_subject_phpnews_admin_post__subject_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/phpnews_admin_post2_1527_subject_phpnews_admin_post__subject_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [1->2] , [1->7] , [1->5] , [1->4] , [0->2] , [0->3] , [0->5] , [0->4] }
+LF
+CR
+SUB
+\s
+"
+&
+'
+<
+>
+\
+            .........result : trim
+This char is going out from state: 11
+In state 11 this char was preceded by more than one transition coming from states:4, 0, 1, 
+            .........result : preg_raplace('/[\Q
+"&'<>\\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: validation patch is generated for input: username
+            ...mincut for : snipe_gallery_41_snipe_gallery__form_cat_description_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_gallery_41_snipe_gallery__form_cat_description_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_gallery_41_snipe_gallery__form_cat_description_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [0->1] , [0->2] }
+"
+'
+\
+This char is going out from state: 2
+            .........escapee : '"' escaper : '"'
+This char is going out from state: 2
+            .........escapee : ''' escaper : '''
+This char is going out from state: 2
+            .........escapee : '\' escaper : '\'
+            .........result : preg_raplace('/"/', '\"', $input);
+            .........result : preg_raplace('/'/', '\'', $input);
+            .........result : preg_raplace('/\/', '\\', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: ........................................END VALIDATION EXTRACTION PHASE
+            ...mincut for : snipe_local_snipe_local__form_location_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_local_snipe_local__form_location_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_local_snipe_local__form_location_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [993->999] , [993->1000] , [993->998] , [645->651] , [645->652] , [645->650] , [669->675] , [669->676] , [669->674] , [225->231] , [225->232] , [225->230] , [717->723] , [717->724] , [717->722] , [421->427] , [421->428] , [421->426] , [821->827] , [821->828] , [821->826] , [625->631] , [625->632] , [625->630] , [0->2] , [0->3] , [749->755] , [749->756] , [749->754] , [1005->1011] , [1005->1012] , [1005->1010] , [937->943] , [937->944] , [937->942] , [597->603] , [597->604] , [597->602] , [549->555] , [549->556] , [549->554] , [329->335] , [329->336] , [329->334] , [989->995] , [989->996] , [989->994] , [529->535] , [529->536] , [529->534] , [185->191] , [185->192] , [185->190] , [525->531] , [525->532] , [525->530] , [913->919] , [913->920] , [913->918] , [317->323] , [317->324] , [317->322] , [853->859] , [853->860] , [853->858] , [385->391] , [385->392] , [385->390] , [53->59] , [53->60] , [53->58] , [929->935] , [929->936] , [929->934] , [745->751] , [745->752] , [745->750] , [617->623] , [617->624] , [617->622] , [189->195] , [189->196] , [189->194] , [429->435] , [429->436] , [429->434] , [293->299] , [293->300] , [293->298] , [113->119] , [113->120] , [113->118] , [261->267] , [261->268] , [261->266] , [893->899] , [893->900] , [893->898] , [905->911] , [905->912] , [905->910] , [273->279] , [273->280] , [273->278] , [677->683] , [677->684] , [677->682] , [361->367] , [361->368] , [361->366] , [341->347] , [341->348] , [341->346] , [997->1003] , [997->1004] , [997->1002] , [849->855] , [849->856] , [849->854] , [689->695] , [689->696] , [689->694] , [533->539] , [533->540] , [533->538] , [209->215] , [209->216] , [209->214] , [237->243] , [237->244] , [237->242] , [409->415] , [409->416] , [409->414] , [797->803] , [797->804] , [797->802] , [661->667] , [661->668] , [661->666] , [605->611] , [605->612] , [605->610] , [561->567] , [561->568] , [561->566] , [137->143] , [137->144] , [137->142] , [97->103] , [97->104] , [97->102] , [277->283] , [277->284] , [277->282] , [125->131] , [125->132] , [125->130] , [741->747] , [741->748] , [741->746] , [885->891] , [885->892] , [885->890] , [537->543] , [537->544] , [537->542] , [481->487] , [481->488] , [481->486] , [73->79] , [73->80] , [73->78] , [521->527] , [521->528] , [521->526] , [333->339] , [333->340] , [333->338] , [865->871] , [865->872] , [865->870] , [721->727] , [721->728] , [721->726] , [197->203] , [197->204] , [197->202] , [325->331] , [325->332] , [325->330] , [165->171] , [165->172] , [165->170] , [837->843] , [837->844] , [837->842] , [205->211] , [205->212] , [205->210] , [1->7] , [1->8] , [1->6] , [249->255] , [249->256] , [249->254] , [817->823] , [817->824] , [817->822] , [57->63] , [57->64] , [57->62] , [701->707] , [701->708] , [701->706] , [649->655] , [649->656] , [649->654] , [105->111] , [105->112] , [105->110] , [173->179] , [173->180] , [173->178] , [977->983] , [977->984] , [977->982] , [393->399] , [393->400] , [393->398] , [965->971] , [965->972] , [965->970] , [241->247] , [241->248] , [241->246] , [141->147] , [141->148] , [141->146] , [629->635] , [629->636] , [629->634] , [609->615] , [609->616] , [609->614] , [269->275] , [269->276] , [269->274] , [117->123] , [117->124] , [117->122] , [101->107] , [101->108] , [101->106] , [157->163] , [157->164] , [157->162] , [589->595] , [589->596] , [589->594] , [357->363] , [357->364] , [357->362] , [257->263] , [257->264] , [257->262] , [957->963] , [957->964] , [957->962] , [65->71] , [65->72] , [65->70] , [801->807] , [801->808] , [801->806] , [93->99] , [93->100] , [93->98] , [37->43] , [37->44] , [37->42] , [897->903] , [897->904] , [897->902] , [309->315] , [309->316] , [309->314] , [705->711] , [705->712] , [705->710] , [665->671] , [665->672] , [665->670] , [417->423] , [417->424] , [417->422] , [401->407] , [401->408] , [401->406] , [153->159] , [153->160] , [153->158] , [541->547] , [541->548] , [541->546] , [581->587] , [581->588] , [581->586] , [389->395] , [389->396] , [389->394] , [565->571] , [565->572] , [565->570] , [353->359] , [353->360] , [353->358] , [841->847] , [841->848] , [841->846] , [461->467] , [461->468] , [461->466] , [825->831] , [825->832] , [825->830] , [489->495] , [489->496] , [489->494] , [77->83] , [77->84] , [77->82] , [809->815] , [809->816] , [809->814] , [805->811] , [805->812] , [805->810] , [281->287] , [281->288] , [281->286] , [405->411] , [405->412] , [405->410] , [813->819] , [813->820] , [813->818] , [297->303] , [297->304] , [297->302] , [505->511] , [505->512] , [505->510] , [337->343] , [337->344] , [337->342] , [29->35] , [29->36] , [29->34] , [765->771] , [765->772] , [765->770] , [961->967] , [961->968] , [961->966] , [265->271] , [265->272] , [265->270] , [933->939] , [933->940] , [933->938] , [445->451] , [445->452] , [445->450] , [869->875] , [869->876] , [869->874] , [641->647] , [641->648] , [641->646] , [493->499] , [493->500] , [493->498] , [129->135] , [129->136] , [129->134] , [253->259] , [253->260] , [253->258] , [433->439] , [433->440] , [433->438] , [193->199] , [193->200] , [193->198] , [1001->1007] , [1001->1008] , [1001->1006] , [501->507] , [501->508] , [501->506] , [305->311] , [305->312] , [305->310] , [33->39] , [33->40] , [33->38] , [513->519] , [513->520] , [513->518] , [221->227] , [221->228] , [221->226] , [769->775] , [769->776] , [769->774] , [901->907] , [901->908] , [901->906] , [301->307] , [301->308] , [301->306] , [761->767] , [761->768] , [761->766] , [365->371] , [365->372] , [365->370] , [453->459] , [453->460] , [453->458] , [585->591] , [585->592] , [585->590] , [233->239] , [233->240] , [233->238] , [881->887] , [881->888] , [881->886] , [637->643] , [637->644] , [637->642] , [473->479] , [473->480] , [473->478] , [889->895] , [889->896] , [889->894] , [169->175] , [169->176] , [169->174] , [201->207] , [201->208] , [201->206] , [145->151] , [145->152] , [145->150] , [909->915] , [909->916] , [909->914] , [685->691] , [685->692] , [685->690] , [425->431] , [425->432] , [425->430] , [373->379] , [373->380] , [373->378] , [133->139] , [133->140] , [133->138] , [213->219] , [213->220] , [213->218] , [45->51] , [45->52] , [45->50] , [941->947] , [941->948] , [941->946] , [289->295] , [289->296] , [289->294] , [69->75] , [69->76] , [69->74] , [17->23] , [17->24] , [17->22] , [621->627] , [621->628] , [621->626] , [449->455] , [449->456] , [449->454] , [569->575] , [569->576] , [569->574] , [437->443] , [437->444] , [437->442] , [713->719] , [713->720] , [713->718] , [5->11] , [5->12] , [5->10] , [953->959] , [953->960] , [953->958] , [377->383] , [377->384] , [377->382] , [861->867] , [861->868] , [861->866] , [845->851] , [845->852] , [845->850] , [709->715] , [709->716] , [709->714] , [949->955] , [949->956] , [949->954] , [477->483] , [477->484] , [477->482] , [413->419] , [413->420] , [413->418] , [613->619] , [613->620] , [613->618] , [497->503] , [497->504] , [497->502] , [557->563] , [557->564] , [557->562] , [777->783] , [777->784] , [777->782] , [465->471] , [465->472] , [465->470] , [369->375] , [369->376] , [369->374] , [21->27] , [21->28] , [21->26] , [873->879] , [873->880] , [873->878] , [285->291] , [285->292] , [285->290] , [245->251] , [245->252] , [245->250] , [757->763] , [757->764] , [757->762] , [509->515] , [509->516] , [509->514] , [553->559] , [553->560] , [553->558] , [457->463] , [457->464] , [457->462] , [181->187] , [181->188] , [181->186] , [61->67] , [61->68] , [61->66] , [725->731] , [725->732] , [725->730] , [41->47] , [41->48] , [41->46] , [773->779] , [773->780] , [773->778] , [657->663] , [657->664] , [657->662] , [229->235] , [229->236] , [229->234] , [829->835] , [829->836] , [829->834] , [925->931] , [925->932] , [925->930] , [89->95] , [89->96] , [89->94] , [857->863] , [857->864] , [857->862] , [981->987] , [981->988] , [981->986] , [545->551] , [545->552] , [545->550] , [729->735] , [729->736] , [729->734] , [397->403] , [397->404] , [397->402] , [13->19] , [13->20] , [13->18] , [469->475] , [469->476] , [469->474] , [921->927] , [921->928] , [921->926] , [673->679] , [673->680] , [673->678] , [577->583] , [577->584] , [577->582] , [737->743] , [737->744] , [737->742] , [313->319] , [313->320] , [313->318] , [877->883] , [877->884] , [877->882] , [633->639] , [633->640] , [633->638] , [149->155] , [149->156] , [149->154] , [25->31] , [25->32] , [25->30] , [9->15] , [9->16] , [9->14] , [601->607] , [601->608] , [601->606] , [177->183] , [177->184] , [177->182] , [973->979] , [973->980] , [973->978] , [753->759] , [753->760] , [753->758] , [945->951] , [945->952] , [945->950] , [573->579] , [573->580] , [573->578] , [985->991] , [985->992] , [985->990] , [485->491] , [485->492] , [485->490] , [345->351] , [345->352] , [345->350] , [789->795] , [789->796] , [789->794] , [441->447] , [441->448] , [441->446] , [217->223] , [217->224] , [217->222] , [49->55] , [49->56] , [49->54] , [161->167] , [161->168] , [161->166] , [1009->1015] , [1009->1016] , [1009->1014] , [321->327] , [321->328] , [321->326] , [733->739] , [733->740] , [733->738] , [781->787] , [781->788] , [781->786] , [653->659] , [653->660] , [653->658] , [969->975] , [969->976] , [969->974] , [121->127] , [121->128] , [121->126] , [109->115] , [109->116] , [109->114] , [81->87] , [81->88] , [81->86] , [381->387] , [381->388] , [381->386] , [917->923] , [917->924] , [917->922] , [785->791] , [785->792] , [785->790] , [593->599] , [593->600] , [593->598] , [349->355] , [349->356] , [349->354] , [1013->1017] , [85->91] , [85->92] , [85->90] , [697->703] , [697->704] , [697->702] , [681->687] , [681->688] , [681->686] , [833->839] , [833->840] , [833->838] , [793->799] , [793->800] , [793->798] , [693->699] , [693->700] , [693->698] , [517->523] , [517->524] , [517->522] }
+\s
+"
+'
+\
+            .........result : trim
+This char is going out from state: 3
+In state 3 this char was preceded by more than one transition coming from states:1, 0, 4, 
+            .........result : preg_raplace('/[\Q"'\\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: computing patcher sink post image...
+            ...mincut for : phpnews_admin_modifynewsposter3_3091_email_phpnews_admin_poster__email_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/phpnews_admin_modifynewsposter3_3091_email_phpnews_admin_poster__email_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/phpnews_admin_modifynewsposter3_3091_email_phpnews_admin_poster__email_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [18->17] , [15->17] , [0->2] }
+\s
+            ......result : preg_replace('/ /', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: initializing patcher inputs with bottom
+            ...mincut for : phpnews_admin_newsposter2_1780_email_username_phpnews_admin_poster__email_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/phpnews_admin_newsposter2_1780_email_username_phpnews_admin_poster__email_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/phpnews_admin_newsposter2_1780_email_username_phpnews_admin_poster__email_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [15->17] , [18->17] , [0->2] }
+\s
+            ......result : preg_replace('/ /', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(7) with sigma star
+            ...mincut for : phpnews_auth_89_user_password_phpnews_auth_89__user_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/phpnews_auth_89_user_password_phpnews_auth_89__user_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/phpnews_auth_89_user_password_phpnews_auth_89__user_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [0->1] , [0->2] }
+"
+'
+\
+This char is going out from state: 3
+In state 3 this char was preceded by more than one transition coming from states:0, 1, 
+            .........result : preg_raplace('/[\Q"'\\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patcher...
-	 peak : concat : states 3 : bddnodes 10 : before projection 
-	 peak : concat : states 3 : bddnodes 9 : after projection 
-	 peak : union : states 3 : bddnodes 9 
-	 peak : concat : states 4 : bddnodes 19 : before projection 
-	 peak : concat : states 4 : bddnodes 17 : after projection 
-	 peak : union : states 4 : bddnodes 17 
-	 peak : concat : states 5 : bddnodes 28 : before projection 
-	 peak : concat : states 5 : bddnodes 25 : after projection 
-	 peak : union : states 5 : bddnodes 25 
-	 peak : concat : states 6 : bddnodes 37 : before projection 
-	 peak : concat : states 6 : bddnodes 33 : after projection 
-	 peak : union : states 6 : bddnodes 33 
-	 peak : concat : states 7 : bddnodes 46 : before projection 
-	 peak : concat : states 7 : bddnodes 41 : after projection 
-	 peak : union : states 7 : bddnodes 41 
-	 peak : concat : states 8 : bddnodes 55 : before projection 
-	 peak : concat : states 8 : bddnodes 49 : after projection 
-	 peak : union : states 8 : bddnodes 49 
-	 peak : concat : states 9 : bddnodes 64 : before projection 
-	 peak : concat : states 9 : bddnodes 57 : after projection 
-	 peak : union : states 9 : bddnodes 57 
-	 peak : concat : states 10 : bddnodes 73 : before projection 
-	 peak : concat : states 10 : bddnodes 65 : after projection 
-	 peak : union : states 10 : bddnodes 65 
-	 peak : concat : states 11 : bddnodes 82 : before projection 
-	 peak : concat : states 11 : bddnodes 73 : after projection 
-	 peak : union : states 11 : bddnodes 73 
-	 peak : concat : states 12 : bddnodes 91 : before projection 
-	 peak : concat : states 12 : bddnodes 81 : after projection 
-	 peak : union : states 12 : bddnodes 81 
-	 peak : concat : states 13 : bddnodes 100 : before projection 
-	 peak : concat : states 13 : bddnodes 89 : after projection 
-	 peak : union : states 13 : bddnodes 89 
-	 peak : concat : states 14 : bddnodes 109 : before projection 
-	 peak : concat : states 14 : bddnodes 97 : after projection 
-	 peak : union : states 14 : bddnodes 97 
-	 peak : concat : states 15 : bddnodes 118 : before projection 
-	 peak : concat : states 15 : bddnodes 105 : after projection 
-	 peak : union : states 15 : bddnodes 105 
-	 peak : concat : states 16 : bddnodes 127 : before projection 
-	 peak : concat : states 16 : bddnodes 113 : after projection 
-	 peak : union : states 16 : bddnodes 113 
-	 peak : concat : states 17 : bddnodes 136 : before projection 
-	 peak : concat : states 17 : bddnodes 121 : after projection 
-	 peak : union : states 17 : bddnodes 121 
-	 peak : concat : states 18 : bddnodes 145 : before projection 
-	 peak : concat : states 18 : bddnodes 129 : after projection 
-	 peak : union : states 18 : bddnodes 129 
-	 peak : concat : states 19 : bddnodes 154 : before projection 
-	 peak : concat : states 19 : bddnodes 137 : after projection 
-	 peak : union : states 19 : bddnodes 137 
-	 peak : concat : states 20 : bddnodes 163 : before projection 
-	 peak : concat : states 20 : bddnodes 145 : after projection 
-	 peak : union : states 20 : bddnodes 145 
-	 peak : concat : states 21 : bddnodes 172 : before projection 
-	 peak : concat : states 21 : bddnodes 153 : after projection 
-	 peak : union : states 21 : bddnodes 153 
-	 peak : concat : states 22 : bddnodes 181 : before projection 
-	 peak : concat : states 22 : bddnodes 161 : after projection 
-	 peak : union : states 22 : bddnodes 161 
-	 peak : concat : states 23 : bddnodes 190 : before projection 
-	 peak : concat : states 23 : bddnodes 169 : after projection 
-	 peak : union : states 23 : bddnodes 169 
-	 peak : concat : states 24 : bddnodes 199 : before projection 
-	 peak : concat : states 24 : bddnodes 177 : after projection 
-	 peak : union : states 24 : bddnodes 177 
-	 peak : concat : states 25 : bddnodes 208 : before projection 
-	 peak : concat : states 25 : bddnodes 185 : after projection 
-	 peak : union : states 25 : bddnodes 185 
-	 peak : concat : states 26 : bddnodes 217 : before projection 
-	 peak : concat : states 26 : bddnodes 193 : after projection 
-	 peak : union : states 26 : bddnodes 193 
-	 peak : concat : states 27 : bddnodes 226 : before projection 
-	 peak : concat : states 27 : bddnodes 201 : after projection 
-	 peak : union : states 27 : bddnodes 201 
-	 peak : concat : states 28 : bddnodes 235 : before projection 
-	 peak : concat : states 28 : bddnodes 209 : after projection 
-	 peak : union : states 28 : bddnodes 209 
-	 peak : concat : states 29 : bddnodes 244 : before projection 
-	 peak : concat : states 29 : bddnodes 217 : after projection 
-	 peak : union : states 29 : bddnodes 217 
-	 peak : concat : states 30 : bddnodes 253 : before projection 
-	 peak : concat : states 30 : bddnodes 225 : after projection 
-	 peak : union : states 30 : bddnodes 225 
-	 peak : concat : states 31 : bddnodes 262 : before projection 
-	 peak : concat : states 31 : bddnodes 233 : after projection 
-	 peak : union : states 31 : bddnodes 233 
-	 peak : concat : states 32 : bddnodes 271 : before projection 
-	 peak : concat : states 32 : bddnodes 241 : after projection 
-	 peak : union : states 32 : bddnodes 241 
-	 peak : concat : states 33 : bddnodes 280 : before projection 
-	 peak : concat : states 33 : bddnodes 249 : after projection 
-	 peak : union : states 33 : bddnodes 249 
-	 peak : concat : states 34 : bddnodes 289 : before projection 
-	 peak : concat : states 34 : bddnodes 257 : after projection 
-	 peak : union : states 34 : bddnodes 257 
-	 peak : concat : states 35 : bddnodes 298 : before projection 
-	 peak : concat : states 35 : bddnodes 265 : after projection 
-	 peak : union : states 35 : bddnodes 265 
-	 peak : concat : states 36 : bddnodes 307 : before projection 
-	 peak : concat : states 36 : bddnodes 273 : after projection 
-	 peak : union : states 36 : bddnodes 273 
-	 peak : concat : states 37 : bddnodes 316 : before projection 
-	 peak : concat : states 37 : bddnodes 281 : after projection 
-	 peak : union : states 37 : bddnodes 281 
-	 peak : concat : states 38 : bddnodes 325 : before projection 
-	 peak : concat : states 38 : bddnodes 289 : after projection 
-	 peak : union : states 38 : bddnodes 289 
-	 peak : concat : states 39 : bddnodes 334 : before projection 
-	 peak : concat : states 39 : bddnodes 297 : after projection 
-	 peak : union : states 39 : bddnodes 297 
-	 peak : concat : states 40 : bddnodes 343 : before projection 
-	 peak : concat : states 40 : bddnodes 305 : after projection 
-	 peak : union : states 40 : bddnodes 305 
-	 peak : concat : states 41 : bddnodes 352 : before projection 
-	 peak : concat : states 41 : bddnodes 313 : after projection 
-	 peak : union : states 41 : bddnodes 313 
-	 peak : concat : states 42 : bddnodes 361 : before projection 
-	 peak : concat : states 42 : bddnodes 321 : after projection 
-	 peak : union : states 42 : bddnodes 321 
-	 peak : concat : states 43 : bddnodes 370 : before projection 
-	 peak : concat : states 43 : bddnodes 329 : after projection 
-	 peak : union : states 43 : bddnodes 329 
-	 peak : concat : states 44 : bddnodes 379 : before projection 
-	 peak : concat : states 44 : bddnodes 337 : after projection 
-	 peak : union : states 44 : bddnodes 337 
-	 peak : concat : states 45 : bddnodes 388 : before projection 
-	 peak : concat : states 45 : bddnodes 345 : after projection 
-	 peak : union : states 45 : bddnodes 345 
-	 peak : concat : states 46 : bddnodes 397 : before projection 
-	 peak : concat : states 46 : bddnodes 353 : after projection 
-	 peak : union : states 46 : bddnodes 353 
-	 peak : concat : states 47 : bddnodes 406 : before projection 
-	 peak : concat : states 47 : bddnodes 361 : after projection 
-	 peak : union : states 47 : bddnodes 361 
-	 peak : concat : states 48 : bddnodes 415 : before projection 
-	 peak : concat : states 48 : bddnodes 369 : after projection 
-	 peak : union : states 48 : bddnodes 369 
-	 peak : concat : states 49 : bddnodes 424 : before projection 
-	 peak : concat : states 49 : bddnodes 377 : after projection 
-	 peak : union : states 49 : bddnodes 377 
-	 peak : concat : states 50 : bddnodes 433 : before projection 
-	 peak : concat : states 50 : bddnodes 385 : after projection 
-	 peak : union : states 50 : bddnodes 385 
-	 peak : concat : states 51 : bddnodes 442 : before projection 
-	 peak : concat : states 51 : bddnodes 393 : after projection 
-	 peak : union : states 51 : bddnodes 393 
-	 peak : concat : states 52 : bddnodes 451 : before projection 
-	 peak : concat : states 52 : bddnodes 401 : after projection 
-	 peak : union : states 52 : bddnodes 401 
-	 peak : intersect : states 53 : bddnodes 409 
+            ...mincut for : snipe_gallery_115_snipe_gallery__form_cat_description_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_gallery_115_snipe_gallery__form_cat_description_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_gallery_115_snipe_gallery__form_cat_description_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [0->1] , [0->2] }
+"
+'
+\
+This char is going out from state: 2
+            .........escapee : '"' escaper : '"'
+This char is going out from state: 2
+            .........escapee : ''' escaper : '''
+This char is going out from state: 2
+            .........escapee : '\' escaper : '\'
+            .........result : preg_raplace('/"/', '\"', $input);
+            .........result : preg_raplace('/'/', '\'', $input);
+            .........result : preg_raplace('/\/', '\\', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patcher.
+            ...mincut for : snipe_gallery_41_snipe_gallery__form_gallery_name_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_gallery_41_snipe_gallery__form_gallery_name_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_gallery_41_snipe_gallery__form_gallery_name_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [419->423] , [419->424] , [371->375] , [371->376] , [62->66] , [62->67] , [521->525] , [521->526] , [542->546] , [542->547] , [302->306] , [302->307] , [11->15] , [11->16] , [401->405] , [401->406] , [218->222] , [218->223] , [392->396] , [392->397] , [266->270] , [266->271] , [221->225] , [221->226] , [17->21] , [17->22] , [440->444] , [440->445] , [173->177] , [173->178] , [56->60] , [56->61] , [389->393] , [389->394] , [188->192] , [188->193] , [158->162] , [158->163] , [191->195] , [191->196] , [227->231] , [227->232] , [449->453] , [449->454] , [326->330] , [326->331] , [593->597] , [593->598] , [563->567] , [563->568] , [353->357] , [353->358] , [464->468] , [464->469] , [254->258] , [254->259] , [155->159] , [155->160] , [548->552] , [548->553] , [500->504] , [500->505] , [533->537] , [533->538] , [170->174] , [170->175] , [263->267] , [263->268] , [527->531] , [527->532] , [8->12] , [8->13] , [176->180] , [176->181] , [293->297] , [293->298] , [479->483] , [479->484] , [95->99] , [95->100] , [161->165] , [161->166] , [404->408] , [404->409] , [497->501] , [497->502] , [179->183] , [179->184] , [386->390] , [386->391] , [236->240] , [236->241] , [80->84] , [80->85] , [572->576] , [572->577] , [473->477] , [473->478] , [242->246] , [242->247] , [89->93] , [89->94] , [209->213] , [209->214] , [350->354] , [350->355] , [296->300] , [296->301] , [566->570] , [566->571] , [416->420] , [416->421] , [365->369] , [365->370] , [251->255] , [251->256] , [437->441] , [437->442] , [149->153] , [149->154] , [335->339] , [335->340] , [224->228] , [224->229] , [494->498] , [494->499] , [233->237] , [233->238] , [383->387] , [383->388] , [128->132] , [128->133] , [272->276] , [272->277] , [461->465] , [461->466] , [215->219] , [215->220] , [509->513] , [509->514] , [152->156] , [152->157] , [413->417] , [413->418] , [146->150] , [146->151] , [512->516] , [512->517] , [320->324] , [320->325] , [74->78] , [74->79] , [569->573] , [569->574] , [452->456] , [452->457] , [536->540] , [536->541] , [290->294] , [290->295] , [182->186] , [182->187] , [506->510] , [506->511] , [359->363] , [359->364] , [377->381] , [377->382] , [197->201] , [197->202] , [119->123] , [119->124] , [71->75] , [71->76] , [554->558] , [554->559] , [434->438] , [434->439] , [1->6] , [1->7] , [314->318] , [314->319] , [557->561] , [557->562] , [398->402] , [398->403] , [113->117] , [113->118] , [44->48] , [44->49] , [68->72] , [68->73] , [518->522] , [518->523] , [92->96] , [92->97] , [458->462] , [458->463] , [23->27] , [23->28] , [488->492] , [488->493] , [281->285] , [281->286] , [317->321] , [317->322] , [467->471] , [467->472] , [380->384] , [380->385] , [407->411] , [407->412] , [194->198] , [194->199] , [143->147] , [143->148] , [206->210] , [206->211] , [77->81] , [77->82] , [476->480] , [476->481] , [41->45] , [41->46] , [245->249] , [245->250] , [596->599] , [356->360] , [356->361] , [503->507] , [503->508] , [104->108] , [104->109] , [38->42] , [38->43] , [86->90] , [86->91] , [83->87] , [83->88] , [584->588] , [584->589] , [368->372] , [368->373] , [164->168] , [164->169] , [455->459] , [455->460] , [116->120] , [116->121] , [470->474] , [470->475] , [35->39] , [35->40] , [50->54] , [50->55] , [47->51] , [47->52] , [332->336] , [332->337] , [248->252] , [248->253] , [428->432] , [428->433] , [185->189] , [185->190] , [422->426] , [422->427] , [260->264] , [260->265] , [200->204] , [200->205] , [305->309] , [305->310] , [122->126] , [122->127] , [362->366] , [362->367] , [539->543] , [539->544] , [140->144] , [140->145] , [212->216] , [212->217] , [65->69] , [65->70] , [59->63] , [59->64] , [344->348] , [344->349] , [524->528] , [524->529] , [287->291] , [287->292] , [425->429] , [425->430] , [125->129] , [125->130] , [20->24] , [20->25] , [482->486] , [482->487] , [299->303] , [299->304] , [578->582] , [578->583] , [29->33] , [29->34] , [581->585] , [581->586] , [395->399] , [395->400] , [0->2] , [0->3] , [257->261] , [257->262] , [374->378] , [374->379] , [134->138] , [134->139] , [515->519] , [515->520] , [107->111] , [107->112] , [5->9] , [5->10] , [545->549] , [545->550] , [101->105] , [101->106] , [98->102] , [98->103] , [167->171] , [167->172] , [32->36] , [32->37] , [431->435] , [431->436] , [284->288] , [284->289] , [329->333] , [329->334] , [137->141] , [137->142] , [26->30] , [26->31] , [14->18] , [14->19] , [269->273] , [269->274] , [323->327] , [323->328] , [560->564] , [560->565] , [491->495] , [491->496] , [239->243] , [239->244] , [446->450] , [446->451] , [410->414] , [410->415] , [275->279] , [275->280] , [347->351] , [347->352] , [587->591] , [587->592] , [575->579] , [575->580] , [278->282] , [278->283] , [110->114] , [110->115] , [485->489] , [485->490] , [551->555] , [551->556] , [530->534] , [530->535] , [53->57] , [53->58] , [341->345] , [341->346] , [443->447] , [443->448] , [338->342] , [338->343] , [311->315] , [311->316] , [131->135] , [131->136] , [230->234] , [230->235] , [590->594] , [590->595] , [308->312] , [308->313] , [203->207] , [203->208] }
+"
+'
+\
+This char is going out from state: 2
+            .........escapee : '"' escaper : '"'
+This char is going out from state: 2
+            .........escapee : ''' escaper : '''
+This char is going out from state: 2
+            .........escapee : '\' escaper : '\'
+            .........result : preg_raplace('/"/', '\"', $input);
+            .........result : preg_raplace('/'/', '\'', $input);
+            .........result : preg_raplace('/\/', '\\', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: ...computed patcher sink post image.
+            ...mincut for : client_email_1_client_email_6_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/client_email_1_client_email_6_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/client_email_1_client_email_6_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [0->2] }
+\s
+            .........result : trim
 
-~~~~~~~~~~~>>> StrangerPatcher says: initializing patchee inputs with bottom
+            ...mincut for : snipe_frame_snipe_frame__form_frame_name_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_frame_snipe_frame__form_frame_name_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_frame_snipe_frame__form_frame_name_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [17->23] , [17->24] , [17->22] , [113->119] , [113->120] , [113->118] , [57->63] , [57->64] , [57->62] , [81->87] , [81->88] , [81->86] , [73->79] , [73->80] , [73->78] , [197->203] , [197->204] , [197->202] , [217->223] , [217->224] , [217->222] , [133->139] , [133->140] , [133->138] , [109->115] , [109->116] , [109->114] , [61->67] , [61->68] , [61->66] , [169->175] , [169->176] , [169->174] , [153->159] , [153->160] , [153->158] , [49->55] , [49->56] , [49->54] , [125->131] , [125->132] , [125->130] , [41->47] , [41->48] , [41->46] , [45->51] , [45->52] , [45->50] , [201->207] , [201->208] , [201->206] , [161->167] , [161->168] , [161->166] , [65->71] , [65->72] , [65->70] , [29->35] , [29->36] , [29->34] , [181->187] , [181->188] , [181->186] , [1->7] , [1->8] , [1->6] , [93->99] , [93->100] , [93->98] , [129->135] , [129->136] , [129->134] , [117->123] , [117->124] , [117->122] , [177->183] , [177->184] , [177->182] , [5->11] , [5->12] , [5->10] , [225->231] , [225->232] , [225->230] , [185->191] , [185->192] , [185->190] , [213->219] , [213->220] , [213->218] , [89->95] , [89->96] , [89->94] , [33->39] , [33->40] , [33->38] , [193->199] , [193->200] , [193->198] , [165->171] , [165->172] , [165->170] , [141->147] , [141->148] , [141->146] , [209->215] , [209->216] , [209->214] , [137->143] , [137->144] , [137->142] , [221->227] , [221->228] , [221->226] , [101->107] , [101->108] , [101->106] , [37->43] , [37->44] , [37->42] , [229->235] , [229->236] , [229->234] , [205->211] , [205->212] , [205->210] , [173->179] , [173->180] , [173->178] , [149->155] , [149->156] , [149->154] , [157->163] , [157->164] , [157->162] , [121->127] , [121->128] , [121->126] , [25->31] , [25->32] , [25->30] , [85->91] , [85->92] , [85->90] , [189->195] , [189->196] , [189->194] , [21->27] , [21->28] , [21->26] , [145->151] , [145->152] , [145->150] , [97->103] , [97->104] , [97->102] , [9->15] , [9->16] , [9->14] , [233->237] , [105->111] , [105->112] , [105->110] , [53->59] , [53->60] , [53->58] , [69->75] , [69->76] , [69->74] , [13->19] , [13->20] , [13->18] , [0->2] , [0->3] , [77->83] , [77->84] , [77->82] }
+\s
+"
+'
+\
+            .........result : trim
+This char is going out from state: 3
+In state 3 this char was preceded by more than one transition coming from states:4, 0, 1, 
+            .........result : preg_raplace('/[\Q"'\\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(44) with validation patch auto
+            ...mincut for : snipe_gallery_41_snipe_gallery__form_watermark_txt_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_gallery_41_snipe_gallery__form_watermark_txt_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_gallery_41_snipe_gallery__form_watermark_txt_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [566->570] , [566->571] , [368->372] , [368->373] , [560->564] , [560->565] , [29->33] , [29->34] , [113->117] , [113->118] , [365->369] , [365->370] , [215->219] , [215->220] , [590->594] , [590->595] , [140->144] , [140->145] , [587->591] , [587->592] , [428->432] , [428->433] , [353->357] , [353->358] , [131->135] , [131->136] , [188->192] , [188->193] , [59->63] , [59->64] , [62->66] , [62->67] , [206->210] , [206->211] , [521->525] , [521->526] , [224->228] , [224->229] , [38->42] , [38->43] , [233->237] , [233->238] , [74->78] , [74->79] , [503->507] , [503->508] , [242->246] , [242->247] , [245->249] , [245->250] , [155->159] , [155->160] , [86->90] , [86->91] , [26->30] , [26->31] , [596->599] , [320->324] , [320->325] , [323->327] , [323->328] , [422->426] , [422->427] , [398->402] , [398->403] , [569->573] , [569->574] , [395->399] , [395->400] , [497->501] , [497->502] , [401->405] , [401->406] , [203->207] , [203->208] , [83->87] , [83->88] , [479->483] , [479->484] , [302->306] , [302->307] , [392->396] , [392->397] , [551->555] , [551->556] , [506->510] , [506->511] , [464->468] , [464->469] , [161->165] , [161->166] , [314->318] , [314->319] , [116->120] , [116->121] , [32->36] , [32->37] , [275->279] , [275->280] , [254->258] , [254->259] , [200->204] , [200->205] , [347->351] , [347->352] , [278->282] , [278->283] , [533->537] , [533->538] , [197->201] , [197->202] , [425->429] , [425->430] , [386->390] , [386->391] , [23->27] , [23->28] , [149->153] , [149->154] , [104->108] , [104->109] , [488->492] , [488->493] , [290->294] , [290->295] , [524->528] , [524->529] , [248->252] , [248->253] , [416->420] , [416->421] , [380->384] , [380->385] , [500->504] , [500->505] , [176->180] , [176->181] , [518->522] , [518->523] , [311->315] , [311->316] , [539->543] , [539->544] , [266->270] , [266->271] , [485->489] , [485->490] , [512->516] , [512->517] , [56->60] , [56->61] , [134->138] , [134->139] , [389->393] , [389->394] , [293->297] , [293->298] , [374->378] , [374->379] , [98->102] , [98->103] , [410->414] , [410->415] , [0->2] , [0->3] , [344->348] , [344->349] , [443->447] , [443->448] , [356->360] , [356->361] , [383->387] , [383->388] , [53->57] , [53->58] , [263->267] , [263->268] , [455->459] , [455->460] , [8->12] , [8->13] , [221->225] , [221->226] , [548->552] , [548->553] , [530->534] , [530->535] , [35->39] , [35->40] , [110->114] , [110->115] , [167->171] , [167->172] , [470->474] , [470->475] , [545->549] , [545->550] , [341->345] , [341->346] , [101->105] , [101->106] , [185->189] , [185->190] , [359->363] , [359->364] , [47->51] , [47->52] , [494->498] , [494->499] , [251->255] , [251->256] , [179->183] , [179->184] , [107->111] , [107->112] , [452->456] , [452->457] , [296->300] , [296->301] , [467->471] , [467->472] , [317->321] , [317->322] , [5->9] , [5->10] , [578->582] , [578->583] , [146->150] , [146->151] , [230->234] , [230->235] , [68->72] , [68->73] , [335->339] , [335->340] , [173->177] , [173->178] , [407->411] , [407->412] , [554->558] , [554->559] , [212->216] , [212->217] , [515->519] , [515->520] , [158->162] , [158->163] , [527->531] , [527->532] , [509->513] , [509->514] , [305->309] , [305->310] , [17->21] , [17->22] , [536->540] , [536->541] , [446->450] , [446->451] , [482->486] , [482->487] , [227->231] , [227->232] , [476->480] , [476->481] , [431->435] , [431->436] , [182->186] , [182->187] , [338->342] , [338->343] , [92->96] , [92->97] , [80->84] , [80->85] , [458->462] , [458->463] , [272->276] , [272->277] , [371->375] , [371->376] , [557->561] , [557->562] , [11->15] , [11->16] , [299->303] , [299->304] , [209->213] , [209->214] , [491->495] , [491->496] , [584->588] , [584->589] , [137->141] , [137->142] , [326->330] , [326->331] , [542->546] , [542->547] , [449->453] , [449->454] , [287->291] , [287->292] , [269->273] , [269->274] , [119->123] , [119->124] , [65->69] , [65->70] , [191->195] , [191->196] , [308->312] , [308->313] , [284->288] , [284->289] , [125->129] , [125->130] , [89->93] , [89->94] , [329->333] , [329->334] , [572->576] , [572->577] , [377->381] , [377->382] , [218->222] , [218->223] , [122->126] , [122->127] , [20->24] , [20->25] , [593->597] , [593->598] , [143->147] , [143->148] , [170->174] , [170->175] , [239->243] , [239->244] , [95->99] , [95->100] , [281->285] , [281->286] , [350->354] , [350->355] , [437->441] , [437->442] , [71->75] , [71->76] , [1->6] , [1->7] , [44->48] , [44->49] , [563->567] , [563->568] , [152->156] , [152->157] , [575->579] , [575->580] , [332->336] , [332->337] , [404->408] , [404->409] , [41->45] , [41->46] , [14->18] , [14->19] , [419->423] , [419->424] , [128->132] , [128->133] , [257->261] , [257->262] , [434->438] , [434->439] , [260->264] , [260->265] , [77->81] , [77->82] , [581->585] , [581->586] , [440->444] , [440->445] , [194->198] , [194->199] , [236->240] , [236->241] , [461->465] , [461->466] , [50->54] , [50->55] , [362->366] , [362->367] , [413->417] , [413->418] , [164->168] , [164->169] , [473->477] , [473->478] }
+"
+'
+\
+This char is going out from state: 2
+            .........escapee : '"' escaper : '"'
+This char is going out from state: 2
+            .........escapee : ''' escaper : '''
+This char is going out from state: 2
+            .........escapee : '\' escaper : '\'
+            .........result : preg_raplace('/"/', '\"', $input);
+            .........result : preg_raplace('/'/', '\'', $input);
+            .........result : preg_raplace('/\/', '\\', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patchee
-	 peak : escape : states 102 : bddnodes 1851 
+            ...mincut for : client_email_1_client_email_3_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/client_email_1_client_email_3_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/client_email_1_client_email_3_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [304->322] , [321->339] , [37->51] , [338->355] , [100->118] , [0->2] , [219->237] , [185->203] , [83->101] , [253->271] , [151->169] , [117->135] , [168->186] , [287->305] , [354->369] , [236->254] , [368->381] , [50->67] , [134->152] , [66->84] , [270->288] , [380->381] , [202->220] }
+\s
+            .........result : trim
 
-!!! Not all successors of a normal node(39) is computed, not computed node(45) !!!:
-doForwardNodeComputation_RegularPhase()
-	 peak : left_trim : states 103 : bddnodes 2576 : before projection : loop 0 
-	 peak : left_trim : states 245 : bddnodes 4679 : after projection : loop 0 
-	 peak : left_trim : states 102 : bddnodes 2401 : before projection : loop 1 
-	 peak : left_trim : states 218 : bddnodes 4346 : after projection : loop 1 
-	 peak : left_trim : states 102 : bddnodes 2272 : before projection : loop 2 
-	 peak : left_trim : states 192 : bddnodes 3868 : after projection : loop 2 
-	 peak : left_trim : states 102 : bddnodes 2161 : before projection : loop 3 
-	 peak : left_trim : states 162 : bddnodes 3186 : after projection : loop 3 
-	 peak : left_trim : states 102 : bddnodes 2056 : before projection : loop 4 
-	 peak : left_trim : states 112 : bddnodes 2090 : after projection : loop 4 
-	 peak : left_trim : states 102 : bddnodes 1953 : before projection : loop 5 
-	 peak : left_trim : states 103 : bddnodes 1853 : after projection : loop 5 
-	 peak : right_trim : states 103 : bddnodes 2049 : before projection 
-	 peak : right_trim : states 152 : bddnodes 1951 : after projection 
-!!! Warning: Unmodeled builtin general function : rtrim
-	 peak : replace_char_with_string : states 5 : bddnodes 43 
-	 peak : replace_char_with_string : states 8 : bddnodes 73 : before projection 
-	 peak : replace_char_with_string : states 9 : bddnodes 64 : after projection 
-	 peak : replace_char_with_string : states 10 : bddnodes 97 : before projection 
-	 peak : replace_char_with_string : states 11 : bddnodes 89 : after projection 
-	 peak : replace_char_with_string : states 11 : bddnodes 112 : before projection 
-	 peak : replace_char_with_string : states 12 : bddnodes 97 : after projection 
-	 peak : replace_char_with_string : states 10 : bddnodes 101 : before projection 
-	 peak : replace_char_with_string : states 11 : bddnodes 96 : after projection 
-	 peak : union : states 3 : bddnodes 9 
-	 peak : union : states 3 : bddnodes 9 
-	 peak : concat : states 4 : bddnodes 28 : before projection 
-	 peak : concat : states 4 : bddnodes 18 : after projection 
-	 peak : concat : states 3 : bddnodes 27 : before projection 
-	 peak : concat : states 5 : bddnodes 33 : after projection 
-	 peak : intersect : states 44 : bddnodes 753 
-	 peak : intersect : states 62 : bddnodes 1085 
-	 peak : replace_char : states 44 : bddnodes 614 : before projection : loop 0 
-	 peak : replace char : states 18 : bddnodes 480 : after projection : loop 0 
-	 peak : replace_char : states 9 : bddnodes 201 : before projection : loop 1 
-	 peak : replace char : states 23 : bddnodes 396 : after projection : loop 1 
-	 peak : replace_char : states 19 : bddnodes 346 : before projection : loop 2 
-	 peak : replace char : states 42 : bddnodes 546 : after projection : loop 2 
-	 peak : replace_char : states 18 : bddnodes 250 : before projection : loop 3 
-	 peak : replace char : states 25 : bddnodes 290 : after projection : loop 3 
-	 peak : replace_char : states 13 : bddnodes 166 : before projection : loop 4 
-	 peak : replace char : states 26 : bddnodes 253 : after projection : loop 4 
-	 peak : replace_char : states 10 : bddnodes 105 
-	 peak : replace_extrabit : states 14 : bddnodes 123 
-!!! Warning: Unmodeled builtin general function : substr
-	 peak : union : states 3 : bddnodes 9 
-	 peak : union : states 3 : bddnodes 9 
-	 peak : concat : states 4 : bddnodes 28 : before projection 
-	 peak : concat : states 4 : bddnodes 18 : after projection 
-	 peak : concat : states 3 : bddnodes 27 : before projection 
-	 peak : concat : states 5 : bddnodes 33 : after projection 
-	 peak : intersect : states 9 : bddnodes 108 
-	 peak : intersect : states 13 : bddnodes 165 
-	 peak : replace_string : states 12 : bddnodes 119 : before loop 
-	 peak : replace_string : states 10 : bddnodes 119 : before projection : loop 0 
-	 peak : replace_string : states 7 : bddnodes 96 : after projection : loop 0 
-	 peak : replace_string : states 7 : bddnodes 96 : before projection : loop 1 
-	 peak : replace_string : states 9 : bddnodes 82 : after projection : loop 1 
-	 peak : replace_extrabit : states 4 : bddnodes 25 
-	 peak : left_trim : states 4 : bddnodes 51 : before projection : loop 0 
-	 peak : left_trim : states 4 : bddnodes 33 : after projection : loop 0 
-	 peak : right_trim : states 5 : bddnodes 43 : before projection 
-	 peak : right_trim : states 7 : bddnodes 56 : after projection 
+            ...mincut for : client_email_1_client_email_5_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/client_email_1_client_email_5_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/client_email_1_client_email_5_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [287->305] , [66->84] , [354->369] , [100->118] , [83->101] , [270->288] , [338->355] , [380->381] , [151->169] , [368->381] , [0->2] , [202->220] , [37->51] , [117->135] , [134->152] , [50->67] , [253->271] , [236->254] , [219->237] , [168->186] , [185->203] , [304->322] , [321->339] }
+\s
+            .........result : trim
 
-~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patchee.
+            ...mincut for : snipe_gallery_115_snipe_gallery__form_gallery_name_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_gallery_115_snipe_gallery__form_gallery_name_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_gallery_115_snipe_gallery__form_gallery_name_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [41->45] , [41->46] , [575->579] , [575->580] , [497->501] , [497->502] , [332->336] , [332->337] , [287->291] , [287->292] , [584->588] , [584->589] , [203->207] , [203->208] , [149->153] , [149->154] , [539->543] , [539->544] , [458->462] , [458->463] , [47->51] , [47->52] , [62->66] , [62->67] , [419->423] , [419->424] , [545->549] , [545->550] , [518->522] , [518->523] , [98->102] , [98->103] , [413->417] , [413->418] , [401->405] , [401->406] , [116->120] , [116->121] , [428->432] , [428->433] , [482->486] , [482->487] , [95->99] , [95->100] , [509->513] , [509->514] , [197->201] , [197->202] , [470->474] , [470->475] , [437->441] , [437->442] , [23->27] , [23->28] , [311->315] , [311->316] , [251->255] , [251->256] , [155->159] , [155->160] , [92->96] , [92->97] , [533->537] , [533->538] , [8->12] , [8->13] , [389->393] , [389->394] , [563->567] , [563->568] , [515->519] , [515->520] , [305->309] , [305->310] , [194->198] , [194->199] , [566->570] , [566->571] , [29->33] , [29->34] , [0->2] , [0->3] , [440->444] , [440->445] , [74->78] , [74->79] , [140->144] , [140->145] , [530->534] , [530->535] , [302->306] , [302->307] , [341->345] , [341->346] , [188->192] , [188->193] , [14->18] , [14->19] , [239->243] , [239->244] , [257->261] , [257->262] , [569->573] , [569->574] , [542->546] , [542->547] , [86->90] , [86->91] , [131->135] , [131->136] , [323->327] , [323->328] , [1->6] , [1->7] , [104->108] , [104->109] , [278->282] , [278->283] , [461->465] , [461->466] , [200->204] , [200->205] , [167->171] , [167->172] , [425->429] , [425->430] , [236->240] , [236->241] , [230->234] , [230->235] , [77->81] , [77->82] , [464->468] , [464->469] , [224->228] , [224->229] , [218->222] , [218->223] , [53->57] , [53->58] , [374->378] , [374->379] , [248->252] , [248->253] , [65->69] , [65->70] , [398->402] , [398->403] , [185->189] , [185->190] , [380->384] , [380->385] , [296->300] , [296->301] , [434->438] , [434->439] , [221->225] , [221->226] , [5->9] , [5->10] , [353->357] , [353->358] , [554->558] , [554->559] , [581->585] , [581->586] , [320->324] , [320->325] , [182->186] , [182->187] , [392->396] , [392->397] , [404->408] , [404->409] , [17->21] , [17->22] , [506->510] , [506->511] , [173->177] , [173->178] , [146->150] , [146->151] , [590->594] , [590->595] , [359->363] , [359->364] , [152->156] , [152->157] , [314->318] , [314->319] , [479->483] , [479->484] , [275->279] , [275->280] , [290->294] , [290->295] , [485->489] , [485->490] , [488->492] , [488->493] , [209->213] , [209->214] , [80->84] , [80->85] , [128->132] , [128->133] , [365->369] , [365->370] , [227->231] , [227->232] , [119->123] , [119->124] , [335->339] , [335->340] , [308->312] , [308->313] , [107->111] , [107->112] , [137->141] , [137->142] , [134->138] , [134->139] , [443->447] , [443->448] , [317->321] , [317->322] , [386->390] , [386->391] , [191->195] , [191->196] , [170->174] , [170->175] , [596->599] , [593->597] , [593->598] , [272->276] , [272->277] , [578->582] , [578->583] , [395->399] , [395->400] , [416->420] , [416->421] , [449->453] , [449->454] , [50->54] , [50->55] , [83->87] , [83->88] , [329->333] , [329->334] , [35->39] , [35->40] , [122->126] , [122->127] , [344->348] , [344->349] , [284->288] , [284->289] , [512->516] , [512->517] , [242->246] , [242->247] , [143->147] , [143->148] , [587->591] , [587->592] , [38->42] , [38->43] , [431->435] , [431->436] , [32->36] , [32->37] , [572->576] , [572->577] , [89->93] , [89->94] , [68->72] , [68->73] , [20->24] , [20->25] , [524->528] , [524->529] , [215->219] , [215->220] , [71->75] , [71->76] , [26->30] , [26->31] , [161->165] , [161->166] , [233->237] , [233->238] , [383->387] , [383->388] , [347->351] , [347->352] , [338->342] , [338->343] , [521->525] , [521->526] , [350->354] , [350->355] , [467->471] , [467->472] , [299->303] , [299->304] , [362->366] , [362->367] , [266->270] , [266->271] , [446->450] , [446->451] , [113->117] , [113->118] , [254->258] , [254->259] , [377->381] , [377->382] , [158->162] , [158->163] , [293->297] , [293->298] , [548->552] , [548->553] , [110->114] , [110->115] , [245->249] , [245->250] , [536->540] , [536->541] , [494->498] , [494->499] , [179->183] , [179->184] , [281->285] , [281->286] , [527->531] , [527->532] , [263->267] , [263->268] , [422->426] , [422->427] , [368->372] , [368->373] , [491->495] , [491->496] , [125->129] , [125->130] , [56->60] , [56->61] , [410->414] , [410->415] , [176->180] , [176->181] , [476->480] , [476->481] , [356->360] , [356->361] , [503->507] , [503->508] , [500->504] , [500->505] , [164->168] , [164->169] , [407->411] , [407->412] , [101->105] , [101->106] , [551->555] , [551->556] , [206->210] , [206->211] , [269->273] , [269->274] , [11->15] , [11->16] , [557->561] , [557->562] , [212->216] , [212->217] , [371->375] , [371->376] , [326->330] , [326->331] , [260->264] , [260->265] , [455->459] , [455->460] , [44->48] , [44->49] , [473->477] , [473->478] , [560->564] , [560->565] , [452->456] , [452->457] , [59->63] , [59->64] }
+"
+'
+\
+This char is going out from state: 2
+            .........escapee : '"' escaper : '"'
+This char is going out from state: 2
+            .........escapee : ''' escaper : '''
+This char is going out from state: 2
+            .........escapee : '\' escaper : '\'
+            .........result : preg_raplace('/"/', '\"', $input);
+            .........result : preg_raplace('/'/', '\'', $input);
+            .........result : preg_raplace('/\/', '\\', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: checking difference between patcher and patchee
-	 peak : negate : states 53 : bddnodes 409 
-	 peak : intersect : states 205 : bddnodes 1976 
-	 peak : intersect : states 52 : bddnodes 401 
-	 peak : negate : states 53 : bddnodes 409 
-	 peak : intersect : states 5 : bddnodes 40 
-	 peak : negate : states 6 : bddnodes 48 
+            ...mincut for : snipe_local_snipe_local__form_details_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_local_snipe_local__form_details_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_local_snipe_local__form_details_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [1->2] , [1->3] , [1->5] , [0->2] , [0->3] }
+\s
+"
+'
+\
+            .........result : trim
+This char is going out from state: 3
+In state 3 this char was preceded by more than one transition coming from states:0, 4, 1, 
+            .........result : preg_raplace('/[\Q"'\\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: length constraints contribute to the difference, fixing issue...
-	 peak : intersect : states 52 : bddnodes 401 
-	 peak : negate : states 53 : bddnodes 409 
-	 peak : intersect : states 204 : bddnodes 1625 
-	 peak : negate : states 150 : bddnodes 1544 
-	 peak : intersect : states 154 : bddnodes 1582 
+            ...mincut for : phpnews_auth_89_user_password_phpnews_auth_89__password_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/phpnews_auth_89_user_password_phpnews_auth_89__password_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/phpnews_auth_89_user_password_phpnews_auth_89__password_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [0->1] , [0->2] }
+"
+'
+\
+This char is going out from state: 3
+In state 3 this char was preceded by more than one transition coming from states:1, 0, 
+            .........result : preg_raplace('/[\Q"'\\E]/', '', $input);
 
-~~~~~~~~~~~>>> StrangerPatcher says: starting a backward analysis to calculate length patch...
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : intersect : states 153 : bddnodes 1574 
-	 peak : pre_right_trim : states 105 : bddnodes 1343 : before projection 
-	 peak : pre_right_trim : states 105 : bddnodes 1246 : after projection 
-	 peak : pre_left_trim : states 105 : bddnodes 1248 
-	 peak : intersect : states 104 : bddnodes 1240 
-	 peak : intersect : states 104 : bddnodes 1240 
-	 peak : intersect : states 104 : bddnodes 1240 
-	 peak : union : states 3 : bddnodes 9 
-	 peak : union : states 3 : bddnodes 9 
-	 peak : concat : states 4 : bddnodes 28 : before projection 
-	 peak : concat : states 4 : bddnodes 18 : after projection 
-	 peak : concat : states 3 : bddnodes 27 : before projection 
-	 peak : concat : states 5 : bddnodes 33 : after projection 
-	 peak : intersect : states 519 : bddnodes 7303 
-	 peak : intersect : states 716 : bddnodes 11092 
-	 peak : intersect : states 6 : bddnodes 40 
-	 peak : intersect : states 7 : bddnodes 41 
+            ...mincut for : snipe_local_snipe_local__form_author_auto.dot
+            ......parsing patch auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/patches/snipe_local_snipe_local__form_author_auto.dot
+            ......parsing reference auto : /home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/references/snipe_local_snipe_local__form_author_auto.dot
+            ......calculating mincut charset
+Min cut edges: { [249->255] , [249->256] , [249->254] , [165->171] , [165->172] , [165->170] , [217->223] , [217->224] , [217->222] , [89->95] , [89->96] , [89->94] , [365->371] , [365->372] , [365->370] , [145->151] , [145->152] , [145->150] , [109->115] , [109->116] , [109->114] , [141->147] , [141->148] , [141->146] , [121->127] , [121->128] , [121->126] , [213->219] , [213->220] , [213->218] , [65->71] , [65->72] , [65->70] , [37->43] , [37->44] , [37->42] , [357->363] , [357->364] , [357->362] , [61->67] , [61->68] , [61->66] , [29->35] , [29->36] , [29->34] , [301->307] , [301->308] , [301->306] , [341->347] , [341->348] , [341->346] , [9->15] , [9->16] , [9->14] , [345->351] , [345->352] , [345->350] , [305->311] , [305->312] , [305->310] , [325->331] , [325->332] , [325->330] , [129->135] , [129->136] , [129->134] , [337->343] , [337->344] , [337->342] , [161->167] , [161->168] , [161->166] , [321->327] , [321->328] , [321->326] , [93->99] , [93->100] , [93->98] , [1->7] , [1->8] , [1->6] , [5->11] , [5->12] , [5->10] , [45->51] , [45->52] , [45->50] , [13->19] , [13->20] , [13->18] , [125->131] , [125->132] , [125->130] , [285->291] , [285->292] , [285->290] , [205->211] , [205->212] , [205->210] , [289->295] , [289->296] , [289->294] , [149->155] , [149->156] , [149->154] , [293->299] , [293->300] , [293->298] , [57->63] , [57->64] , [57->62] , [229->235] , [229->236] , [229->234] , [21->27] , [21->28] , [21->26] , [225->231] , [225->232] , [225->230] , [281->287] , [281->288] , [281->286] , [277->283] , [277->284] , [277->282] , [349->355] , [349->356] , [349->354] , [333->339] , [333->340] , [333->338] , [381->387] , [381->388] , [381->386] , [133->139] , [133->140] , [133->138] , [33->39] , [33->40] , [33->38] , [81->87] , [81->88] , [81->86] , [137->143] , [137->144] , [137->142] , [361->367] , [361->368] , [361->366] , [233->239] , [233->240] , [233->238] , [261->267] , [261->268] , [261->266] , [269->275] , [269->276] , [269->274] , [245->251] , [245->252] , [245->250] , [41->47] , [41->48] , [41->46] , [329->335] , [329->336] , [329->334] , [241->247] , [241->248] , [241->246] , [17->23] , [17->24] , [17->22] , [49->55] , [49->56] , [49->54] , [353->359] , [353->360] , [353->358] , [317->323] , [317->324] , [317->322] , [53->59] , [53->60] , [53->58] , [253->259] , [253->260] , [253->258] , [373->379] , [373->380] , [373->378] , [73->79] , [73->80] , [73->78] , [393->397] , [0->2] , [0->3] , [169->175] , [169->176] , [169->174] , [101->107] , [101->108] , [101->106] , [157->163] , [157->164] , [157->162] , [221->227] , [221->228] , [221->226] , [185->191] , [185->192] , [185->190] , [389->395] , [389->396] , [389->394] , [209->215] , [209->216] , [209->214] , [97->103] , [97->104] , [97->102] , [189->195] , [189->196] , [189->194] , [85->91] , [85->92] , [85->90] , [309->315] , [309->316] , [309->314] , [273->279] , [273->280] , [273->278] , [113->119] , [113->120] , [113->118] , [77->83] , [77->84] , [77->82] , [193->199] , [193->200] , [193->198] , [69->75] , [69->76] , [69->74] , [377->383] , [377->384] , [377->382] , [313->319] , [313->320] , [313->318] , [237->243] , [237->244] , [237->242] , [177->183] , [177->184] , [177->182] , [117->123] , [117->124] , [117->122] , [297->303] , [297->304] , [297->302] , [201->207] , [201->208] , [201->206] , [257->263] , [257->264] , [257->262] , [105->111] , [105->112] , [105->110] , [369->375] , [369->376] , [369->374] , [173->179] , [173->180] , [173->178] , [197->203] , [197->204] , [197->202] , [385->391] , [385->392] , [385->390] , [181->187] , [181->188] , [181->186] , [153->159] , [153->160] , [153->158] , [25->31] , [25->32] , [25->30] , [265->271] , [265->272] , [265->270] }
+\s
+"
+'
+\
+            .........result : trim
+This char is going out from state: 3
+In state 3 this char was preceded by more than one transition coming from states:4, 1, 0, 
+            .........result : preg_raplace('/[\Q"'\\E]/', '', $input);

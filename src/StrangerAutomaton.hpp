@@ -157,6 +157,10 @@ public:
 //    StrangerAutomaton* trimRight(char chars[]);
     StrangerAutomaton* preTrimSpaces(int id);
     StrangerAutomaton* preTrimSpaces() { return preTrimSpaces(traceID);};
+    StrangerAutomaton* preTrimSpacesLeft(int id);
+    StrangerAutomaton* preTrimSpacesRigth(int id);
+    StrangerAutomaton* substr(int start, int length, int id);
+    StrangerAutomaton* pre_substr(int start, int length, int id);
 
     static StrangerAutomaton* addslashes(StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* addslashes(StrangerAutomaton* subjectAuto){return addslashes(subjectAuto, traceID);};

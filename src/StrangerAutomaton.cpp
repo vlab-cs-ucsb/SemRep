@@ -2058,7 +2058,7 @@ StrangerAutomaton* StrangerAutomaton::trimSpacesRight(int id){
 	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaRightTrim(this->dfa, ' ', num_ascii_track, indices_main));
 	perfInfo->trim_spaces_right_total_time += perfInfo->current_time() - start_time;
-	perfInfo->number_of_trim_spaces_right++;
+	perfInfo->number_of_trim_spaces_rigth++;
 
     retMe->setID(id);
     return retMe;
@@ -2125,6 +2125,81 @@ StrangerAutomaton* StrangerAutomaton::preTrimSpaces(int id){
 
     retMe->setID(id);
     return retMe;
+}
+
+StrangerAutomaton* StrangerAutomaton::preTrimSpacesLeft(int id){
+
+    debug(stringbuilder() << id <<  " = dfaPreTrimLeft(" << this->ID << ",' ')\n");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreLeftTrim(this->dfa, ' ', num_ascii_track, indices_main));
+	perfInfo->pre_trim_spaces_left_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_trim_spaces_left++;
+
+    retMe->setID(id);
+    return retMe;
+}
+
+StrangerAutomaton* StrangerAutomaton::preTrimSpacesRigth(int id){
+
+    debug(stringbuilder() << id <<  " = dfaPreTrim(" << this->ID << ",' ')\n");
+
+	boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreRightTrim(this->dfa, ' ', num_ascii_track, indices_main));
+	perfInfo->pre_trim_spaces_rigth_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_trim_spaces_rigth++;
+
+    retMe->setID(id);
+    return retMe;
+}
+
+StrangerAutomaton* StrangerAutomaton::substr(int start, int length, int id) {
+	if (start < 0 || length < 0)
+		throw new std::runtime_error(stringbuilder() << "current substr model does not support negative parameters!!!");
+	boost::posix_time::ptime start_time = perfInfo->current_time();
+	StrangerAutomaton* retMe = NULL;
+	if (length == 0) {
+		retMe = StrangerAutomaton::makeEmptyString(id);
+	}
+	else {
+		// start index is zero based in php, increase it by one
+		start = start + 1;
+		string regString = stringbuilder() << "/.{" << start << "," << length << "}/";
+		StrangerAutomaton* regx = StrangerAutomaton::regExToAuto(regString, true, id);
+		retMe = this->intersect(regx, id);
+		delete regx;
+	}
+	perfInfo->substr_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_substr++;
+	return retMe;
+}
+
+StrangerAutomaton* StrangerAutomaton::pre_substr(int start, int length, int id) {
+	if (start < 0 || length < 0)
+		throw new std::runtime_error(stringbuilder() << "current substr model does not support negative parameters!!!");
+	boost::posix_time::ptime start_time = perfInfo->current_time();
+	StrangerAutomaton* retMe = NULL;
+	if (length == 0) {
+		retMe = StrangerAutomaton::makeEmptyString(id);
+	}
+	else if (start == 0) {
+		StrangerAutomaton* right_side = StrangerAutomaton::makeAnyString(id);
+		retMe = this->concatenate(right_side,id);
+		delete right_side;
+	}
+	else {
+		string left_side_regString = stringbuilder() << "/.{0," << start << "}/";
+		StrangerAutomaton* left_side_regx = StrangerAutomaton::regExToAuto(left_side_regString, true, id);
+		StrangerAutomaton* right_side = StrangerAutomaton::makeAnyString(id);
+		StrangerAutomaton* left_concatane = left_side_regx->concatenate(this,id);
+		retMe = left_concatane->concatenate(right_side,id);
+		delete left_side_regx;
+		delete right_side;
+		delete left_concatane;
+	}
+	perfInfo->pre_substr_total_time += perfInfo->current_time() - start_time;
+	perfInfo->number_of_pre_substr++;
+	return retMe;
 }
 
 StrangerAutomaton* StrangerAutomaton::addslashes(StrangerAutomaton* subjectAuto, int id)

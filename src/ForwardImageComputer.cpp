@@ -298,7 +298,27 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 		delete forward;
 		delete intersection;
 //		return retMe;
-	} else if (opName == "htmlspecialchars") {
+	} else if (opName == "ltrim" ) {
+		// only has one parameter ==>  string trim  ( string $str  )
+		StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(opNode->getID());
+		StrangerAutomaton* forward = sigmaStar->trimSpacesLeft(opNode->getID());
+		StrangerAutomaton* intersection = opAuto->intersect(forward, childNode->getID());
+		retMe = intersection->preTrimSpacesLeft(childNode->getID());
+		delete sigmaStar;
+		delete forward;
+		delete intersection;
+//		return retMe;
+	}  else if (opName == "rtrim" ) {
+		// only has one parameter ==>  string trim  ( string $str  )
+		StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(opNode->getID());
+		StrangerAutomaton* forward = sigmaStar->trimSpacesRight(opNode->getID());
+		StrangerAutomaton* intersection = opAuto->intersect(forward, childNode->getID());
+		retMe = intersection->preTrimSpacesRigth(childNode->getID());
+		delete sigmaStar;
+		delete forward;
+		delete intersection;
+//		return retMe;
+	}  else if (opName == "htmlspecialchars") {
 		if (childNode->equals(successors[0])) {
 			string flagString = "ENT_COMPAT";
 			if (successors.size() > 1) {
@@ -399,6 +419,54 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_ValidationPh
 					"makeBackwardAutoForOpChild_ValidationPhase()");
 		}
 
+
+	}  else if (opName == "substr"){
+
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr invalid number of arguments: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+		DepGraphNode* subjectNode = successors[0];
+		DepGraphNode* startNode = successors[1];
+		DepGraphNode* lengthNode = successors[2];
+
+		StrangerAutomaton* subjectAuto = opAuto;
+
+		DepGraphNormalNode* sNode = dynamic_cast<DepGraphNormalNode*>(startNode);
+		if (sNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find start node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		Literal* startLit = dynamic_cast<Literal*>(sNode->getPlace());
+		if (startLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find value of start node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+		string startValue = startLit->getLiteralValue();
+		int start = stoi(startValue);
+		DepGraphNormalNode* lNode = dynamic_cast<DepGraphNormalNode*>(lengthNode);
+		if (lNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find length node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		Literal* lengthLit = dynamic_cast<Literal*>(lNode->getPlace());
+		if (lengthLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find value of length node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		string lengthValue = lengthLit->getLiteralValue();
+		int length = stoi(lengthValue);
+
+		StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(subjectAuto->getID());
+		StrangerAutomaton* forward = sigmaStar->substr(start, length, subjectAuto->getID());
+		StrangerAutomaton* intersection = subjectAuto->intersect(forward, childNode->getID());
+		retMe = intersection->pre_substr(start, length, childNode->getID());
+		delete sigmaStar;
+		delete forward;
+		delete intersection;
 
 	} else if (opName == "strip_tags") {
 		cout << endl << "!!!!! strip_tags is not implemented yet" << endl;
@@ -812,7 +880,55 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 				paramAuto, opNode->getID());
 		retMe = nl2brAuto;
 //		return retMe;
-	} else if (opName == "trim" || opName == "strtoupper" || opName == "strtolower") {
+	}  else if (opName == "substr"){
+
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr invalid number of arguments: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+		DepGraphNode* subjectNode = successors[0];
+		DepGraphNode* startNode = successors[1];
+		DepGraphNode* lengthNode = successors[2];
+
+		AnalysisResultIterator rit = analysisResult.find(subjectNode->getID());
+		if (rit == analysisResult.end()) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find subject auto: "
+									"makeForwardAutoForOp_RegularPhase()");
+		}
+		StrangerAutomaton* subjectAuto = rit->second;
+
+		DepGraphNormalNode* sNode = dynamic_cast<DepGraphNormalNode*>(startNode);
+		if (sNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find start node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		Literal* startLit = dynamic_cast<Literal*>(sNode->getPlace());
+		if (startLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find value of start node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+		string startValue = startLit->getLiteralValue();
+		int start = stoi(startValue);
+		DepGraphNormalNode* lNode = dynamic_cast<DepGraphNormalNode*>(lengthNode);
+		if (lNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find length node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		Literal* lengthLit = dynamic_cast<Literal*>(lNode->getPlace());
+		if (lengthLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find value of length node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		string lengthValue = lengthLit->getLiteralValue();
+		int length = stoi(lengthValue);
+		StrangerAutomaton* substrAuto = subjectAuto->substr(start,length,opNode->getID());
+
+		retMe = substrAuto;
+
+	} else if (opName == "trim" || opName == "strtoupper" || opName == "strtolower" || opName == "rtrim" || opName == "ltrim") {
         if (successors.size() != 1) {
 			throw new StrangerStringAnalysisException(stringbuilder() << opName << " has more than one successor in depgraph.\n"
 					"makeForwardAutoForOp_RegularPhase()" );
@@ -823,6 +939,12 @@ StrangerAutomaton* ForwardImageComputer::makeForwardAutoForOp_RegularPhase(
 
         if (opName == "trim")
             retMe = paramAuto->trimSpaces(opNode->getID());
+        else if (opName == "rtrim") {
+        	retMe = paramAuto->trimSpacesRight(opNode->getID());
+        }
+        else if (opName == "ltrim") {
+        	retMe = paramAuto->trimSpacesLeft(opNode->getID());
+        }
         else if (opName == "strtoupper") {
         	retMe = paramAuto->toUpperCase(opNode->getID());
         }
@@ -1057,6 +1179,14 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 		// only has one parameter ==>  string trim  ( string $str  )
 		retMe = opAuto->preTrimSpaces(childNode->getID());
 
+	} else if (opName == "rtrim" ) {
+			// only has one parameter ==>  string trim  ( string $str  )
+			retMe = opAuto->preTrimSpacesRigth(childNode->getID());
+
+	} else if (opName == "ltrim" ) {
+			// only has one parameter ==>  string trim  ( string $str  )
+			retMe = opAuto->preTrimSpacesLeft(childNode->getID());
+
 	} else if (opName == "htmlspecialchars") {
 		if (childNode->equals(successors[0])) {
 			string flagString = "ENT_COMPAT";
@@ -1141,6 +1271,49 @@ StrangerAutomaton* ForwardImageComputer::makeBackwardAutoForOpChild_RegularPhase
 		retMe = subjectAuto->preReplace(regx, replaceStr, childNode->getID());
 
 		delete regx;
+
+	} else if (opName == "substr"){
+
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr invalid number of arguments: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+		DepGraphNode* subjectNode = successors[0];
+		DepGraphNode* startNode = successors[1];
+		DepGraphNode* lengthNode = successors[2];
+
+		StrangerAutomaton* subjectAuto = opAuto;
+
+		DepGraphNormalNode* sNode = dynamic_cast<DepGraphNormalNode*>(startNode);
+		if (sNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find start node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		Literal* startLit = dynamic_cast<Literal*>(sNode->getPlace());
+		if (startLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find value of start node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+		string startValue = startLit->getLiteralValue();
+		int start = stoi(startValue);
+		DepGraphNormalNode* lNode = dynamic_cast<DepGraphNormalNode*>(lengthNode);
+		if (lNode == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find length node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		Literal* lengthLit = dynamic_cast<Literal*>(lNode->getPlace());
+		if (lengthLit == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr cannot find value of length node: "
+					"makeForwardAutoForOp_RegularPhase()");
+		}
+
+		string lengthValue = lengthLit->getLiteralValue();
+		int length = stoi(lengthValue);
+		StrangerAutomaton* substrAuto = subjectAuto->pre_substr(start,length,opNode->getID());
+
+		retMe = substrAuto;
 
 	} else if (opName == "md5") {
 		cout << endl << "!!!!! md5 cannot be implemented, continues with previous node results" << endl;

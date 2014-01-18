@@ -50,10 +50,12 @@ void PerfInfo::reset() {
 	number_of_pre_trim_spaces = 0;
 	number_of_trim_spaces_left = 0;
 	number_of_pre_trim_spaces_left = 0;
-	number_of_trim_spaces_right = 0;
-	number_of_pre_trim_spaces_right = 0;
+	number_of_trim_spaces_rigth = 0;
+	number_of_pre_trim_spaces_rigth = 0;
 	number_of_trim_set = 0;
 	number_of_pre_trim_set = 0;
+	number_of_substr = 0;
+	number_of_pre_substr = 0;
 
 }
 
@@ -123,10 +125,12 @@ void PerfInfo::print_operations_info() {
 	cout << "\t trim_spaces : #" << number_of_trim_spaces << " : " << trim_spaces_total_time << " (" << trim_spaces_total_time.total_milliseconds() << " ms)" << endl;
 	cout << "\t pre_trim_spaces : #" << number_of_pre_trim_spaces << " : " << pre_trim_spaces_total_time << " (" << pre_trim_spaces_total_time.total_milliseconds() << " ms)" << endl;
 	cout << "\t trim_spaces_left : #" << number_of_trim_spaces_left << " : " << trim_spaces_left_total_time << " (" << trim_spaces_left_total_time.total_milliseconds() << " ms)" << endl;
-	cout << "\t pre_trim_spaces_left : #" << number_of_pre_trim_spaces_left << " : " << pre_trim_left_spaces_total_time << " (" << pre_trim_left_spaces_total_time.total_milliseconds() << " ms)" << endl;
-	cout << "\t trim_spaces_rigth : #" << number_of_trim_spaces_right << " : " << trim_spaces_right_total_time << " (" << trim_spaces_right_total_time.total_milliseconds() << " ms)" << endl;
-	cout << "\t pre_trim_spaces_rigth : #" << number_of_pre_trim_spaces_right<< " : " << pre_trim_spaces_right_total_time << " (" << pre_trim_spaces_right_total_time.total_milliseconds() << " ms)" << endl;
+	cout << "\t pre_trim_spaces_left : #" << number_of_pre_trim_spaces_left << " : " << pre_trim_spaces_left_total_time << " (" << pre_trim_spaces_left_total_time.total_milliseconds() << " ms)" << endl;
+	cout << "\t trim_spaces_rigth : #" << number_of_trim_spaces_rigth << " : " << trim_spaces_right_total_time << " (" << trim_spaces_right_total_time.total_milliseconds() << " ms)" << endl;
+	cout << "\t pre_trim_spaces_rigth : #" << number_of_pre_trim_spaces_rigth<< " : " << pre_trim_spaces_rigth_total_time << " (" << pre_trim_spaces_rigth_total_time.total_milliseconds() << " ms)" << endl;
 	cout << "\t trim_set : #" << number_of_trim_set << " : " << trim_set_total_time << " (" << trim_set_total_time.total_milliseconds() << " ms)" << endl;
 	cout << "\t pre_trim_set : #" << number_of_pre_trim_set << " : " << pre_trim_set_total_time << " (" << pre_trim_set_total_time.total_milliseconds() << " ms)" << endl;
+	cout << "\t substr : #" << number_of_substr << " : " << substr_total_time << " (" << substr_total_time.total_milliseconds() << " ms)" << endl;
+	cout << "\t pre_substr : #" << number_of_pre_substr << " : " << pre_substr_total_time << " (" << pre_substr_total_time.total_milliseconds() << " ms)" << endl;
 }
 

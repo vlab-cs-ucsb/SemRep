@@ -230,6 +230,7 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 			message("difference auto is empty, no validation patch is required!!!");
 			is_validation_patch_required = false;
 			validation_patch_auto = StrangerAutomaton::makeAnyString(patchee_uninit_field_node->getID());
+//			validation_patch_auto = patchee_validation;
 			delete interAuto;
 
 		} else if (interAuto->isEmpty()) {

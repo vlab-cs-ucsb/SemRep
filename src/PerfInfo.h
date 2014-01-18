@@ -95,11 +95,13 @@ public:
 	 boost::posix_time::time_duration trim_spaces_total_time;
 	 boost::posix_time::time_duration pre_trim_spaces_total_time;
 	 boost::posix_time::time_duration trim_spaces_left_total_time;
-	 boost::posix_time::time_duration pre_trim_left_spaces_total_time;
+	 boost::posix_time::time_duration pre_trim_spaces_left_total_time;
 	 boost::posix_time::time_duration trim_spaces_right_total_time;
-	 boost::posix_time::time_duration pre_trim_spaces_right_total_time;
+	 boost::posix_time::time_duration pre_trim_spaces_rigth_total_time;
 	 boost::posix_time::time_duration trim_set_total_time;
 	 boost::posix_time::time_duration pre_trim_set_total_time;
+	 boost::posix_time::time_duration substr_total_time;
+	 	 boost::posix_time::time_duration pre_substr_total_time;
 
 	 unsigned int number_of_vlab_restrict;
 	 unsigned int number_of_pre_vlab_restrict;
@@ -119,10 +121,12 @@ public:
 	 unsigned int number_of_pre_trim_spaces;
 	 unsigned int number_of_trim_spaces_left;
 	 unsigned int number_of_pre_trim_spaces_left;
-	 unsigned int number_of_trim_spaces_right;
-	 unsigned int number_of_pre_trim_spaces_right;
+	 unsigned int number_of_trim_spaces_rigth;
+	 unsigned int number_of_pre_trim_spaces_rigth;
 	 unsigned int number_of_trim_set;
 	 unsigned int number_of_pre_trim_set;
+	 unsigned int number_of_substr;
+	 unsigned int number_of_pre_substr;
 
 
 };
