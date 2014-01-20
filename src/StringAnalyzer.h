@@ -11,7 +11,7 @@
 
 #include "StrangerAutomaton.hpp"
 #include "StringAnalysisTypes.h"
-#include "ForwardImageComputer.h"
+#include "ImageComputer.h"
 #include "DepGraph.h"
 #include "StrangerStringAnalysisException.h"
 #include <map>
@@ -30,7 +30,7 @@ public:
     void analyze();
     
 private:
-    ForwardImageComputer imageComputer;
+    ImageComputer imageComputer;
     DepGraph depGraph;
     DepGraph depGraph2;
     std::string name;

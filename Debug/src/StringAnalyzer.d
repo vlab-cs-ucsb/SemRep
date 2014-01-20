@@ -15,7 +15,7 @@ src/StringAnalyzer.d: ../src/StringAnalyzer.cpp ../src/StringAnalyzer.h \
  ../src/StringBuilder.h ../src/DepGraphSccNode.h \
  ../src/DepGraphUninitNode.h ../src/DepGraphOpNode.h \
  ../src/DepGraphNormalNode.h ../src/TacPlace.h ../src/Variable.h \
- ../src/Literal.h ../src/Constant.h ../src/ForwardImageComputer.h \
+ ../src/Literal.h ../src/Constant.h ../src/ImageComputer.h \
  ../src/StrangerStringAnalysisException.h
 
 ../src/StringAnalyzer.h:
@@ -72,6 +72,6 @@ src/StringAnalyzer.d: ../src/StringAnalyzer.cpp ../src/StringAnalyzer.h \
 
 ../src/Constant.h:
 
-../src/ForwardImageComputer.h:
+../src/ImageComputer.h:
 
 ../src/StrangerStringAnalysisException.h:

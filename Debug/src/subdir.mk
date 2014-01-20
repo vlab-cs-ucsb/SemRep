@@ -10,7 +10,7 @@ CPP_SRCS += \
 ../src/DepGraphOpNode.cpp \
 ../src/DepGraphSccNode.cpp \
 ../src/DepGraphUninitNode.cpp \
-../src/ForwardImageComputer.cpp \
+../src/ImageComputer.cpp \
 ../src/PerfInfo.cpp \
 ../src/RegExp.cpp \
 ../src/StrangerAutomaton.cpp \
@@ -28,7 +28,7 @@ OBJS += \
 ./src/DepGraphOpNode.o \
 ./src/DepGraphSccNode.o \
 ./src/DepGraphUninitNode.o \
-./src/ForwardImageComputer.o \
+./src/ImageComputer.o \
 ./src/PerfInfo.o \
 ./src/RegExp.o \
 ./src/StrangerAutomaton.o \
@@ -46,7 +46,7 @@ CPP_DEPS += \
 ./src/DepGraphOpNode.d \
 ./src/DepGraphSccNode.d \
 ./src/DepGraphUninitNode.d \
-./src/ForwardImageComputer.d \
+./src/ImageComputer.d \
 ./src/PerfInfo.d \
 ./src/RegExp.d \
 ./src/StrangerAutomaton.d \

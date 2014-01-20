@@ -17,6 +17,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 	try {
 		cout << endl << "\t------ Starting Analysis for: " << field_name << " ------" << endl;
 		StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
+		strangerPatcher.calculate_rejected_set = false;
 		strangerPatcher.extractValidationPatch();
 		strangerPatcher.extractSanitizationPatch();
 
@@ -1269,7 +1270,7 @@ void patch_mybloggie_login__username(bool reversed) {
 void patch_usebb_login__user(bool reversed) {
 	string field_name = "user";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_login.dot";
-	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_login_user.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_login__user.dot";
 
 	if (reversed) {
 		call_patcher(server, client, field_name);
@@ -1281,7 +1282,7 @@ void patch_usebb_login__user(bool reversed) {
 void patch_usebb_register__user(bool reversed) {
 	string field_name = "user";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register.dot";
-	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register_user.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register__user.dot";
 
 	if (reversed) {
 		call_patcher(server, client, field_name);
@@ -1293,7 +1294,7 @@ void patch_usebb_register__user(bool reversed) {
 void patch_usebb_register__email(bool reversed) {
 	string field_name = "email";
 	string server = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register.dot";
-	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register_email.dot";
+	string client = "/home/abaki/RA/PLDI/PLDI14/experiments/usebb/usebb_register__email.dot";
 
 	if (reversed) {
 		call_patcher(server, client, field_name);
@@ -1661,11 +1662,11 @@ int main(int argc, char *argv[]) {
 //	patch_schoolmate_manageusers_39__userid(patchClient);
 //	patch_schoolmate_validatelogin__username(patchClient);
 
-	patch_mybloggie_login__username(patchClient);
+//	patch_mybloggie_login__username(patchClient);
 
-//	patch_usebb_login_user(patchClient);
-//	patch_usebb_register_user(patchClient);
-//	patch_usebb_register_email(patchClient);
+	patch_usebb_login__user(patchClient);
+//	patch_usebb_register__user(patchClient);
+//	patch_usebb_register__email(patchClient);
 
 //	Server-Server Comparisons ////////////////////////////////////////
 

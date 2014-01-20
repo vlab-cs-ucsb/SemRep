@@ -16,7 +16,7 @@ src/StrangerPatcher.d: ../src/StrangerPatcher.cpp \
  ../src/DepGraphSccNode.h ../src/DepGraphUninitNode.h \
  ../src/DepGraphOpNode.h ../src/DepGraphNormalNode.h ../src/TacPlace.h \
  ../src/Variable.h ../src/Literal.h ../src/Constant.h \
- ../src/ForwardImageComputer.h ../src/StringAnalysisTypes.h \
+ ../src/ImageComputer.h ../src/StringAnalysisTypes.h \
  ../src/StrangerStringAnalysisException.h ../src/StrangerDebugger.hpp
 
 ../src/StrangerPatcher.h:
@@ -71,7 +71,7 @@ src/StrangerPatcher.d: ../src/StrangerPatcher.cpp \
 
 ../src/Constant.h:
 
-../src/ForwardImageComputer.h:
+../src/ImageComputer.h:
 
 ../src/StringAnalysisTypes.h:
 

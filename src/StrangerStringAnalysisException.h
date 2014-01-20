@@ -14,7 +14,7 @@
 
 class StrangerStringAnalysisException {
 public:
-    StrangerStringAnalysisException ( const string err): error(err){};
+    StrangerStringAnalysisException ( const string err){ error = err;};
     const std::string what() const { return error;};
 
 private:

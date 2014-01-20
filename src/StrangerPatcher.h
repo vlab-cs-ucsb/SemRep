@@ -28,7 +28,7 @@
 
 
 #include "DepGraph.h"
-#include "ForwardImageComputer.h"
+#include "ImageComputer.h"
 #include "StrangerDebugger.hpp"
 
 using namespace std;
@@ -56,6 +56,8 @@ public:
 	bool is_validation_patch_required = false;
 	bool is_length_patch_required = false;
 	bool is_sanitization_patch_required = false;
+
+	bool calculate_rejected_set = false;
 
 	static PerfInfo perfInfo;
 private:

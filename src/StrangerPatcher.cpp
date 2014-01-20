@@ -57,8 +57,8 @@ StrangerPatcher::StrangerPatcher(string patcher_dep_graph_file_name,string patch
 
 	}
 
-	ForwardImageComputer::perfInfo = &StrangerPatcher::perfInfo;
-	ForwardImageComputer::staticInit();
+	ImageComputer::perfInfo = &StrangerPatcher::perfInfo;
+	ImageComputer::staticInit();
 }
 
 StrangerPatcher::~StrangerPatcher() {
@@ -186,7 +186,7 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 
 	message("BEGIN VALIDATION EXTRACTION PHASE........................................");
 
-	ForwardImageComputer analyzer;
+	ImageComputer analyzer;
 	boost::posix_time::ptime start_time;
 	try {
 		message("extracting validation from patcher");
@@ -194,7 +194,11 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 		AnalysisResult patcher_validationExtractionResults =
 				analyzer.doBackwardAnalysis_ValidationPhase(patcher_dep_graph, patcher_field_relevant_graph, patcher_sorted_field_relevant_nodes);
 		StrangerAutomaton* patcher_negVPatch = patcher_validationExtractionResults[patcher_uninit_field_node->getID()];
-		StrangerAutomaton* patcher_validation = patcher_negVPatch->complement(patcher_uninit_field_node->getID());
+		StrangerAutomaton* patcher_validation = patcher_negVPatch;
+		if ( !calculate_rejected_set ) {
+			patcher_validation = patcher_negVPatch->complement(patcher_uninit_field_node->getID());
+		}
+
 		perfInfo.validation_patcher_backward_time = perfInfo.current_time() - start_time;
 		if (DEBUG_ENABLED_VP != 0) {
 			DEBUG_MESSAGE("patcher validation auto:");
@@ -206,7 +210,10 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 		AnalysisResult patchee_validationExtractionResults =
 				analyzer.doBackwardAnalysis_ValidationPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes);
 		StrangerAutomaton* patchee_negVPatch = patchee_validationExtractionResults[patchee_uninit_field_node->getID()];
-		StrangerAutomaton* patchee_validation = patchee_negVPatch->complement(patchee_uninit_field_node->getID());
+		StrangerAutomaton* patchee_validation = patchee_negVPatch;
+		if ( !calculate_rejected_set ) {
+			patchee_validation = patchee_negVPatch->complement(patchee_uninit_field_node->getID());
+		}
 		perfInfo.validation_patchee_backward_time = perfInfo.current_time() - start_time;
 		if (DEBUG_ENABLED_VP != 0) {
 			DEBUG_MESSAGE("patchee validation auto:");
@@ -215,39 +222,62 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 
 		message("computing validation patch");
 		start_time = perfInfo.current_time();
-		StrangerAutomaton* diffAuto = patchee_validation->difference(patcher_validation, patchee_uninit_field_node->getID());
+		StrangerAutomaton* diffAuto = NULL;
+		if (calculate_rejected_set)  {
+			diffAuto = patcher_validation->difference(patchee_validation, patchee_uninit_field_node->getID());
+		}
+		else {
+			diffAuto = patchee_validation->difference(patcher_validation, patchee_uninit_field_node->getID());
+		}
 		if (DEBUG_ENABLED_VP != 0) {
 			DEBUG_MESSAGE("difference auto:");
 			DEBUG_AUTO(diffAuto);
 		}
+		if (calculate_rejected_set) {
+			if (diffAuto->isEmpty()) {
+				message("difference auto is empty, no validation patch is required!!!");
+				is_validation_patch_required = false;
+				validation_patch_auto = StrangerAutomaton::makePhi(patchee_uninit_field_node->getID());
 
-		StrangerAutomaton* interAuto = patchee_validation->intersect(patcher_validation, patchee_uninit_field_node->getID());
-		if (DEBUG_ENABLED_VP != 0) {
-			DEBUG_MESSAGE("intersection auto:");
-			DEBUG_AUTO(interAuto);
-		}
-		if (diffAuto->isEmpty()) {
-			message("difference auto is empty, no validation patch is required!!!");
-			is_validation_patch_required = false;
-			validation_patch_auto = StrangerAutomaton::makeAnyString(patchee_uninit_field_node->getID());
-//			validation_patch_auto = patchee_validation;
-			delete interAuto;
-
-		} else if (interAuto->isEmpty()) {
-			message("intersection auto is empty; client and server accepts different sets, validation patch rejects everything!");
-			is_validation_patch_required = true;
-			validation_patch_auto = interAuto->clone(-11);
-			if (DEBUG_ENABLED_VP != 0) {
-				DEBUG_MESSAGE("validation patch is intersection auto...");
-			}
-		} else {
-			message("validation patch is generated for input: " + input_field_name);
-			is_validation_patch_required = true;
-			validation_patch_auto = interAuto->clone(-11);
-			if (DEBUG_ENABLED_VP != 0) {
-				DEBUG_MESSAGE("validation patch is intersection auto...");
+			} else {
+				message("validation patch is generated for input: " + input_field_name);
+				is_validation_patch_required = true;
+				validation_patch_auto = diffAuto->clone(patchee_uninit_field_node->getID());
+				if (DEBUG_ENABLED_VP != 0) {
+					DEBUG_MESSAGE("validation patch is difference auto...");
+				}
 			}
 		}
+		else {
+			StrangerAutomaton* interAuto = patchee_validation->intersect(patcher_validation, patchee_uninit_field_node->getID());
+			if (DEBUG_ENABLED_VP != 0) {
+				DEBUG_MESSAGE("intersection auto:");
+				DEBUG_AUTO(interAuto);
+			}
+			if (diffAuto->isEmpty()) {
+				message("difference auto is empty, no validation patch is required!!!");
+				is_validation_patch_required = false;
+				validation_patch_auto = StrangerAutomaton::makeAnyString(patchee_uninit_field_node->getID());
+//				validation_patch_auto = patchee_validation;
+				delete interAuto;
+
+			} else if (interAuto->isEmpty()) {
+				message("intersection auto is empty; client and server accepts different sets, validation patch rejects everything!");
+				is_validation_patch_required = true;
+				validation_patch_auto = interAuto->clone(-11);
+				if (DEBUG_ENABLED_VP != 0) {
+					DEBUG_MESSAGE("validation patch is intersection auto...");
+				}
+			} else {
+				message("validation patch is generated for input: " + input_field_name);
+				is_validation_patch_required = true;
+				validation_patch_auto = interAuto->clone(-11);
+				if (DEBUG_ENABLED_VP != 0) {
+					DEBUG_MESSAGE("validation patch is intersection auto...");
+				}
+			}
+		}
+
 		perfInfo.validation_comparison_time = perfInfo.current_time() - start_time;
 
 		delete patcher_validation;
@@ -282,7 +312,7 @@ StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
 	delete patcherAnalysisResult[patcher_uninit_field_node->getID()];
 	patcherAnalysisResult[patcher_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(patcher_uninit_field_node->getID());
 
-	ForwardImageComputer patcherAnalyzer;
+	ImageComputer patcherAnalyzer;
 
 	try {
 		message("starting forward analysis for patcher...");
@@ -314,9 +344,14 @@ AnalysisResult StrangerPatcher::computePatcheeFWAnalysis() {
 	// initialize uninit node that we are interested in with validation patch_auto
 	message(stringbuilder() << "initializing input node(" << patchee_uninit_field_node->getID() << ") with validation patch auto");
 	delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
-	patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
+	if (calculate_rejected_set) {
+		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto->complement(patchee_uninit_field_node->getID());
+	} else {
+		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
+	}
 
-	ForwardImageComputer patcheeAnalyzer;
+
+	ImageComputer patcheeAnalyzer;
 
 	try {
 
@@ -334,14 +369,18 @@ AnalysisResult StrangerPatcher::computePatcheeFWAnalysis() {
 
 StrangerAutomaton* StrangerPatcher::computePatcheeLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult) {
 	message("starting a backward analysis to calculate length patch...");
-	ForwardImageComputer patcheeAnalyzer;
+	ImageComputer patcheeAnalyzer;
 	try {
 		fwAnalysisResult[patchee_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(-5);
 		boost::posix_time::ptime start_time = perfInfo.current_time();
 		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
 		perfInfo.sanitization_length_backward_time = perfInfo.current_time() - start_time;
 		StrangerAutomaton* negPatchAuto = bwResult[patchee_uninit_field_node->getID()];
-		length_patch_auto = negPatchAuto->complement(-5);
+		if ( calculate_rejected_set ) {
+			length_patch_auto = negPatchAuto->clone(-5);
+		} else {
+			length_patch_auto = negPatchAuto->complement(-5);
+		}
 
 		if (DEBUG_ENABLED_LP != 0) {
 			DEBUG_MESSAGE("Length patch:");
@@ -359,7 +398,7 @@ StrangerAutomaton* StrangerPatcher::computePatcheeLengthPatch(StrangerAutomaton*
 }
 
 StrangerAutomaton* StrangerPatcher::computePatcheeSanitizationPatch(StrangerAutomaton* initialAuto,	const AnalysisResult& fwAnalysisResult) {
-	ForwardImageComputer patcheeAnalyzer;
+	ImageComputer patcheeAnalyzer;
 	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
 	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
 	return sanitization_patch_auto;
