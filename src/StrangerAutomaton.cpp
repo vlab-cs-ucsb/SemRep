@@ -1565,7 +1565,7 @@ StrangerAutomaton* StrangerAutomaton::preReplace(StrangerAutomaton* searchAuto,
     
     
     debugToFile(stringbuilder() << "M[" << (traceID) << "] = dfa_pre_replace_str(M[" << this->autoTraceID << "], M[" << searchAuto->autoTraceID << "], \"" << replaceString << "\" , NUM_ASCII_TRACKS, indices_main);//"<<id << " = preReplace("  << this->ID <<  ", " << searchAuto->ID << ")");
-
+    replaceString = "";
     boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfa_pre_replace_str(this->dfa, searchAuto->dfa, StrangerAutomaton::strToCharStar(replaceString), num_ascii_track, indices_main));
     perfInfo->pre_replace_total_time += perfInfo->current_time() - start_time;
@@ -2993,7 +2993,7 @@ std::string StrangerAutomaton::escapeSpecialChars(std::string s)
  * Helps to convert std::string into char*
  * to pass to StrangerLibrary functions
  */
-char* StrangerAutomaton::strToCharStar(const std::string s){
+char* StrangerAutomaton::strToCharStar( const std::string s){
 	char *a = new char[s.size()+1];
 	a[s.size()] = '\0';
 	memcpy(a,s.c_str(), s.size());

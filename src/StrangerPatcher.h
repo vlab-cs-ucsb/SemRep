@@ -38,8 +38,8 @@ public:
 	StrangerPatcher(string patcher_dep_graph_file_name, string patchee_dep_graph_file_name, string input_field_name);
 	virtual ~StrangerPatcher();
 
-	StrangerAutomaton* extractValidationPatch();
-	StrangerAutomaton* extractSanitizationPatch();
+	StrangerAutomaton* computeValidationPatch();
+	StrangerAutomaton* computeSanitizationPatch();
 
 	StrangerAutomaton* computePatcherFWAnalysis();
 	AnalysisResult computePatcheeFWAnalysis();
@@ -51,7 +51,7 @@ public:
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
 
 	void printResults();
-	void writeAutoforMinCut(string referenceName, string patchName);
+	void writeAutosforCodeGeneration(string referenceName, string patchName);
 
 	bool is_validation_patch_required = false;
 	bool is_length_patch_required = false;

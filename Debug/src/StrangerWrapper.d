@@ -17,7 +17,8 @@ src/StrangerWrapper.d: ../src/StrangerWrapper.cpp \
  ../src/DepGraphOpNode.h ../src/DepGraphNormalNode.h ../src/TacPlace.h \
  ../src/Variable.h ../src/Literal.h ../src/Constant.h \
  ../src/ImageComputer.h ../src/StringAnalysisTypes.h \
- ../src/StrangerStringAnalysisException.h ../src/StrangerDebugger.hpp
+ ../src/StrangerStringAnalysisException.h ../src/StrangerDebugger.hpp \
+ ../src/TestReplace.hpp
 
 ../src/StrangerPatcher.h:
 
@@ -78,3 +79,5 @@ src/StrangerWrapper.d: ../src/StrangerWrapper.cpp \
 ../src/StrangerStringAnalysisException.h:
 
 ../src/StrangerDebugger.hpp:
+
+../src/TestReplace.hpp:

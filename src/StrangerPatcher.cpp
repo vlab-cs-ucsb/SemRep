@@ -133,24 +133,42 @@ void StrangerPatcher::printResults() {
 	perfInfo.print_validation_extraction_info();
 	perfInfo.print_sanitization_extraction_info();
 	perfInfo.print_operations_info();
+	perfInfo.reset();
 }
-
-void StrangerPatcher::writeAutoforMinCut(string patcherName, string patcheeName) {
+// TODO parameterize paths
+void StrangerPatcher::writeAutosforCodeGeneration(string patcherName, string patcheeName) {
+	string patcher_name = patcherName.substr( patcherName.find_last_of('/') + 1,patcherName.find_last_of('.') - patcherName.find_last_of('/') - 1 );
+	string patchee_name = patcheeName.substr( patcheeName.find_last_of('/') + 1,patcheeName.find_last_of('.') - patcheeName.find_last_of('/') - 1 );
+	string type = "accept";
+	if (calculate_rejected_set) {
+		type = "reject";
+	}
+	if (is_validation_patch_required) {
+		string v_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << patcher_name << "_" << patchee_name <<
+				"_VP_" << type << "_auto.dot";
+		validation_patch_auto->toDotFile(v_patch_auto_path);
+		message(stringbuilder() << "Validation Patch auto is written... : " << v_patch_auto_path);
+	}
+	if (is_length_patch_required) {
+		string l_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << patcher_name << "_" << patchee_name <<
+						"_LP_" << type << "_auto.dot";
+		length_patch_auto->toDotFile(l_patch_auto_path);
+		message(stringbuilder() << "Length Patch auto is written... : " << l_patch_auto_path);
+	}
 	if (is_sanitization_patch_required) {
 		string path = "/home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/";
-		patcherName = patcherName.substr( patcherName.find_last_of('/') + 1,patcherName.find_last_of('.') - patcherName.find_last_of('/') - 1 );
-		patcheeName = patcheeName.substr( patcheeName.find_last_of('/') + 1,patcheeName.find_last_of('.') - patcheeName.find_last_of('/') - 1 );
 
-		string ref_auto_name = path + "references/" + patcherName + "_" + patcheeName + "_auto.dot";
-		string patch_auto_name = path + "patches/" + patcherName + "_" + patcheeName + "_auto.dot";
+		string ref_auto_name = path + "references/" + patcher_name + "_" + patchee_name + "_auto.dot";
+		string patch_auto_name = path + "patches/" + patcher_name + "_" + patchee_name + "_auto.dot";
 		patcher_sink_auto->toDotFile(ref_auto_name);
 		sanitization_patch_auto->toDotFile(patch_auto_name);
-
+		message(stringbuilder() << "Sanitization Patch autos are written for mincut... : " << "ref auto: " << ref_auto_name << ", patch auto: " << patch_auto_name);
 		cout << endl << "\t Automata for Mincut are written:" << endl;
 		cout << "\t Reference auto : " << ref_auto_name << endl;
 		cout << "\t Patch     auto : " << patch_auto_name << endl;
 	}
 }
+
 /**
  * checks if length has maximum restriction, or minimum restriction without a maximium restriction
  * TODO currently that function only checks if the minimum restriction length is 1 or not, handle any minimum restriction later
@@ -159,6 +177,7 @@ void StrangerPatcher::writeAutoforMinCut(string patcherName, string patcheeName)
  * result 2 : there is a minimum length restriction (max length is infinite in that case)
  */
 int StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto) {
+	message("BEGIN LENGTH PATCH ANALYSIS PHASE........................................");
 	boost::posix_time::ptime start_time = perfInfo.current_time();
 	int result = 0;
 	if(patcherAuto->isLengthFinite()) {
@@ -182,9 +201,9 @@ int StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAut
 /**
  * Initial backward analysis phase for extracting validation behavior
  */
-StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
+StrangerAutomaton* StrangerPatcher::computeValidationPatch() {
 
-	message("BEGIN VALIDATION EXTRACTION PHASE........................................");
+	message("BEGIN VALIDATION ANALYSIS PHASE........................................");
 
 	ImageComputer analyzer;
 	boost::posix_time::ptime start_time;
@@ -290,7 +309,7 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
 	}
 
 	perfInfo.calculate_total_validation_extraction_time();
-	message("........................................END VALIDATION EXTRACTION PHASE");
+	message("........................................END VALIDATION ANALYSIS PHASE");
 	return validation_patch_auto;
 }
 
@@ -298,6 +317,7 @@ StrangerAutomaton* StrangerPatcher::extractValidationPatch() {
  * Computes sink post image for patcher
  */
 StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
+
 	message("computing patcher sink post image...");
 	AnalysisResult patcherAnalysisResult;
 	UninitNodesList patcherUninitNodes = patcher_dep_graph.getUninitNodes();
@@ -408,8 +428,8 @@ StrangerAutomaton* StrangerPatcher::computePatcheeSanitizationPatch(StrangerAuto
 /**
  *
  */
-StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
-
+StrangerAutomaton* StrangerPatcher::computeSanitizationPatch() {
+	message("BEGIN SANITIZATION ANALYSIS PHASE........................................");
 	boost::posix_time::ptime start_time = perfInfo.current_time();
 	patcher_sink_auto = computePatcherFWAnalysis();
 	perfInfo.sanitization_patcher_first_forward_time = perfInfo.current_time() - start_time;
@@ -469,7 +489,6 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 			// use negation of length restricted auto to solve the problem of overapproximation
 			StrangerAutomaton* negLengthRestrictAuto = lengthRestrictAuto->complement(-4);
 			StrangerAutomaton* rejectedLengthAuto = patcheeSinkAuto->intersect(negLengthRestrictAuto, -4);
-			delete lengthRestrictAuto;
 			delete negLengthRestrictAuto;
 			computePatcheeLengthPatch(rejectedLengthAuto, patcheeAnalysisResult);
 
@@ -477,7 +496,8 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 				DEBUG_MESSAGE("Length patch automaton");
 				DEBUG_AUTO(length_patch_auto);
 			}
-
+			message("........................................END LENGTH_PATCH ANALYSIS PHASE");
+			message("CONTINUE SANITIZATION ANALYSIS PHASE........................................");
 			message("checking difference between patcher and patchee after length restriction");
 			delete differenceAuto;
 			comp_time = perfInfo.current_time();
@@ -515,6 +535,7 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		}
 
 	} else {
+		message("CONTINUE SANITIZATION ANALYSIS PHASE........................................");
 		message("starting last backward analysis for sanitization patch with diff auto...");
 		start_time = perfInfo.current_time();
 		sanitization_patch_auto = computePatcheeSanitizationPatch(differenceAuto, patcheeAnalysisResult);
@@ -527,7 +548,9 @@ StrangerAutomaton* StrangerPatcher::extractSanitizationPatch() {
 		is_sanitization_patch_required = true;
 		is_length_patch_required = false;
 	}
+	perfInfo.calculate_total_sanitization_length_extraction_time();
 	perfInfo.calculate_total_sanitization_extraction_time();
+	message("........................................END SANITIZATION ANALYSIS PHASE");
 	return sanitization_patch_auto;
 }
 

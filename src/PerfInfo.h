@@ -29,6 +29,7 @@ public:
 	 void print_operations_info();
 
 	 void calculate_total_validation_extraction_time();
+	 void calculate_total_sanitization_length_extraction_time();
 	 void calculate_total_sanitization_extraction_time();
 
 //	Validation Extraction Time
@@ -42,6 +43,7 @@ public:
 	 boost::posix_time::time_duration sanitization_patcher_first_forward_time;
 	 boost::posix_time::time_duration sanitization_length_issue_check_time;
 	 boost::posix_time::time_duration sanitization_length_backward_time;
+	 boost::posix_time::time_duration sanitization_length_patch_extraction_total_time;
 	 boost::posix_time::time_duration sanitization_patch_backward_time;
 	 boost::posix_time::time_duration sanitization_comparison_time;
 	 boost::posix_time::time_duration sanitization_patch_extraction_total_time;
@@ -62,6 +64,8 @@ public:
 	 boost::posix_time::time_duration const_pre_concat_total_time;
 	 boost::posix_time::time_duration replace_total_time;
 	 boost::posix_time::time_duration pre_replace_total_time;
+
+	 boost::posix_time::time_duration performance_time;
 
 
 	 unsigned int num_of_intersect;
@@ -101,7 +105,7 @@ public:
 	 boost::posix_time::time_duration trim_set_total_time;
 	 boost::posix_time::time_duration pre_trim_set_total_time;
 	 boost::posix_time::time_duration substr_total_time;
-	 	 boost::posix_time::time_duration pre_substr_total_time;
+	 boost::posix_time::time_duration pre_substr_total_time;
 
 	 unsigned int number_of_vlab_restrict;
 	 unsigned int number_of_pre_vlab_restrict;

@@ -1,19 +1,50 @@
-
-	------ Starting Analysis for: user ------
-
-~~~~~~~~~~~>>> StrangerPatcher says: patcher uninit node(7) found for field user.
-
-~~~~~~~~~~~>>> StrangerPatcher says: patchee uninit node(109) found for field user.
-
-~~~~~~~~~~~>>> StrangerPatcher says: BEGIN VALIDATION EXTRACTION PHASE........................................
-
-~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patcher
-handling: __vlab_restrict\n(unmodeled)
-		: validation function found!
-
-~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patchee
-handling: __vlab_restrict\n(unmodeled)
-handling: __vlab_restrict\n(unmodeled)
-handling: __vlab_restrict\n(unmodeled)
-handling: preg_replace
-**********
+	 peak : negate : states 3 : bddnodes 9 
+	 peak : intersect : states 9 : bddnodes 95 
+	 peak : intersect : states 13 : bddnodes 152 
+	 peak : replace_delete : states 9 : bddnodes 62 : before projection : loop 0 
+	 peak : replace_delete : states 4 : bddnodes 38 : after projection : loop 0 
+	 peak : replace_delete : states 2 : bddnodes 17 : before projection : loop 1 
+	 peak : replace_delete : states 3 : bddnodes 16 : after projection : loop 1 
+	 peak : replace_delete : states 2 : bddnodes 16 
+	 peak : replace_extrabit : states 2 : bddnodes 16 
+digraph MONA_DFA {
+ rankdir = LR;
+ center = true;
+ size = "700.5,1000.5";
+ edge [fontname = Courier];
+ node [height = .5, width = .5];
+ node [shape = doublecircle]; 0;
+ node [shape = circle];
+ node [shape = box];
+ init [shape = plaintext, label = ""];
+ init -> 0;
+ 0 -> 0 [label=" [NUL-;], [=-253]"];
+}
+	 peak : intersect : states 3 : bddnodes 16 
+digraph MONA_DFA {
+ rankdir = LR;
+ center = true;
+ size = "700.5,1000.5";
+ edge [fontname = Courier];
+ node [height = .5, width = .5];
+ node [shape = doublecircle]; 0;
+ node [shape = circle];
+ node [shape = box];
+ init [shape = plaintext, label = ""];
+ init -> 0;
+}
+	 peak : intersect : states 4 : bddnodes 17 
+	 peak : intersect : states 4 : bddnodes 11 
+digraph MONA_DFA {
+ rankdir = LR;
+ center = true;
+ size = "700.5,1000.5";
+ edge [fontname = Courier];
+ node [height = .5, width = .5];
+ node [shape = doublecircle]; 0;
+ node [shape = circle];
+ node [shape = box];
+ init [shape = plaintext, label = ""];
+ init -> 0;
+ 0 -> 0 [label=" <"];
+}
