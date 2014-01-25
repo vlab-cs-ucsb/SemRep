@@ -1,50 +1,48 @@
-	 peak : negate : states 3 : bddnodes 9 
-	 peak : intersect : states 9 : bddnodes 95 
-	 peak : intersect : states 13 : bddnodes 152 
-	 peak : replace_delete : states 9 : bddnodes 62 : before projection : loop 0 
-	 peak : replace_delete : states 4 : bddnodes 38 : after projection : loop 0 
-	 peak : replace_delete : states 2 : bddnodes 17 : before projection : loop 1 
-	 peak : replace_delete : states 3 : bddnodes 16 : after projection : loop 1 
-	 peak : replace_delete : states 2 : bddnodes 16 
-	 peak : replace_extrabit : states 2 : bddnodes 16 
-digraph MONA_DFA {
- rankdir = LR;
- center = true;
- size = "700.5,1000.5";
- edge [fontname = Courier];
- node [height = .5, width = .5];
- node [shape = doublecircle]; 0;
- node [shape = circle];
- node [shape = box];
- init [shape = plaintext, label = ""];
- init -> 0;
- 0 -> 0 [label=" [NUL-;], [=-253]"];
-}
-	 peak : intersect : states 3 : bddnodes 16 
-digraph MONA_DFA {
- rankdir = LR;
- center = true;
- size = "700.5,1000.5";
- edge [fontname = Courier];
- node [height = .5, width = .5];
- node [shape = doublecircle]; 0;
- node [shape = circle];
- node [shape = box];
- init [shape = plaintext, label = ""];
- init -> 0;
-}
-	 peak : intersect : states 4 : bddnodes 17 
-	 peak : intersect : states 4 : bddnodes 11 
-digraph MONA_DFA {
- rankdir = LR;
- center = true;
- size = "700.5,1000.5";
- edge [fontname = Courier];
- node [height = .5, width = .5];
- node [shape = doublecircle]; 0;
- node [shape = circle];
- node [shape = box];
- init [shape = plaintext, label = ""];
- init -> 0;
- 0 -> 0 [label=" <"];
-}
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 19 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 19 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : union : states 4 : bddnodes 24 
+	 peak : union : states 4 : bddnodes 19 
+	 peak : union : states 4 : bddnodes 23 
+	 peak : concat : states 4 : bddnodes 43 : before projection 
+	 peak : concat : states 4 : bddnodes 41 : after projection 
+	 peak : concat : states 5 : bddnodes 64 : before projection 
+	 peak : concat : states 5 : bddnodes 61 : after projection 
+	 peak : union : states 5 : bddnodes 61 
+	 peak : concat : states 6 : bddnodes 85 : before projection 
+	 peak : concat : states 6 : bddnodes 81 : after projection 
+	 peak : union : states 6 : bddnodes 81 
+	 peak : concat : states 7 : bddnodes 95 : before projection 
+	 peak : concat : states 7 : bddnodes 90 : after projection 
+	 peak : concat : states 8 : bddnodes 116 : before projection 
+	 peak : concat : states 12 : bddnodes 166 : after projection 
+	 peak : concat : states 14 : bddnodes 209 : before projection 
+	 peak : concat : states 14 : bddnodes 184 : after projection 
+	 peak : concat : states 15 : bddnodes 218 : before projection 
+	 peak : concat : states 15 : bddnodes 205 : after projection 
+length:  200
+------------
+	 peak : intersect : states 403 : bddnodes 1809 
+	 peak : replace_char_with_string : states 802 : bddnodes 8401 
+	 peak : replace_char_with_string : states 1402 : bddnodes 14401 : before projection 
+	 peak : replace_char_with_string : states 1202 : bddnodes 10801 : after projection 
+	 peak : replace_char_with_string : states 1802 : bddnodes 19401 : before projection 
+	 peak : replace_char_with_string : states 1602 : bddnodes 15601 : after projection 
+	 peak : replace_char_with_string : states 2402 : bddnodes 26001 : before projection 
+	 peak : replace_char_with_string : states 2202 : bddnodes 22001 : after projection 
+	 peak : replace_char_with_string : states 2602 : bddnodes 28801 : before projection 
+	 peak : replace_char_with_string : states 2602 : bddnodes 25201 : after projection 
+	 peak : replace_char_with_string : states 2402 : bddnodes 26601 : before projection 
+	 peak : replace_char_with_string : states 2002 : bddnodes 21601 : after projection 
+htmlSpecialChars           :  1284254us
+states2002, bddnodes: 21601
+
+
+
+

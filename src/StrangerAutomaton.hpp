@@ -94,6 +94,7 @@ public:
     static StrangerAutomaton* regExToAuto(std::string phpRegexOrig);
     static StrangerAutomaton* reg_replace(StrangerAutomaton* patternAuto, std::string replaceStr, StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* reg_replace(StrangerAutomaton* patternAuto, std::string replaceStr, StrangerAutomaton* subjectAuto);
+    static StrangerAutomaton* general_replace(StrangerAutomaton* patternAuto, StrangerAutomaton* replaceAuto, StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* str_replace(StrangerAutomaton* searchAuto, std::string replaceStr, StrangerAutomaton* subjectAuto, int id);
     static StrangerAutomaton* str_replace(StrangerAutomaton* searchAuto, std::string replaceStr, StrangerAutomaton* subjectAuto);
     StrangerAutomaton* preReplace(StrangerAutomaton* searchAuto, std::string replaceString, int id);

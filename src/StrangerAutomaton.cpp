@@ -1434,6 +1434,41 @@ StrangerAutomaton* StrangerAutomaton::reg_replace(StrangerAutomaton* patternAuto
     return retMe;
 }
 
+
+StrangerAutomaton* StrangerAutomaton::general_replace(StrangerAutomaton* patternAuto, StrangerAutomaton* replaceAuto, StrangerAutomaton* subjectAuto, int id) {
+
+    debug(stringbuilder() << id <<  " = reg_replace(" << patternAuto->ID << ", " << replaceAuto->ID << ", " << subjectAuto->ID << ")");
+    // Note: the replaceAuto parameter should be of type
+    // Automaton not String. We changed it
+    // to use the replace function from StrangerLibrary.
+    // TODO: Otherwise we need a method to accept all three parameters as
+    // automaton in Stranger Library
+    debug(stringbuilder() << "calling reg_replace with the following order (" << subjectAuto->ID << ", " << patternAuto->ID << ", " << replaceAuto->ID << ")");
+    if (patternAuto->isBottom() || subjectAuto->isBottom())
+        throw new StrangerAutomatonException(
+                                             "SNH: In StrangerAutoatmon.reg_replace: either patternAuto or subjectAuto is bottom element (phi) which can not be used in replace.");
+    else if (patternAuto->isTop())
+        throw new StrangerAutomatonException(
+                                             "SNH: In StrangerAutoatmon.reg_replace: patternAuto is top (indicating that the variable may no longer be of type string) and can not be used in replacement");
+    else if (subjectAuto->isTop())
+        throw new StrangerAutomatonException(
+                                             "SNH: In StrangerAutoatmon.reg_replace: subjectAuto is top (indicating that the variable may no longer be of type string) and can not be used in replacement");
+
+    debugToFile(stringbuilder() << "M[" << (traceID) << "] = dfa_replace_extrabit(M["<< subjectAuto->autoTraceID  << "], M[" << patternAuto->autoTraceID << "], \"" << replaceAuto->ID << "\" , NUM_ASCII_TRACKS, indices_main);//"<<id << " = reg_replace(" << patternAuto->ID << ", " << replaceAuto->ID
+				<< ", " << subjectAuto->ID << ")");
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    StrangerAutomaton* retMe = new StrangerAutomaton(dfa_general_replace_extrabit(subjectAuto->dfa, patternAuto->dfa, replaceAuto->dfa, num_ascii_track, indices_main));
+    perfInfo->replace_total_time += perfInfo->current_time() - start_time;
+    perfInfo->num_of_replace++;
+
+    {
+        retMe->ID = id;
+//        retMe->debugAutomaton();
+    }
+    return retMe;
+}
+
 /**
  * constructs a StrangerAutomaton that accepts the result of replacing every
  * occurrence of a string of patternAuto language in subjectAuto language
@@ -2033,9 +2068,12 @@ StrangerAutomaton* StrangerAutomaton::trimSpaces(int id){
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaTrim(this->dfa, ' ', num_ascii_track, indices_main));
 	perfInfo->trim_spaces_total_time += perfInfo->current_time() - start_time;
 	perfInfo->number_of_trim_spaces++;
-
     retMe->setID(id);
     return retMe;
+//	char ws[3] = {' ', '\n', '\t'};
+//	StrangerAutomaton* ret2 = trim(ws,id);
+//	ret2->setID(id);
+//	return ret2;
 }
 
 StrangerAutomaton* StrangerAutomaton::trimSpacesLeft(int id){
@@ -2120,11 +2158,16 @@ StrangerAutomaton* StrangerAutomaton::preTrimSpaces(int id){
 
 	boost::posix_time::ptime start_time = perfInfo->current_time();
     StrangerAutomaton* retMe = new StrangerAutomaton(dfaPreTrim(this->dfa, ' ', num_ascii_track, indices_main));
-	perfInfo->pre_trim_spaces_total_time += perfInfo->current_time() - start_time;
+//    StrangerAutomaton* a1 = new StrangerAutomaton(dfaPreTrim(retMe->dfa, '\n', num_ascii_track, indices_main));
+//    delete retMe;
+//    retMe = new StrangerAutomaton(dfaPreTrim(a1->dfa, '\t', num_ascii_track, indices_main));
+//    delete a1;
+    perfInfo->pre_trim_spaces_total_time += perfInfo->current_time() - start_time;
 	perfInfo->number_of_pre_trim_spaces++;
 
     retMe->setID(id);
     return retMe;
+
 }
 
 StrangerAutomaton* StrangerAutomaton::preTrimSpacesLeft(int id){

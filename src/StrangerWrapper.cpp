@@ -29,7 +29,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		cout << "\t    Patchee: " << patchee_name << endl;
 
 		strangerPatcher.printResults();
-		strangerPatcher.writeAutosforCodeGeneration(patcher_name, patchee_name);
+		strangerPatcher.writeAutosforCodeGeneration(field_name, patcher_name, patchee_name);
 
 		cout << endl << "\t------ END RESULT for: " << field_name << " ------" << endl;
 	} catch (StrangerStringAnalysisException const &e) {
@@ -423,13 +423,13 @@ void patch_usebb(bool reversed) {
 	vector<string> usebb_clients;
 	vector<string> usebb_servers;
 
-//	usebb_field_names.push_back("username");
-//	usebb_clients.push_back(dep_graph_path + "usebb_login__user.dot");
-//	usebb_servers.push_back(dep_graph_path + "usebb_login.dot");
+	usebb_field_names.push_back("username");
+	usebb_clients.push_back(dep_graph_path + "usebb_login__user.dot");
+	usebb_servers.push_back(dep_graph_path + "usebb_login.dot");
 
-//	usebb_field_names.push_back("username");
-//	usebb_clients.push_back(dep_graph_path + "usebb_register__user.dot");
-//	usebb_servers.push_back(dep_graph_path + "usebb_register.dot");
+	usebb_field_names.push_back("username");
+	usebb_clients.push_back(dep_graph_path + "usebb_register__user.dot");
+	usebb_servers.push_back(dep_graph_path + "usebb_register.dot");
 
 	usebb_field_names.push_back("email");
 	usebb_clients.push_back(dep_graph_path + "usebb_register__email.dot");
@@ -452,8 +452,8 @@ void patch_server_server(bool reversed) {
 
 
 	username_field_name.push_back("username");
-	username_servers.push_back(dep_graph_path + "mybloggie/mybloggie_login_username_password.dot");
-	username_servers.push_back(dep_graph_path + "usebb/usebb_register.dot");
+//	username_servers.push_back(dep_graph_path + "mybloggie/mybloggie_login_username_password.dot");
+//	username_servers.push_back(dep_graph_path + "usebb/usebb_register.dot");
 	username_servers.push_back(dep_graph_path + "usebb/usebb_login.dot");
 	username_servers.push_back(dep_graph_path + "phpnews/phpnews_admin_newsposter2_1780_email_username.dot");
 	username_servers.push_back(dep_graph_path + "phpnews/phpnews_auth_89_user_password.dot");
@@ -617,7 +617,7 @@ void patch_client_client(bool reversed) {
 	phone_field_name.push_back("phone");
 	phone_clients.push_back(dep_graph_path + "client_phone_1.dot");
 	phone_clients.push_back(dep_graph_path + "client_phone_2.dot");
-//	phone_clients.push_back(dep_graph_path + "client_phone_3.dot");
+	phone_clients.push_back(dep_graph_path + "client_phone_3.dot");
 
 
 //	generate_repairs_for_ss_cc_pairs(email_clients, email_field_name, reversed);
@@ -628,8 +628,9 @@ void patch_client_client(bool reversed) {
 
 
 void test_performance() {
-	replaceVsAddslashes();
-//	replaceVsHtmlSpecialChars();
+//	replaceVsAddslashes();
+	replaceVsHtmlSpecialChars();
+//	replaceVsTrimSpaces();
 }
 
 
@@ -637,6 +638,7 @@ void test_performance() {
 int main(int argc, char *argv[]) {
 
 	bool reversed = false;
+
 
 //	run_paper_example(reversed);
 
@@ -649,28 +651,33 @@ int main(int argc, char *argv[]) {
 
 //	patch_server_server(reversed);
 
+//	patch_server_server(false);
+//	patch_server_server(true);
+
 //	patch_client_client(reversed);
 
+//	patch_client_client(false);
+//	patch_client_client(true);
 
 	PerfInfo *perfInfo = new PerfInfo();
 	StrangerAutomaton::perfInfo = perfInfo;
+
+	test_performance();
+
+
+//	StrangerAutomaton* subject = StrangerAutomaton::regExToAuto("/.+/");
+//	StrangerAutomaton* anystring = StrangerAutomaton::makeAnyString();
+//	StrangerAutomaton* negsubject = subject->complement();
+//	StrangerAutomaton* regx = StrangerAutomaton::makeString("<");
 //
-//	test_performance();
-
-
-	StrangerAutomaton* subject = StrangerAutomaton::regExToAuto("/.+/");
-	StrangerAutomaton* anystring = StrangerAutomaton::makeAnyString();
-	StrangerAutomaton* negsubject = subject->complement();
-	StrangerAutomaton* regx = StrangerAutomaton::makeString("<");
-
-	string x = "";
-	StrangerAutomaton* forward = StrangerAutomaton::reg_replace(regx,"",anystring);
-	forward->toDotAscii(0);
-
-	StrangerAutomaton* intersect = forward->intersect(negsubject);
-	intersect->toDotAscii(0);
-	StrangerAutomaton* preresult = intersect->preReplace(regx,"");
-	preresult->toDotAscii(0);
+//	string x = "";
+//	StrangerAutomaton* forward = StrangerAutomaton::reg_replace(regx,"",anystring);
+//	forward->toDotAscii(0);
+//
+//	StrangerAutomaton* intersect = forward->intersect(negsubject);
+//	intersect->toDotAscii(0);
+//	StrangerAutomaton* preresult = intersect->preReplace(regx,"");
+//	preresult->toDotAscii(0);
 
 	return 0;
 }

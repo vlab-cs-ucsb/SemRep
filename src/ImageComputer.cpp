@@ -294,6 +294,7 @@ StrangerAutomaton* ImageComputer::makeBackwardAutoForOpChild_ValidationPhase(Dep
 		StrangerAutomaton* forward = sigmaStar->trimSpaces(opNode->getID());
 		StrangerAutomaton* intersection = opAuto->intersect(forward, childNode->getID());
 		retMe = intersection->preTrimSpaces(childNode->getID());
+
 		delete sigmaStar;
 		delete forward;
 		delete intersection;
@@ -408,17 +409,8 @@ StrangerAutomaton* ImageComputer::makeBackwardAutoForOpChild_ValidationPhase(Dep
 			string replaceStr = replaceLit->getLiteralValue();
 
 			StrangerAutomaton* sigmaStar = StrangerAutomaton::makeAnyString(subjectAuto->getID());
-			cout << "sigmastart" << endl;
-			sigmaStar->toDotAscii(0);
-					cout << endl << "regx" << endl;
-								regx->toDotAscii(0);
-								cout << endl << "replace string " << "'" << replaceStr << "'" << endl;
 			StrangerAutomaton* forward = StrangerAutomaton::reg_replace(regx, replaceStr, sigmaStar, subjectAuto->getID());
 			StrangerAutomaton* intersection = subjectAuto->intersect(forward, childNode->getID());
-
-			cout << "intersection" << endl;
-			intersection->toDotAscii(0);
-
 			retMe = intersection->preReplace(regx, replaceStr, childNode->getID());
 			delete sigmaStar;
 			delete forward;

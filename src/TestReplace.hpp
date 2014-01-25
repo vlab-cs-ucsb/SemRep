@@ -134,10 +134,12 @@ StrangerAutomaton *preHtmlSpecialCharsWithReplace(StrangerAutomaton *a){
 
 StrangerAutomaton *trimWithReplace(StrangerAutomaton *a1){
     StrangerAutomaton *sp = StrangerAutomaton::makeString(" ");
-
-    StrangerAutomaton *a2 = StrangerAutomaton::str_replace(sp, "", a1);
-
+    StrangerAutomaton *replaceAuto = StrangerAutomaton::regExToAuto("/ ?/");
+    StrangerAutomaton *a2 = StrangerAutomaton::general_replace(sp, replaceAuto, a1,1);
+//    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl;
+//    replaceAuto->toDotAscii(0);
     delete sp;
+    delete replaceAuto;
 
     return a2;
 }
@@ -157,9 +159,10 @@ void replaceVsAddslashes(){
     string path = "/home/abaki/RA/PLDI/PLDI14/experiments/replacePerformance/";
 
     StrangerAutomaton *regexp = StrangerAutomaton::regExToAuto("/[A-Za-z0-9\\-\\.\\+]+ @[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z0-9 ]{2,4}/");
-    string timeFile = stringbuilder() << path << "addSlashes_time.csv";
-    string memFile = stringbuilder() << path << "addSlashes_memory.csv";
-
+    string timeFile = stringbuilder() << path << "addSlashes_time_new.csv";
+    string memFile = stringbuilder() << path << "addSlashes_memory_new.csv";
+//    string timeFile = stringbuilder() << path << "addSlashes_time_with_repalce.csv";
+//    string memFile = stringbuilder() << path << "addSlashes_memory_with_replace.csv";
     std::ofstream timeS;
     std::ofstream memS;
     boost::posix_time::ptime start_time = perfInfo->current_time();
@@ -168,7 +171,7 @@ void replaceVsAddslashes(){
         memS.open(memFile, std::ofstream::out);
         timeS << "length,addSlashes,addSlashesWithReplace" << endl;
         memS << "length,addSlashesSTATES,addSlashesBDDNODES,addSlashesWithReplaceSTATES,addSlashesWithReplaceBDDNODES" << endl;
-        for (int l = 35; l <= 35; l += 1){
+        for (int l = 1000; l <= 1000; l += 1){
             cout << "length:  " << l << "\n------------" << endl;
             timeS << l << ",";
             memS << l << ",";
@@ -186,31 +189,32 @@ void replaceVsAddslashes(){
             StrangerAutomaton *a3 = StrangerAutomaton::addslashes(a2);
             perfInfo->performance_time = perfInfo->current_time() - start_time;
             cout << "addSlashes           :  " << perfInfo->performance_time.total_microseconds() << "us" << endl;
-            timeS << perfInfo->performance_time.total_microseconds() << ",";
-            memS << a3->get_num_of_states() << "," << a3->get_num_of_bdd_nodes() << ",";
-            if (l == 10) {
-            	cout << "**********************" << endl;
-            	a3->toDotAscii(0);
-            	cout << endl;
-            }
-            delete a3;
-
-            start_time = perfInfo->current_time();
-            a3 = addSlashesWithReplace(a2);
-            perfInfo->performance_time = perfInfo->current_time() - start_time;
-            cout << "addSlashesWithReplace:  " << perfInfo->performance_time.total_microseconds() << "us" << endl;
             timeS << perfInfo->performance_time.total_microseconds() << endl;
             memS << a3->get_num_of_states() << "," << a3->get_num_of_bdd_nodes() << endl;
-//            cout << "states" << a3->get_num_of_states() << ", bddnodes: " << a3->get_num_of_bdd_nodes() << endl;
-            if (l == 10) {
-            	cout << "**********************" << endl;
-            	a3->toDotAscii(0);
-            	cout << endl;
-            }
+            cout << "states" << a3->get_num_of_states() << ", bddnodes: " << a3->get_num_of_bdd_nodes() << endl;
+//            if (l == 10) {
+//            	cout << "**********************" << endl;
+//            	a3->toDotAscii(0);
+//            	cout << endl;
+//            }
             delete a3;
+
+//            start_time = perfInfo->current_time();
+//            StrangerAutomaton *a3 = addSlashesWithReplace(a2);
+//            perfInfo->performance_time = perfInfo->current_time() - start_time;
+//            cout << "addSlashesWithReplace:  " << perfInfo->performance_time.total_microseconds() << "us" << endl;
+//            timeS << perfInfo->performance_time.total_microseconds() << endl;
+//            memS << a3->get_num_of_states() << "," << a3->get_num_of_bdd_nodes() << endl;
+//            cout << "states" << a3->get_num_of_states() << ", bddnodes: " << a3->get_num_of_bdd_nodes() << endl;
+//            if (l == 10) {
+//            	cout << "**********************" << endl;
+//            	a3->toDotAscii(0);
+//            	cout << endl;
+//            }
+//            delete a3;
             delete a2;
 
-            cout << "\n\n\n" << endl;
+            cout << "\n\n" << endl;
 
         }
         memS.close();
@@ -228,8 +232,10 @@ void replaceVsAddslashes(){
 void replaceVsHtmlSpecialChars(){
     string path = "/home/abaki/RA/PLDI/PLDI14/experiments/replacePerformance/";
     StrangerAutomaton *regexp = StrangerAutomaton::regExToAuto("/[A-Za-z0-9\\-\\.\\+]+ @[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z0-9 ]{2,4}/");
-    string timeFile = stringbuilder() << path << "htmlSpecialChars_time.csv";
-    string memFile = stringbuilder() << path << "htmlSpecialChars_memory.csv";
+    string timeFile = stringbuilder() << path << "htmlSpecialChars_time_new_2.csv";
+    string memFile = stringbuilder() << path << "htmlSpecialChars_memory_new_2.csv";
+//    string timeFile = stringbuilder() << path << "htmlSpecialChars_time_with_replace.csv";
+//    string memFile = stringbuilder() << path << "htmlSpecialChars_memory_with_replace.csv";
     std::ofstream timeS;
     std::ofstream memS;
 
@@ -239,7 +245,7 @@ void replaceVsHtmlSpecialChars(){
         memS.open(memFile, std::ofstream::out);
         timeS << "length,htmlSpecialChars,htmlSpecialCharsWithReplace" << endl;
         memS << "length,htmlSpecialCharsSTATES,htmlSpecialCharsBDDNODES,htmlSpecialCharsWithReplaceSTATES,htmlSpecialCharsWithReplaceBDDNODES" << endl;
-        for (int l = 5; l <= 35; l += 5){
+        for (int l = 200; l <= 200; l += 5){
             cout << "length:  " << l << "\n------------" << endl;
             timeS << l << ",";
             memS << l << ",";
@@ -254,26 +260,101 @@ void replaceVsHtmlSpecialChars(){
             StrangerAutomaton *a3 = StrangerAutomaton::htmlSpecialChars(a2, "ENT_QUOTES");
             perfInfo->performance_time = perfInfo->current_time() - start_time;
             cout << "htmlSpecialChars           :  " << perfInfo->performance_time.total_microseconds() << "us" << endl;
-            timeS << perfInfo->performance_time.total_microseconds() << ",";
-            memS << a3->get_num_of_states() << "," << a3->get_num_of_bdd_nodes() << ",";
-            if (l == 10) {
-            	cout << "**********************" << endl;
-            	a3->toDotAscii(0);
-            	cout << endl;
-            }
+            timeS << perfInfo->performance_time.total_microseconds() << "us" << endl;
+            memS << a3->get_num_of_states() << "," << a3->get_num_of_bdd_nodes() << endl;
+            cout << "states" << a3->get_num_of_states() << ", bddnodes: " << a3->get_num_of_bdd_nodes() << endl;
+//            if (l == 5) {
+//            	cout << "**********************" << endl;
+//            	a3->toDotAscii(0);
+//            	cout << endl;
+//            }
             delete a3;
 
+//            start_time = perfInfo->current_time();
+//            StrangerAutomaton *a3 = htmlSpecialCharsWithReplace(a2);
+//            perfInfo->performance_time = perfInfo->current_time() - start_time;
+//            cout << "htmlSpecialCharsWithReplace:  " << perfInfo->performance_time.total_microseconds() << "us" << endl;
+//            timeS << perfInfo->performance_time.total_microseconds() << endl;
+//            memS << a3->get_num_of_states() << "," << a3->get_num_of_bdd_nodes() << endl;
+//            cout << "states" << a3->get_num_of_states() << ", bddnodes: " << a3->get_num_of_bdd_nodes() << endl;
+//            if (l == 10) {
+//            	cout << "**********************" << endl;
+//            	a3->toDotAscii(0);
+//            	cout << endl;
+//            }
+//            delete a3;
+            delete a2;
+
+            cout << "\n\n\n" << endl;
+
+        }
+
+        memS.close();
+        timeS.close();
+
+    } catch (exception const &e) {
+        cerr << "Can not open time or memory perfrmance file " << timeFile << ",  " << memFile << ". Following exception happened:\n" << e.what();
+        if (timeS.is_open())
+        timeS.close();
+        if (memS.is_open())
+        memS.close();
+        exit(EXIT_FAILURE);
+    }
+}
+
+void replaceVsTrimSpaces(){
+    string path = "/home/abaki/RA/PLDI/PLDI14/experiments/replacePerformance/";
+    StrangerAutomaton *regexp = StrangerAutomaton::regExToAuto("/[A-Za-z0-9\\-\\.\\+]+ @[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z0-9 ]{2,4}/");
+    string timeFile = stringbuilder() << path << "trim_time_new_test.csv";
+    string memFile = stringbuilder() << path << "trim_memory_new_test.csv";
+//    string timeFile = stringbuilder() << path << "trim_time_with_replace.csv";
+//    string memFile = stringbuilder() << path << "trim_memory_with_replace.csv";
+    std::ofstream timeS;
+    std::ofstream memS;
+
+    boost::posix_time::ptime start_time = perfInfo->current_time();
+    try {
+        timeS.open(timeFile, std::ofstream::out);
+        memS.open(memFile, std::ofstream::out);
+        timeS << "length,trim,trimWithReplace" << endl;
+        memS << "length,trimSTATES,trimBDDNODES,trimWithReplaceSTATES,trimWithReplaceBDDNODES" << endl;
+        for (int l = 5; l <= 5; l += 1){
+            cout << "length:  " << l << "\n------------" << endl;
+            timeS << l << ",";
+            memS << l << ",";
+            StrangerAutomaton *a = StrangerAutomaton::makeAnyStringL1ToL2(l, l);
+//            StrangerAutomaton *a2 = a->intersect(regexp);
+            StrangerAutomaton *a2 = a->intersect(StrangerAutomaton::makeAnyString());
+            delete a;
+
+
+//
+//            start_time = perfInfo->current_time();
+//            StrangerAutomaton *a3 = a2->trimSpaces();
+//            perfInfo->performance_time = perfInfo->current_time() - start_time;
+//            cout << "trim           :  " << perfInfo->performance_time.total_microseconds() << "us" << endl;
+//            timeS << perfInfo->performance_time.total_microseconds() << "us" << endl;
+//            memS << a3->get_num_of_states() << "," << a3->get_num_of_bdd_nodes() << endl;
+//            cout << "states" << a3->get_num_of_states() << ", bddnodes: " << a3->get_num_of_bdd_nodes() << endl;
+//            if (l == 5) {
+//            	cout << "**********************" << endl;
+//            	a3->toDotAscii(0);
+//            	cout << endl;
+//            }
+//            delete a3;
+
             start_time = perfInfo->current_time();
-            a3 = htmlSpecialCharsWithReplace(a2);
+            StrangerAutomaton *a3 = trimWithReplace(a2);
             perfInfo->performance_time = perfInfo->current_time() - start_time;
-            cout << "htmlSpecialCharsWithReplace:  " << perfInfo->performance_time.total_microseconds() << "us" << endl;
+            cout << "trimWithReplace:  " << perfInfo->performance_time.total_microseconds() << "us" << endl;
             timeS << perfInfo->performance_time.total_microseconds() << endl;
             memS << a3->get_num_of_states() << "," << a3->get_num_of_bdd_nodes() << endl;
-            if (l == 10) {
-            	cout << "**********************" << endl;
-            	a3->toDotAscii(0);
-            	cout << endl;
-            }
+            cout << "states" << a3->get_num_of_states() << ", bddnodes: " << a3->get_num_of_bdd_nodes() << endl;
+//            if (l == 5) {
+//            	cout << "**********************" << endl;
+//            	a3->toDotAscii(0);
+//            	cout << endl;
+//            }
             delete a3;
             delete a2;
 

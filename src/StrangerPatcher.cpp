@@ -136,7 +136,7 @@ void StrangerPatcher::printResults() {
 	perfInfo.reset();
 }
 // TODO parameterize paths
-void StrangerPatcher::writeAutosforCodeGeneration(string patcherName, string patcheeName) {
+void StrangerPatcher::writeAutosforCodeGeneration(string field_name, string patcherName, string patcheeName) {
 	string patcher_name = patcherName.substr( patcherName.find_last_of('/') + 1,patcherName.find_last_of('.') - patcherName.find_last_of('/') - 1 );
 	string patchee_name = patcheeName.substr( patcheeName.find_last_of('/') + 1,patcheeName.find_last_of('.') - patcheeName.find_last_of('/') - 1 );
 	string type = "accept";
@@ -144,7 +144,7 @@ void StrangerPatcher::writeAutosforCodeGeneration(string patcherName, string pat
 		type = "reject";
 	}
 	if (is_validation_patch_required) {
-		string v_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << patcher_name << "_" << patchee_name <<
+		string v_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << field_name << "_" << patcher_name << "_" << patchee_name <<
 				"_VP_" << type << "_auto.dot";
 		validation_patch_auto->toDotFile(v_patch_auto_path);
 		message(stringbuilder() << "Validation Patch auto is written... : " << v_patch_auto_path);
@@ -158,8 +158,8 @@ void StrangerPatcher::writeAutosforCodeGeneration(string patcherName, string pat
 	if (is_sanitization_patch_required) {
 		string path = "/home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/";
 
-		string ref_auto_name = path + "references/" + patcher_name + "_" + patchee_name + "_auto.dot";
-		string patch_auto_name = path + "patches/" + patcher_name + "_" + patchee_name + "_auto.dot";
+		string ref_auto_name = path + "references/" + field_name + "_" + patcher_name + "_" + patchee_name + "_auto.dot";
+		string patch_auto_name = path + "patches/" + field_name + "_" + patcher_name + "_" + patchee_name + "_auto.dot";
 		patcher_sink_auto->toDotFile(ref_auto_name);
 		sanitization_patch_auto->toDotFile(patch_auto_name);
 		message(stringbuilder() << "Sanitization Patch autos are written for mincut... : " << "ref auto: " << ref_auto_name << ", patch auto: " << patch_auto_name);

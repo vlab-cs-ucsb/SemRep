@@ -51,7 +51,7 @@ public:
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
 
 	void printResults();
-	void writeAutosforCodeGeneration(string referenceName, string patchName);
+	void writeAutosforCodeGeneration(string field_name, string referenceName, string patchName);
 
 	bool is_validation_patch_required = false;
 	bool is_length_patch_required = false;
