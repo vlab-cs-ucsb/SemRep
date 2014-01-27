@@ -554,4 +554,19 @@ StrangerAutomaton* StrangerPatcher::computeSanitizationPatch() {
 	return sanitization_patch_auto;
 }
 
+//StrangerAutomaton* StrangerPatcher::testVulnerabilitySignature(){
+//
+//	validation_patch_auto = StrangerAutomaton::makeAnyString();
+//	AnalysisResult patcheeAnalysisResult = computePatcheeFWAnalysis();
+//	StrangerAutomaton* sinkAuto = patcheeAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
+//	StrangerAutomaton* attackPattern = StrangerAutomaton::regExToAuto("/.*<script.*>.*/");
+//	StrangerAutomaton* intersection = sinkAuto->intersect(attackPattern);
+//	StrangerAutomaton* signature = computePatcheeSanitizationPatch(intersection, patcheeAnalysisResult);
+//
+//	cout << "********************************** signature **********************************" << endl;
+//	signature->toDotAscii(0);
+//	cout << endl << endl;
+//	return signature;
+//
+//}
 
