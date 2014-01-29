@@ -87,6 +87,12 @@ void generate_repairs_for_ss_cc_pairs(vector<string>& targets, vector<string>& f
 
 int main(int argc, char *argv[]) {
 
+	string patcher_name = "/home/abaki/workspace/StrangerWrapper/test/test1.dot";
+	string patchee_name = "/home/abaki/workspace/StrangerWrapper/test/test1.dot";
+	string field_name = "username";
+	StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
+	strangerPatcher.testNewFunctions();
+
 
 	return 0;
 }

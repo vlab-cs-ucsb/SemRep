@@ -17,6 +17,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <stack>
 
 
 
@@ -26,6 +27,7 @@ public:
 	ImageComputer();
 	virtual ~ImageComputer();
     static void staticInit();
+
 
     /****************************************************************************************************/
     /********* VALIDATION PATCH EXTRACTION PHASE METHODS ************************************************/
@@ -104,19 +106,24 @@ public:
                                                   AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint);
 
     static PerfInfo* perfInfo;
-    
+    void calculateNodeAutomaton(DepGraph& origDepGraph, AnalysisResult& analysisResult, DepGraphNode* node);
+    void doPostImageComputation(DepGraph& origDepGraph, AnalysisResult& analysisResult, DepGraphNode* node);
 private:
     static int numOfProcessedNodes;
     static bool initialized;
     static int debugLevel;
     static int autoDebugLevel;
+    static StrangerAutomaton* uninit_node_default_initialization;
     NodesList f_unmodeled;
-    
-    static void debug(std::string s, int dlevel);
-    static void debugAuto(StrangerAutomaton* dfa, int dlevel, int printlevel);
-    static void debugMemoryUsage(int dlevel);
     std::string getLiteralValue(DepGraphNode* node);
     bool isLiteral(DepGraphNode* node, NodesList successors);
+
+    /**
+     * If a successor does not have a corresponding automaton yet, calculate it doing a
+     * post order tree-traversal starting from that node
+     *
+     */
+//    void calculateNodeAutomaton(DepGraph& origDepGraph, AnalysisResult& AnalysisResult, DepGraphNode* node);
 };
 
 #endif /* FORWARDIMAGECOMPUTER_H_ */

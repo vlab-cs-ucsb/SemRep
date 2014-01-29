@@ -29,6 +29,8 @@ bool ImageComputer::initialized = false;
 int ImageComputer::autoDebugLevel = 1;
 int ImageComputer::debugLevel = 1;
 
+StrangerAutomaton* ImageComputer::uninit_node_default_initialization = StrangerAutomaton::makeBottom();
+
 PerfInfo* ImageComputer::perfInfo;
 //static
 void ImageComputer::staticInit() {
@@ -37,30 +39,7 @@ void ImageComputer::staticInit() {
     StrangerAutomaton::staticInit();
 }
 
-//static
-void ImageComputer::debug(string s, int dlevel) {
-    if (debugLevel >= dlevel) {
-        cout << s;
-    }
-}
 
-void ImageComputer::debugAuto(StrangerAutomaton* dfa, int dlevel, int printlevel){
-    if (autoDebugLevel >= dlevel) {
-        if (autoDebugLevel >= dlevel) {
-            debug("", 0);
-            dfa->printAutomatonVitals();
-            debug("", 0);
-        }
-        debug("", 0);
-        dfa->toDot();
-        debug("", 0);
-    }
-}
-
-void ImageComputer::debugMemoryUsage(int dlevel){
-//    if (debugLevel >= dlevel)
-//        PerfInfo::printMemoryUsage();
-}
 
 /*******************************************************************************************************************************/
 /********* VALIDATION PATCH EXTRACTION PHASE METHODS ***************************************************************************/
@@ -122,7 +101,6 @@ AnalysisResult ImageComputer::doBackwardAnalysis_ValidationPhase(DepGraph& origD
 void ImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph,
                                AnalysisResult& bwAnalysisResult, DepGraphNode* node) {
 
-	debug(stringbuilder() << "doInitialBackwardNodeComputaion for node: " << node->getID(), 2);
 	NodesList predecessors = origDepGraph.getPredecessors(node);
 	NodesList successors = origDepGraph.getSuccessors(node);
 	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
@@ -177,7 +155,6 @@ void ImageComputer::doBackwardNodeComputation_ValidationPhase(DepGraph& origDepG
 	}
 
 	bwAnalysisResult[node->getID()] = newAuto;
-	debug("--------------------------", 2);
 
 }
 
@@ -1022,7 +999,6 @@ void ImageComputer::doBackwardNodeComputation_RegularPhase(
 		DepGraph& origDepGraph, DepGraph& inputDepGraph, DepGraphNode* node,
 		AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult) {
 
-	debug(stringbuilder() << "doRegularBackwardNodeComputaion for node: " << node->getID(), 2);
 	NodesList predecessors = origDepGraph.getPredecessors(node);
 	NodesList successors = origDepGraph.getSuccessors(node);
 	DepGraphNormalNode* normalNode = NULL;
@@ -1087,7 +1063,6 @@ void ImageComputer::doBackwardNodeComputation_RegularPhase(
 	}
 
 	bwAnalysisResult[node->getID()] = newAuto;
-	debug("--------------------------", 2);
 }
 
 /**
@@ -1463,7 +1438,6 @@ AnalysisResult ImageComputer::computeBwImage(DepGraph& origDepGraph, DepGraph& a
 		 cout << "\nBackward analysis automaton result for input node ==> " << dotName << "  ID=" << inputNode->getID() << " :" << endl;
 		 cout << "----------------------------" << endl;
 		 //backwardDeco.get(node).printAutomaton();
-		 debugAuto(bwAnalysisResult[inputNode->getID()], 0, autoDebugLevel);
 		 //outputDotAuto(backwardDeco.get(node));
 		 //backwardDeco.get(node).printAutomatonVitals();
 		 cout << "----------------------------" << endl;
@@ -2160,7 +2134,6 @@ void ImageComputer::doNodeComputation(
 	// always use nodes from original dep graph as current dep graph
 	// does not have the nodes inside scc so successors would always
 	// be null for these nodes.
-	debug(stringbuilder() << "doNodeComputaion for node: "  << node->getID(), 2);
 
 	numOfProcessedNodes++;
 
@@ -2326,7 +2299,6 @@ void ImageComputer::doNodeComputation(
 //					deco.remove(successor);
 //			}
 
-		debug("--------------------------",2 );
 }
 
 //	// ********************************************************************************
@@ -2800,7 +2772,6 @@ void ImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph&
 		// always use nodes from original dep graph as current dep graph
 		// does not have the nodes inside scc so predecessors would always
 		// be null for these nodes.
-		debug(stringbuilder() << "doNodeComputaion for node: " << node->getID(), 2);
 		NodesList predecessos = origDepGraph.getPredecessors(node);
 		NodesList successors = origDepGraph.getSuccessors(node);
 		StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
@@ -2892,7 +2863,6 @@ void ImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph&
 		}
 
 		bwAnalysisResult[node->getID()] = newAuto;
-		debug("--------------------------", 2);
 
 	}
 
@@ -3107,6 +3077,102 @@ bool ImageComputer::isLiteral( DepGraphNode* node, NodesList successors) {
     } else
         return false;
 }
+
+/**
+ * Calculate the automaton for the given node, using post-order dfs traversal of the Depgraph starting from given node
+ */
+void ImageComputer::calculateNodeAutomaton(DepGraph& origDepGraph, AnalysisResult& analysisResult, DepGraphNode* node) {
+
+	stack<DepGraphNode*> order_stack;
+	stack<DepGraphNode*> process_stack;
+
+	order_stack.push(node);
+	while ( !order_stack.empty() ) {
+		DepGraphNode *curr = order_stack.top();
+		process_stack.push(curr);
+		order_stack.pop();
+		// if I don't have the result in the analysis results, also check my children
+		if (analysisResult.find(curr->getID()) == analysisResult.end()) {
+			NodesList successors = origDepGraph.getSuccessors(curr);
+			for (NodesListConstIterator it = successors.begin(); it != successors.end(); it++) {
+				order_stack.push(*it);
+			}
+		}
+	}
+
+	cout << "****************** printing post order traversal of the graph ***************" << endl;
+	// now do the operations
+	while ( !process_stack.empty() ) {
+		DepGraphNode *curr = process_stack.top();
+		cout << curr->getID() << " ";
+
+		doPostImageComputation(origDepGraph, analysisResult, curr);
+
+		process_stack.pop();
+	}
+
+	cout << endl << "............................................" << endl << endl;
+}
+
+void ImageComputer::doPostImageComputation(DepGraph& origDepGraph, AnalysisResult& analysisResult, DepGraphNode* node) {
+
+	NodesList successors = origDepGraph.getSuccessors(node);
+
+	StrangerAutomaton* newAuto = NULL;
+	DepGraphNormalNode* normalnode;
+	DepGraphOpNode* opNode;
+	DepGraphUninitNode* uninitNode;
+	if ((normalnode = dynamic_cast<DepGraphNormalNode*>(node)) != NULL) {
+		if (successors.empty()) {
+			TacPlace* place = normalnode->getPlace();
+			Literal* lit = dynamic_cast<Literal*>(place);
+			string value = "";
+			if (lit != NULL) {
+				value = lit->getLiteralValue();
+			}
+			else {
+				Constant* cons = dynamic_cast<Constant*>(place);
+				if (cons != NULL) {
+					value = cons->toString();
+				}
+				else {
+					throw StrangerStringAnalysisException(stringbuilder() << "Unhandled node type, node id: " << node->getID());
+				}
+			}
+			newAuto = StrangerAutomaton::makeString(value, node->getID());
+		} else {
+			// an interior node, union of all its successors
+			for (NodesListIterator it = successors.begin(); it != successors.end(); it++) {
+				DepGraphNode* succNode = *it;
+				if (succNode->getID() == node->getID() ) {
+					// avoid simple loops
+					continue;
+				}
+				StrangerAutomaton *succAuto = analysisResult[succNode->getID()];
+				if (newAuto == NULL) {
+					newAuto = succAuto->clone(node->getID());
+				} else {
+					StrangerAutomaton* temp = newAuto;
+					newAuto = newAuto->union_(succAuto, node->getID());
+					delete temp;
+				}
+			}
+		}
+	} else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != NULL) {
+		// TODO: replace this function with new version
+		newAuto = makeForwardAutoForOp_RegularPhase(origDepGraph, opNode, analysisResult);
+	} else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != NULL) {
+		newAuto = ImageComputer::uninit_node_default_initialization->clone(node->getID());
+	} else {
+		throw StrangerStringAnalysisException(stringbuilder() << "Cannot figure out node type!, node id: " << node->getID());
+	}
+
+	if (newAuto == NULL) {
+		throw StrangerStringAnalysisException(stringbuilder() << "Forward automaton cannot be computed!, node id: " << node->getID());
+	}
+	analysisResult[node->getID()] = newAuto;
+}
+
 //	// ********************************************************************************
 //
 //	private void doBackwardFixPointComputationForSCC(DepGraph inputDepGraph,

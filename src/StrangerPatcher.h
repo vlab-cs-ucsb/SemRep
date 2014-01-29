@@ -50,7 +50,8 @@ public:
 	StrangerAutomaton* getLengthPatchAuto() { return length_patch_auto; }
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
 
-//	sStrangerAutomaton* testVulnerabilitySignature();
+//	StrangerAutomaton* testVulnerabilitySignature();
+	void testNewFunctions();
 
 	void printResults();
 	void writeAutosforCodeGeneration(string field_name, string referenceName, string patchName);

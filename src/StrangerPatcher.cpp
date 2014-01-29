@@ -570,3 +570,11 @@ StrangerAutomaton* StrangerPatcher::computeSanitizationPatch() {
 //
 //}
 
+void StrangerPatcher::testNewFunctions() {
+	AnalysisResult testAnalysisResult;
+	ImageComputer testImageComputer;
+
+	testImageComputer.calculateNodeAutomaton(patcher_dep_graph, testAnalysisResult, patcher_dep_graph.getRoot());
+
+}
+
