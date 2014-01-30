@@ -29,7 +29,7 @@ bool ImageComputer::initialized = false;
 int ImageComputer::autoDebugLevel = 1;
 int ImageComputer::debugLevel = 1;
 
-StrangerAutomaton* ImageComputer::uninit_node_default_initialization = StrangerAutomaton::makeBottom();
+StrangerAutomaton* ImageComputer::uninit_node_default_initialization = NULL;
 
 PerfInfo* ImageComputer::perfInfo;
 //static
@@ -3081,42 +3081,40 @@ bool ImageComputer::isLiteral( DepGraphNode* node, NodesList successors) {
 /**
  * Calculate the automaton for the given node, using post-order dfs traversal of the Depgraph starting from given node
  */
-void ImageComputer::calculateNodeAutomaton(DepGraph& origDepGraph, AnalysisResult& analysisResult, DepGraphNode* node) {
+void ImageComputer::calculateNodeAutomaton(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphNode* node) {
 
-	stack<DepGraphNode*> order_stack;
+	uninit_node_default_initialization = StrangerAutomaton::makeBottom();
 	stack<DepGraphNode*> process_stack;
+	set<DepGraphNode*> visited;
+	pair<set<DepGraphNode*>::iterator,bool> isNotVisited;
 
-	order_stack.push(node);
-	while ( !order_stack.empty() ) {
-		DepGraphNode *curr = order_stack.top();
-		process_stack.push(curr);
-		order_stack.pop();
-		// if I don't have the result in the analysis results, also check my children
-		if (analysisResult.find(curr->getID()) == analysisResult.end()) {
-			NodesList successors = origDepGraph.getSuccessors(curr);
-			for (NodesListConstIterator it = successors.begin(); it != successors.end(); it++) {
-				order_stack.push(*it);
-			}
-		}
-	}
+	process_stack.push(node);
+	while (!process_stack.empty()) {
 
-	cout << "****************** printing post order traversal of the graph ***************" << endl;
-	// now do the operations
-	while ( !process_stack.empty() ) {
 		DepGraphNode *curr = process_stack.top();
-		cout << curr->getID() << " ";
+		isNotVisited = visited.insert(curr);
+		NodesList successors = depGraph.getSuccessors(curr);
 
-		doPostImageComputation(origDepGraph, analysisResult, curr);
+		if (!successors.empty() && isNotVisited.second) {
+			for (NodesListConstReverseIterator it = successors.rbegin(); it != successors.rend(); it++) {
+				if (analysisResult.find((*it)->getID()) == analysisResult.end()) {
+					process_stack.push(*it);
+				}
+			}
+		} else {
+//			cout << " " << curr->getID();
+//			analysisResult[curr->getID()] = StrangerAutomaton::makePhi();
+			doPostImageComputation(depGraph, analysisResult, curr);
+			process_stack.pop();
+		}
+	  }
+	  cout << endl;
 
-		process_stack.pop();
-	}
-
-	cout << endl << "............................................" << endl << endl;
 }
 
-void ImageComputer::doPostImageComputation(DepGraph& origDepGraph, AnalysisResult& analysisResult, DepGraphNode* node) {
+void ImageComputer::doPostImageComputation(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphNode* node) {
 
-	NodesList successors = origDepGraph.getSuccessors(node);
+	NodesList successors = depGraph.getSuccessors(node);
 
 	StrangerAutomaton* newAuto = NULL;
 	DepGraphNormalNode* normalnode;
@@ -3125,21 +3123,33 @@ void ImageComputer::doPostImageComputation(DepGraph& origDepGraph, AnalysisResul
 	if ((normalnode = dynamic_cast<DepGraphNormalNode*>(node)) != NULL) {
 		if (successors.empty()) {
 			TacPlace* place = normalnode->getPlace();
-			Literal* lit = dynamic_cast<Literal*>(place);
-			string value = "";
-			if (lit != NULL) {
-				value = lit->getLiteralValue();
-			}
-			else {
-				Constant* cons = dynamic_cast<Constant*>(place);
-				if (cons != NULL) {
-					value = cons->toString();
+			Literal* lit;
+			Constant*cons;
+			if ((lit = dynamic_cast<Literal*>(place)) != NULL) {
+				string value = lit->getLiteralValue();
+				// check if it is a regular expression
+				if (value.find_first_of('/') == 0 &&
+						value.find_last_of('/') == (value.length() -1) ) {
+					string regString = value.substr( 1,value.length()-2);
+					if(regString.find_first_of('^') == 0 &&
+							regString.find_last_of('$') == (regString.length() -1)){
+						regString = "/" + regString.substr( 1,regString.length()-2) + "/";
+					}
+					else {
+						regString = "/.*(" + regString + ").*/";
+					}
+					newAuto = StrangerAutomaton::regExToAuto(regString, true, node->getID());
 				}
 				else {
-					throw StrangerStringAnalysisException(stringbuilder() << "Unhandled node type, node id: " << node->getID());
+					newAuto = StrangerAutomaton::makeString(value, node->getID());
 				}
+			} else if ((cons = dynamic_cast<Constant*>(place)) != NULL) {
+				newAuto = StrangerAutomaton::makeString(cons->toString(), node->getID());
 			}
-			newAuto = StrangerAutomaton::makeString(value, node->getID());
+			else {
+				throw StrangerStringAnalysisException(stringbuilder() << "Unhandled node type, node id: " << node->getID());
+			}
+
 		} else {
 			// an interior node, union of all its successors
 			for (NodesListIterator it = successors.begin(); it != successors.end(); it++) {
@@ -3159,8 +3169,7 @@ void ImageComputer::doPostImageComputation(DepGraph& origDepGraph, AnalysisResul
 			}
 		}
 	} else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != NULL) {
-		// TODO: replace this function with new version
-		newAuto = makeForwardAutoForOp_RegularPhase(origDepGraph, opNode, analysisResult);
+		newAuto = makePostImageAutoForOp(depGraph, analysisResult, opNode);
 	} else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != NULL) {
 		newAuto = ImageComputer::uninit_node_default_initialization->clone(node->getID());
 	} else {
@@ -3172,6 +3181,212 @@ void ImageComputer::doPostImageComputation(DepGraph& origDepGraph, AnalysisResul
 	}
 	analysisResult[node->getID()] = newAuto;
 }
+
+StrangerAutomaton* ImageComputer::makePostImageAutoForOp(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphOpNode* opNode) {
+	NodesList successors = depGraph.getSuccessors(opNode);
+	StrangerAutomaton* retMe = NULL;
+	string opName = opNode->getName();
+	if (!opNode->isBuiltin()) {
+		// __vlab_restrict
+		if (opName.find("__vlab_restrict") != string::npos) {
+			boost::posix_time::ptime start_time = perfInfo->current_time();
+			if (successors.size() != 3) {
+				throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict invalid number of arguments: " << opNode->getID());
+			}
+
+			DepGraphNode* subjectNode = successors[1];
+			DepGraphNode* patternNode = successors[0];
+			DepGraphNode* complementNode = successors[2];
+
+			StrangerAutomaton* subjectAuto = analysisResult[subjectNode->getID()];
+			StrangerAutomaton* patternAuto = analysisResult[patternNode->getID()];
+			string complementString = analysisResult[complementNode->getID()]->getStr();
+
+			if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
+				retMe = subjectAuto->intersect(patternAuto, opNode->getID());
+			} else {
+				StrangerAutomaton* complementAuto = patternAuto->complement(patternNode->getID());
+				retMe = subjectAuto->intersect(complementAuto, opNode->getID());
+				delete complementAuto;
+			}
+			perfInfo->vlab_restrict_total_time += perfInfo->current_time() - start_time;
+			perfInfo->number_of_vlab_restrict++;
+
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "function " << opName << " is not __vlab_restrict.");
+		}
+	} else if (opName == ".") {
+		for (NodesListIterator it = successors.begin(); it != successors.end(); it++){
+			DepGraphNode* succNode = *it;
+			StrangerAutomaton* succAuto = analysisResult[succNode->getID()];
+			if (retMe == NULL) {
+				retMe = succAuto->clone(opNode->getID());
+			} else {
+				StrangerAutomaton* temp = retMe;
+				retMe = retMe->concatenate(succAuto, opNode->getID());
+				delete temp;
+			}
+
+		}
+		if (retMe == NULL) {
+			throw StrangerStringAnalysisException(stringbuilder() << "Check successors of concatenation: " << opNode->getID());
+		}
+
+	} else if (opName == "preg_replace" || opName == "str_replace") {
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "preg_replace invalid number of arguments: " << opNode->getID());
+		}
+
+		DepGraphNode* subjectNode = successors[2];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* replaceNode = successors[1];
+
+		StrangerAutomaton* subjectAuto = analysisResult[subjectNode->getID()];
+		StrangerAutomaton* patternAuto = analysisResult[patternNode->getID()];
+		StrangerAutomaton* replaceAuto = analysisResult[replaceNode->getID()];
+
+		retMe = StrangerAutomaton::general_replace(patternAuto,replaceAuto,subjectAuto, opNode->getID());
+
+	} else if (opName == "ereg_replace") {
+		// not complete
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "ereg_replace invalid number of arguments: " << opNode->getID());
+		}
+
+		DepGraphNode* subjectNode = successors[2];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* replaceNode = successors[1];
+
+		StrangerAutomaton* subjectAuto = analysisResult[subjectNode->getID()];
+		StrangerAutomaton* patternAuto = analysisResult[patternNode->getID()];
+		StrangerAutomaton* replaceAuto = analysisResult[replaceNode->getID()];
+
+		retMe = StrangerAutomaton::general_replace(patternAuto,replaceAuto,subjectAuto, opNode->getID());
+	} else if (opName == "str_replace") {
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "str_replace invalid number of arguments: " << opNode->getID());
+		}
+
+		DepGraphNode* subjectNode = successors[2];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* replaceNode = successors[1];
+
+		StrangerAutomaton* subjectAuto = analysisResult[subjectNode->getID()];
+		StrangerAutomaton* patternAuto = analysisResult[patternNode->getID()];
+		StrangerAutomaton* replaceAuto = analysisResult[replaceNode->getID()];
+
+		retMe = StrangerAutomaton::general_replace(patternAuto,replaceAuto,subjectAuto, opNode->getID());
+
+	} else if (opName == "addslashes") {
+		if (successors.size() != 1) {
+			throw new StrangerStringAnalysisException(stringbuilder() << "addslashes should have one child: " << opNode->getID());
+		}
+
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		StrangerAutomaton* slashesAuto = StrangerAutomaton::addslashes(paramAuto, opNode->getID());
+		retMe = slashesAuto;
+
+	} else if (opName == "stripslashes") {
+		throw new StrangerStringAnalysisException(stringbuilder() << "stripslashes is not handled yet: " << opNode->getID());
+
+	} else if (opName == "mysql_escape_string") {
+		if (successors.size() < 1 || successors.size() > 2) {
+			throw new StrangerStringAnalysisException(stringbuilder() << "mysql_escape_string wrong number of arguments: " << opNode->getID());
+		}
+		//we only care about the first parameter
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		StrangerAutomaton* mysqlEscapeAuto = StrangerAutomaton::mysql_escape_string(paramAuto, opNode->getID());
+		retMe = mysqlEscapeAuto;
+
+	} else if (opName == "mysql_real_escape_string") {
+		if (successors.size() < 1 || successors.size() > 2) {
+			throw new StrangerStringAnalysisException(stringbuilder() << "mysql_real_escape_string wrong number of arguments: " << opNode->getID());
+		}
+		//we only care about the first parameter
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		StrangerAutomaton* mysqlEscapeAuto = StrangerAutomaton::mysql_real_escape_string(paramAuto, opNode->getID());
+		retMe = mysqlEscapeAuto;
+
+	} else if (opName == "htmlspecialchars") {
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		string flagString = "ENT_COMPAT";
+		if (successors.size() > 1) {
+			flagString = analysisResult[successors[1]->getID()]->getStr();
+		}
+
+		StrangerAutomaton* htmlSpecAuto = StrangerAutomaton::htmlSpecialChars(paramAuto, flagString, opNode->getID());
+		retMe = htmlSpecAuto;
+
+	} else if (opName == "nl2br"){
+		if (successors.size() < 1 || successors.size() > 2) {
+			throw new StrangerStringAnalysisException(stringbuilder() << "nl2br wrong number of arguments: " << opNode->getID());
+		}
+
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		StrangerAutomaton* nl2brAuto = StrangerAutomaton::nl2br(paramAuto, opNode->getID());
+		retMe = nl2brAuto;
+
+	}  else if (opName == "substr"){
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "SNH: substr invalid number of arguments: " << opNode->getID());
+		}
+
+		DepGraphNode* subjectNode = successors[0];
+		DepGraphNode* startNode = successors[1];
+		DepGraphNode* lengthNode = successors[2];
+
+		StrangerAutomaton* subjectAuto = analysisResult[subjectNode->getID()];
+		string startValue = analysisResult[startNode->getID()]->getStr();
+		int start = stoi(startValue);
+		string lengthValue = analysisResult[lengthNode->getID()]->getStr();
+		int length = stoi(lengthValue);
+		StrangerAutomaton* substrAuto = subjectAuto->substr(start,length,opNode->getID());
+		retMe = substrAuto;
+
+	} else if (opName == "strtoupper" || opName == "strtolower") {
+		if (successors.size() != 1) {
+			throw new StrangerStringAnalysisException(stringbuilder() << opName << " has more than one successor in depgraph" );
+		}
+
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		if (opName == "strtoupper") {
+			retMe = paramAuto->toUpperCase(opNode->getID());
+		}
+		else if (opName == "strtolower") {
+			retMe = paramAuto->toLowerCase(opNode->getID());
+		}
+
+	} else if (opName == "trim" || opName == "rtrim" || opName == "ltrim") {
+		if (successors.size() > 2) {
+			throw new StrangerStringAnalysisException(stringbuilder() << opName << " has more than one successor in depgraph" );
+		} else if (successors.size() == 2) {
+			cout << "!!! Second parameter of " << opName << " ignored!!!. If it is not whitespace, modify implementation to handle that situation" << endl;
+		}
+
+		StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
+		if (opName == "trim")
+			retMe = paramAuto->trimSpaces(opNode->getID());
+		else if (opName == "rtrim") {
+			retMe = paramAuto->trimSpacesRight(opNode->getID());
+		}
+		else if (opName == "ltrim") {
+			retMe = paramAuto->trimSpacesLeft(opNode->getID());
+		}
+
+	} else if (opName == "md5") {
+		//conservative desicion
+		retMe = StrangerAutomaton::regExToAuto("/[aAbBcCdDeEfF0-9]{32,32}/",true, opNode->getID());
+	} else {
+		cout << "!!! Warning: Unmodeled builtin general function : " << opName << endl;
+		f_unmodeled.push_back(opNode);
+
+		 //conservative decision for operations that have not been
+		 //modeled yet: .*
+		retMe = StrangerAutomaton::makeAnyString(opNode->getID());
+	}
+	return retMe;
+}
+
 
 //	// ********************************************************************************
 //

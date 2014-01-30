@@ -18,6 +18,7 @@
 #include <map>
 #include <vector>
 #include <stack>
+#include <set>
 
 
 
@@ -106,8 +107,9 @@ public:
                                                   AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint);
 
     static PerfInfo* perfInfo;
-    void calculateNodeAutomaton(DepGraph& origDepGraph, AnalysisResult& analysisResult, DepGraphNode* node);
-    void doPostImageComputation(DepGraph& origDepGraph, AnalysisResult& analysisResult, DepGraphNode* node);
+    void calculateNodeAutomaton(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphNode* node);
+    void doPostImageComputation(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphNode* node);
+    StrangerAutomaton* makePostImageAutoForOp(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphOpNode* opNode);
 private:
     static int numOfProcessedNodes;
     static bool initialized;
