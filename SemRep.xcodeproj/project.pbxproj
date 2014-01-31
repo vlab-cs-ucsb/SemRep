@@ -20,7 +20,6 @@
 		7770E195189AF01900BA46EB /* StrangerAutomatonException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7770E17B189AF01900BA46EB /* StrangerAutomatonException.cpp */; };
 		7770E196189AF01900BA46EB /* StrangerDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7770E17D189AF01900BA46EB /* StrangerDebugger.cpp */; };
 		7770E197189AF01900BA46EB /* StrangerPatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7770E17F189AF01900BA46EB /* StrangerPatcher.cpp */; };
-		7770E198189AF01900BA46EB /* StrangerWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7770E182189AF01900BA46EB /* StrangerWrapper.cpp */; };
 		7770E199189AF01900BA46EB /* StringAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7770E184189AF01900BA46EB /* StringAnalyzer.cpp */; };
 		7770E19A189AF01900BA46EB /* UnsupportedRegexException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7770E188189AF01900BA46EB /* UnsupportedRegexException.cpp */; };
 		7770E19E189AF93200BA46EB /* libstrangerlib.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7770E19D189AF93200BA46EB /* libstrangerlib.dylib */; };
@@ -29,6 +28,8 @@
 		7770E1A4189AF96400BA46EB /* libmonamem.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7770E1A1189AF96400BA46EB /* libmonamem.1.dylib */; };
 		7770E1A7189AFAC700BA46EB /* libboost_date_time-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7770E1A5189AFAC700BA46EB /* libboost_date_time-mt.dylib */; };
 		7770E1A8189AFAC700BA46EB /* libboost_regex-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7770E1A6189AFAC700BA46EB /* libboost_regex-mt.dylib */; };
+		7770E1AE189B457300BA46EB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7770E1AC189B457300BA46EB /* main.cpp */; };
+		7770E1B0189B4E1300BA46EB /* libboost_program_options-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7770E1AF189B4E1300BA46EB /* libboost_program_options-mt.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -73,7 +74,6 @@
 		7770E17F189AF01900BA46EB /* StrangerPatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrangerPatcher.cpp; sourceTree = "<group>"; };
 		7770E180189AF01900BA46EB /* StrangerPatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrangerPatcher.h; sourceTree = "<group>"; };
 		7770E181189AF01900BA46EB /* StrangerStringAnalysisException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrangerStringAnalysisException.h; sourceTree = "<group>"; };
-		7770E182189AF01900BA46EB /* StrangerWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrangerWrapper.cpp; sourceTree = "<group>"; };
 		7770E183189AF01900BA46EB /* StringAnalysisTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringAnalysisTypes.h; sourceTree = "<group>"; };
 		7770E184189AF01900BA46EB /* StringAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringAnalyzer.cpp; sourceTree = "<group>"; };
 		7770E185189AF01900BA46EB /* StringAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringAnalyzer.h; sourceTree = "<group>"; };
@@ -89,6 +89,8 @@
 		7770E1A1189AF96400BA46EB /* libmonamem.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmonamem.1.dylib; path = ../../../../../usr/local/lib/libmonamem.1.dylib; sourceTree = "<group>"; };
 		7770E1A5189AFAC700BA46EB /* libboost_date_time-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_date_time-mt.dylib"; path = "../../../../../usr/local/Cellar/boost/1.53.0/lib/libboost_date_time-mt.dylib"; sourceTree = "<group>"; };
 		7770E1A6189AFAC700BA46EB /* libboost_regex-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_regex-mt.dylib"; path = "../../../../../usr/local/Cellar/boost/1.53.0/lib/libboost_regex-mt.dylib"; sourceTree = "<group>"; };
+		7770E1AC189B457300BA46EB /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		7770E1AF189B4E1300BA46EB /* libboost_program_options-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_program_options-mt.dylib"; path = "../../../../../usr/local/Cellar/boost/1.53.0/lib/libboost_program_options-mt.dylib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7770E1B0189B4E1300BA46EB /* libboost_program_options-mt.dylib in Frameworks */,
 				7770E1A7189AFAC700BA46EB /* libboost_date_time-mt.dylib in Frameworks */,
 				7770E1A8189AFAC700BA46EB /* libboost_regex-mt.dylib in Frameworks */,
 				7770E1A2189AF96400BA46EB /* libmonabdd.1.dylib in Frameworks */,
@@ -111,6 +114,7 @@
 		7770E14F189AEF1600BA46EB = {
 			isa = PBXGroup;
 			children = (
+				7770E1AF189B4E1300BA46EB /* libboost_program_options-mt.dylib */,
 				7770E1A5189AFAC700BA46EB /* libboost_date_time-mt.dylib */,
 				7770E1A6189AFAC700BA46EB /* libboost_regex-mt.dylib */,
 				7770E19F189AF96400BA46EB /* libmonabdd.1.dylib */,
@@ -132,7 +136,7 @@
 				7770E17E189AF01900BA46EB /* StrangerDebugger.hpp */,
 				7770E17F189AF01900BA46EB /* StrangerPatcher.cpp */,
 				7770E180189AF01900BA46EB /* StrangerPatcher.h */,
-				7770E182189AF01900BA46EB /* StrangerWrapper.cpp */,
+				7770E1AC189B457300BA46EB /* main.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -244,9 +248,9 @@
 			files = (
 				7770E18C189AF01900BA46EB /* DepGraphNode.cpp in Sources */,
 				7770E19A189AF01900BA46EB /* UnsupportedRegexException.cpp in Sources */,
-				7770E198189AF01900BA46EB /* StrangerWrapper.cpp in Sources */,
 				7770E190189AF01900BA46EB /* DepGraphUninitNode.cpp in Sources */,
 				7770E18B189AF01900BA46EB /* DepGraph.cpp in Sources */,
+				7770E1AE189B457300BA46EB /* main.cpp in Sources */,
 				7770E18D189AF01900BA46EB /* DepGraphNormalNode.cpp in Sources */,
 				7770E196189AF01900BA46EB /* StrangerDebugger.cpp in Sources */,
 				7770E197189AF01900BA46EB /* StrangerPatcher.cpp in Sources */,
