@@ -125,6 +125,22 @@
 		7770E164189AF01900BA46EB /* src */ = {
 			isa = PBXGroup;
 			children = (
+				7770E1A9189AFC9100BA46EB /* DepGraph */,
+				7770E1AB189AFD6A00BA46EB /* ImageComputation */,
+				7770E1AA189AFCE900BA46EB /* StrangerAutomaton */,
+				7770E17D189AF01900BA46EB /* StrangerDebugger.cpp */,
+				7770E17E189AF01900BA46EB /* StrangerDebugger.hpp */,
+				7770E17F189AF01900BA46EB /* StrangerPatcher.cpp */,
+				7770E180189AF01900BA46EB /* StrangerPatcher.h */,
+				7770E182189AF01900BA46EB /* StrangerWrapper.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		7770E1A9189AFC9100BA46EB /* DepGraph */ = {
+			isa = PBXGroup;
+			children = (
+				7770E174189AF01900BA46EB /* Literal.h */,
 				7770E165189AF01900BA46EB /* Constant.h */,
 				7770E166189AF01900BA46EB /* DepGraph.cpp */,
 				7770E167189AF01900BA46EB /* DepGraph.h */,
@@ -138,9 +154,16 @@
 				7770E16F189AF01900BA46EB /* DepGraphSccNode.h */,
 				7770E170189AF01900BA46EB /* DepGraphUninitNode.cpp */,
 				7770E171189AF01900BA46EB /* DepGraphUninitNode.h */,
-				7770E172189AF01900BA46EB /* ImageComputer.cpp */,
-				7770E173189AF01900BA46EB /* ImageComputer.h */,
-				7770E174189AF01900BA46EB /* Literal.h */,
+				7770E187189AF01900BA46EB /* TacPlace.h */,
+				7770E18A189AF01900BA46EB /* Variable.h */,
+			);
+			name = DepGraph;
+			sourceTree = "<group>";
+		};
+		7770E1AA189AFCE900BA46EB /* StrangerAutomaton */ = {
+			isa = PBXGroup;
+			children = (
+				7770E186189AF01900BA46EB /* StringBuilder.h */,
 				7770E175189AF01900BA46EB /* PerfInfo.cpp */,
 				7770E176189AF01900BA46EB /* PerfInfo.h */,
 				7770E177189AF01900BA46EB /* RegExp.cpp */,
@@ -149,22 +172,23 @@
 				7770E17A189AF01900BA46EB /* StrangerAutomaton.hpp */,
 				7770E17B189AF01900BA46EB /* StrangerAutomatonException.cpp */,
 				7770E17C189AF01900BA46EB /* StrangerAutomatonException.hpp */,
-				7770E17D189AF01900BA46EB /* StrangerDebugger.cpp */,
-				7770E17E189AF01900BA46EB /* StrangerDebugger.hpp */,
-				7770E17F189AF01900BA46EB /* StrangerPatcher.cpp */,
-				7770E180189AF01900BA46EB /* StrangerPatcher.h */,
+				7770E188189AF01900BA46EB /* UnsupportedRegexException.cpp */,
+				7770E189189AF01900BA46EB /* UnsupportedRegexException.hpp */,
+			);
+			name = StrangerAutomaton;
+			sourceTree = "<group>";
+		};
+		7770E1AB189AFD6A00BA46EB /* ImageComputation */ = {
+			isa = PBXGroup;
+			children = (
+				7770E172189AF01900BA46EB /* ImageComputer.cpp */,
+				7770E173189AF01900BA46EB /* ImageComputer.h */,
 				7770E181189AF01900BA46EB /* StrangerStringAnalysisException.h */,
-				7770E182189AF01900BA46EB /* StrangerWrapper.cpp */,
 				7770E183189AF01900BA46EB /* StringAnalysisTypes.h */,
 				7770E184189AF01900BA46EB /* StringAnalyzer.cpp */,
 				7770E185189AF01900BA46EB /* StringAnalyzer.h */,
-				7770E186189AF01900BA46EB /* StringBuilder.h */,
-				7770E187189AF01900BA46EB /* TacPlace.h */,
-				7770E188189AF01900BA46EB /* UnsupportedRegexException.cpp */,
-				7770E189189AF01900BA46EB /* UnsupportedRegexException.hpp */,
-				7770E18A189AF01900BA46EB /* Variable.h */,
 			);
-			path = src;
+			name = ImageComputation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
