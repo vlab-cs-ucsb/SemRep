@@ -19,6 +19,7 @@
 #include <vector>
 #include <stack>
 #include <set>
+#include <queue>
 
 
 
@@ -45,28 +46,34 @@ public:
 
 
     /****************************************************************************************************/
-    /*********** REGULAR FORWARD IMAGE COMPUTATION METHODS **********************************************/
+    /*********** SINGLE INPUT FORWARD IMAGE COMPUTATION METHODS **********************************************/
     /****************************************************************************************************/
 
-    void doForwardAnalysis_RegularPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, NodesList& sortedNodes, AnalysisResult& analysisResult);
-
-    void doForwardNodeComputation_RegularPhase(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
-
-    StrangerAutomaton* makeForwardAutoForOp_RegularPhase(DepGraph& depGraph, DepGraphOpNode* opNode, AnalysisResult& analysisResult);
+    void doForwardAnalysis_SingleInput(DepGraph& origDepGraph,  DepGraphUninitNode* inputNode, AnalysisResult& analysisResult);
+    void doForwardAnalysis_SingleInput(DepGraph& origDepGraph,  DepGraph& inputDepGraph, AnalysisResult& analysisResult);
+    void doPostImageComputation_SingleInput(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
 
 
     /****************************************************************************************************/
     /*********** REGULAR BACKWARD IMAGE COMPUTATION METHODS *********************************************/
     /****************************************************************************************************/
 
-    AnalysisResult doBackwardAnalysis_RegularPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, NodesList& sortedNodes, StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
+    AnalysisResult doBackwardAnalysis_GeneralCase(DepGraph& origDepGraph, DepGraph& inputDepGraph, StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
 
-    void doBackwardNodeComputation_RegularPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph, DepGraphNode* node,
+    void doPreImageComputation_GeneralCase(DepGraph& origDepGraph, DepGraphNode* node,
                                        AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
 
-    StrangerAutomaton* makeBackwardAutoForOpChild_RegularPhase(DepGraph& depGraph, DepGraphOpNode* opNode,
+    StrangerAutomaton* makePreImageAutoForOpChild_GeneralCase(DepGraph& depGraph, DepGraphOpNode* opNode,
 			 DepGraphNode* childNode,AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
 
+
+    /****************************************************************************************************/
+    /*********** GENERAL METHODS ************************************************************************/
+    /****************************************************************************************************/
+
+    void doForwardAnalysis_GeneralCase(DepGraph& depGraph, DepGraphNode* node, AnalysisResult& analysisResult);
+    void doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGraphNode* node, AnalysisResult& analysisResult);
+    StrangerAutomaton* makePostImageAutoForOp_GeneralCase(DepGraph& depGraph, DepGraphOpNode* opNode, AnalysisResult& analysisResult);
 
     /****************************************************************************************************/
     /*********** OLD METHODS *********************************************/
@@ -107,9 +114,9 @@ public:
                                                   AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint);
 
     static PerfInfo* perfInfo;
-    void calculateNodeAutomaton(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphNode* node);
-    void doPostImageComputation(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphNode* node);
-    StrangerAutomaton* makePostImageAutoForOp(DepGraph& depGraph, AnalysisResult& analysisResult, DepGraphOpNode* opNode);
+
+
+
 private:
     static int numOfProcessedNodes;
     static bool initialized;
@@ -119,6 +126,7 @@ private:
     NodesList f_unmodeled;
     std::string getLiteralValue(DepGraphNode* node);
     bool isLiteral(DepGraphNode* node, NodesList successors);
+    StrangerAutomaton* getLiteralorConstantNodeAuto(DepGraphNormalNode* node);
 
     /**
      * If a successor does not have a corresponding automaton yet, calculate it doing a

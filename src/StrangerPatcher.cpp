@@ -336,7 +336,7 @@ StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
 
 	try {
 		message("starting forward analysis for patcher...");
-		patcherAnalyzer.doForwardAnalysis_RegularPhase(patcher_dep_graph,patcher_field_relevant_graph,patcher_sorted_field_relevant_nodes,patcherAnalysisResult);
+		patcherAnalyzer.doForwardAnalysis_SingleInput(patcher_dep_graph, patcher_field_relevant_graph, patcherAnalysisResult);
 		message("...finished forward analysis for patcher.");
 
 	} catch (StrangerStringAnalysisException const &e) {
@@ -376,7 +376,7 @@ AnalysisResult StrangerPatcher::computePatcheeFWAnalysis() {
 	try {
 
 		message("starting forward analysis for patchee");
-		patcheeAnalyzer.doForwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysisResult);
+		patcheeAnalyzer.doForwardAnalysis_SingleInput(patchee_dep_graph, patchee_field_relevant_graph, patcheeAnalysisResult);
 		message("...finished forward analysis for patchee.");
 
 	} catch (StrangerStringAnalysisException const &e) {
@@ -393,7 +393,7 @@ StrangerAutomaton* StrangerPatcher::computePatcheeLengthPatch(StrangerAutomaton*
 	try {
 		fwAnalysisResult[patchee_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(-5);
 		boost::posix_time::ptime start_time = perfInfo.current_time();
-		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
+		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_GeneralCase(patchee_dep_graph, patchee_field_relevant_graph, initialAuto, fwAnalysisResult);
 		perfInfo.sanitization_length_backward_time = perfInfo.current_time() - start_time;
 		StrangerAutomaton* negPatchAuto = bwResult[patchee_uninit_field_node->getID()];
 		if ( calculate_rejected_set ) {
@@ -419,7 +419,7 @@ StrangerAutomaton* StrangerPatcher::computePatcheeLengthPatch(StrangerAutomaton*
 
 StrangerAutomaton* StrangerPatcher::computePatcheeSanitizationPatch(StrangerAutomaton* initialAuto,	const AnalysisResult& fwAnalysisResult) {
 	ImageComputer patcheeAnalyzer;
-	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
+	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_GeneralCase(patchee_dep_graph, patchee_field_relevant_graph, initialAuto, fwAnalysisResult);
 	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
 	return sanitization_patch_auto;
 }
@@ -574,7 +574,9 @@ void StrangerPatcher::testNewFunctions() {
 	AnalysisResult testAnalysisResult;
 	ImageComputer testImageComputer;
 
-	testImageComputer.calculateNodeAutomaton(patcher_dep_graph, testAnalysisResult, patcher_dep_graph.getRoot());
+//	cout << this->patcher_field_relevant_graph.toDot() << endl;
+//	testImageComputer.doForwardAnalysis_GeneralCase(patcher_dep_graph, patcher_dep_graph.getRoot(), testAnalysisResult);
 
+	testImageComputer.doBackwardAnalysis_GeneralCase(patcher_dep_graph,patcher_dep_graph,StrangerAutomaton::makeAnyString(), testAnalysisResult);
 }
 
