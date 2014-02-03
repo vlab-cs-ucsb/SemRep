@@ -1,6 +1,0 @@
-
-~~~~~~~~~~~>>> StrangerPatcher says: patcher uninit node(44) found for field username.
-
-~~~~~~~~~~~>>> StrangerPatcher says: patchee uninit node(44) found for field username.
-breath first: 
- 0 1 2 7 3 8 4 5 9 59 6 10 11 50 12 51 13 49 52 14 53 15 17 54 16 18 55 19 56 57 20 58 21 22 23 24 25 26 27 28 47 48 29 30 31 32 33 34 35 36 37 46 38 39 40 45 41 42 43 44
