@@ -32,7 +32,7 @@ public:
 
 
     /****************************************************************************************************/
-    /********* VALIDATION PATCH EXTRACTION PHASE METHODS ************************************************/
+    /********* VALIDATION FUNCTION CALCULATION METHODS ************************************************/
     /****************************************************************************************************/
 
     AnalysisResult doBackwardAnalysis_ValidationCase(DepGraph& origDepGraph, DepGraph& depGraph, StrangerAutomaton* initialAuto);
@@ -108,22 +108,14 @@ public:
 
 
 private:
-    static int numOfProcessedNodes;
     static bool initialized;
-    static int debugLevel;
-    static int autoDebugLevel;
+
     static StrangerAutomaton* uninit_node_default_initialization;
     NodesList f_unmodeled;
     std::string getLiteralOrConstantValue(DepGraphNode* node);
     bool isLiteralOrConstant(DepGraphNode* node, NodesList successors);
     StrangerAutomaton* getLiteralorConstantNodeAuto(DepGraphNode* node);
 
-    /**
-     * If a successor does not have a corresponding automaton yet, calculate it doing a
-     * post order tree-traversal starting from that node
-     *
-     */
-//    void calculateNodeAutomaton(DepGraph& origDepGraph, AnalysisResult& AnalysisResult, DepGraphNode* node);
 };
 
 #endif /* FORWARDIMAGECOMPUTER_H_ */

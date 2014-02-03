@@ -20,14 +20,12 @@ ImageComputer::~ImageComputer() {
 	// TODO Auto-generated destructor stub
 }
 
-int ImageComputer::numOfProcessedNodes = 0;
 bool ImageComputer::initialized = false;
 /**
  * 1- prints the dot format for result automatons
  * 2- prints the MONA internal states for result automatons
  */
-int ImageComputer::autoDebugLevel = 1;
-int ImageComputer::debugLevel = 1;
+
 
 StrangerAutomaton* ImageComputer::uninit_node_default_initialization = NULL;
 
@@ -800,7 +798,7 @@ AnalysisResult ImageComputer::computeFwImage(
 
     AnalysisResult analysisResult;
 		// used to remove the auto from deco after processing all its parents
-		numOfProcessedNodes = 0;
+//		numOfProcessedNodes = 0;
 
 //		perfInfo->addGraphInfo(origDepGraph.getRoot()->dotName()
 //				, origDepGraph.getNumOfNodes(), origDepGraph.getNumOfEdges());
@@ -1606,7 +1604,7 @@ void ImageComputer::doNodeComputation(
 	// does not have the nodes inside scc so successors would always
 	// be null for these nodes.
 
-	numOfProcessedNodes++;
+//	numOfProcessedNodes++;
 
 	if (node->getNonprocessedParents() == -1)
 		node->setNonprocessedParents((int)origDepGraph.getPredecessors(node).size());
