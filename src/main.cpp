@@ -1,10 +1,9 @@
-//============================================================================
-// Name        : StrangerWrapper.cpp
-// Author      : Abdulbaki Aydin
-// Version     : 0.1b
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
+/*
+ * main.cpp
+ *
+ *  Created on: Feb 3, 2014
+ *      Author: baki
+ */
 
 
 
@@ -86,7 +85,15 @@ void generate_repairs_for_ss_cc_pairs(vector<string>& targets, vector<string>& f
 }
 
 int main(int argc, char *argv[]) {
+	string patcher_name = "/home/abaki/workspace/StrangerWrapper/test/test2.dot";
+	string patchee_name = "/home/abaki/workspace/StrangerWrapper/test/test2.dot";
+	string field_name = "username";
+
+	StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
+//	strangerPatcher.testNewFunctions();
 
 
 	return 0;
 }
+
+
