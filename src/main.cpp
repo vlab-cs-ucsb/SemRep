@@ -1,12 +1,9 @@
-//============================================================================
-// Name        : StrangerWrapper.cpp
-// Author      : Abdulbaki Aydin
-// Version     : 0.1b
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
-
-
+/*
+ * main.cpp
+ *
+ *  Created on: Feb 3, 2014
+ *      Author: baki
+ */
 
 #include "StrangerPatcher.h"
 
@@ -96,3 +93,4 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
+

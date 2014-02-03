@@ -17,9 +17,9 @@ CPP_SRCS += \
 ../src/StrangerAutomatonException.cpp \
 ../src/StrangerDebugger.cpp \
 ../src/StrangerPatcher.cpp \
-../src/StrangerWrapper.cpp \
 ../src/StringAnalyzer.cpp \
-../src/UnsupportedRegexException.cpp 
+../src/UnsupportedRegexException.cpp \
+../src/main.cpp 
 
 OBJS += \
 ./src/DepGraph.o \
@@ -35,9 +35,9 @@ OBJS += \
 ./src/StrangerAutomatonException.o \
 ./src/StrangerDebugger.o \
 ./src/StrangerPatcher.o \
-./src/StrangerWrapper.o \
 ./src/StringAnalyzer.o \
-./src/UnsupportedRegexException.o 
+./src/UnsupportedRegexException.o \
+./src/main.o 
 
 CPP_DEPS += \
 ./src/DepGraph.d \
@@ -53,9 +53,9 @@ CPP_DEPS += \
 ./src/StrangerAutomatonException.d \
 ./src/StrangerDebugger.d \
 ./src/StrangerPatcher.d \
-./src/StrangerWrapper.d \
 ./src/StringAnalyzer.d \
-./src/UnsupportedRegexException.d 
+./src/UnsupportedRegexException.d \
+./src/main.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
