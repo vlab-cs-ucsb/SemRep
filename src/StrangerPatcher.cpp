@@ -211,7 +211,7 @@ StrangerAutomaton* StrangerPatcher::computeValidationPatch() {
 		message("extracting validation from patcher");
 		start_time = perfInfo.current_time();
 		AnalysisResult patcher_validationExtractionResults =
-				analyzer.doBackwardAnalysis_ValidationPhase(patcher_dep_graph, patcher_field_relevant_graph, patcher_sorted_field_relevant_nodes);
+				analyzer.doBackwardAnalysis_ValidationCase(patcher_dep_graph, patcher_field_relevant_graph, StrangerAutomaton::makeBottom());
 		StrangerAutomaton* patcher_negVPatch = patcher_validationExtractionResults[patcher_uninit_field_node->getID()];
 		StrangerAutomaton* patcher_validation = patcher_negVPatch;
 		if ( !calculate_rejected_set ) {
@@ -227,7 +227,7 @@ StrangerAutomaton* StrangerPatcher::computeValidationPatch() {
 		message("extracting validation from patchee");
 		start_time = perfInfo.current_time();
 		AnalysisResult patchee_validationExtractionResults =
-				analyzer.doBackwardAnalysis_ValidationPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes);
+				analyzer.doBackwardAnalysis_ValidationCase(patchee_dep_graph, patchee_field_relevant_graph, StrangerAutomaton::makeBottom());
 		StrangerAutomaton* patchee_negVPatch = patchee_validationExtractionResults[patchee_uninit_field_node->getID()];
 		StrangerAutomaton* patchee_validation = patchee_negVPatch;
 		if ( !calculate_rejected_set ) {

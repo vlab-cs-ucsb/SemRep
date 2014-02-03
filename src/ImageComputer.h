@@ -35,13 +35,9 @@ public:
     /********* VALIDATION PATCH EXTRACTION PHASE METHODS ************************************************/
     /****************************************************************************************************/
 
-    AnalysisResult doBackwardAnalysis_ValidationPhase(DepGraph& origDepGraph,
-                                                                DepGraph& inputDepGraph,
-                                                                 NodesList& sortedNodes);
-    void doBackwardNodeComputation_ValidationPhase(DepGraph& origDepGraph, DepGraph& inputDepGraph,
-                                   AnalysisResult& bwAnalysisResult, DepGraphNode* node);
-
-    StrangerAutomaton* makeBackwardAutoForOpChild_ValidationPhase(DepGraph& depGraph, DepGraphOpNode* opNode,
+    AnalysisResult doBackwardAnalysis_ValidationCase(DepGraph& origDepGraph, DepGraph& depGraph, StrangerAutomaton* initialAuto);
+    void doPreImageComputation_ValidationCase(DepGraph& origDepGraph, DepGraphNode* node, AnalysisResult& bwAnalysisResult);
+    StrangerAutomaton* makePreImageForOpChild_ValidationCase(DepGraph& depGraph, DepGraphOpNode* opNode,
     			 DepGraphNode* childNode,AnalysisResult& bwAnalysisResult);
 
 
@@ -53,19 +49,13 @@ public:
     void doForwardAnalysis_SingleInput(DepGraph& origDepGraph,  DepGraph& inputDepGraph, AnalysisResult& analysisResult);
     void doPostImageComputation_SingleInput(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
 
-
     /****************************************************************************************************/
     /*********** REGULAR BACKWARD IMAGE COMPUTATION METHODS *********************************************/
     /****************************************************************************************************/
 
     AnalysisResult doBackwardAnalysis_GeneralCase(DepGraph& origDepGraph, DepGraph& inputDepGraph, StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
-
-    void doPreImageComputation_GeneralCase(DepGraph& origDepGraph, DepGraphNode* node,
-                                       AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
-
-    StrangerAutomaton* makePreImageAutoForOpChild_GeneralCase(DepGraph& depGraph, DepGraphOpNode* opNode,
-			 DepGraphNode* childNode,AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
-
+    void doPreImageComputation_GeneralCase(DepGraph& origDepGraph, DepGraphNode* node, AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
+    StrangerAutomaton* makePreImageForOpChild_GeneralCase(DepGraph& depGraph, DepGraphOpNode* opNode, DepGraphNode* childNode,AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
 
     /****************************************************************************************************/
     /*********** GENERAL METHODS ************************************************************************/
@@ -73,7 +63,7 @@ public:
 
     void doForwardAnalysis_GeneralCase(DepGraph& depGraph, DepGraphNode* node, AnalysisResult& analysisResult);
     void doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGraphNode* node, AnalysisResult& analysisResult);
-    StrangerAutomaton* makePostImageAutoForOp_GeneralCase(DepGraph& depGraph, DepGraphOpNode* opNode, AnalysisResult& analysisResult);
+    StrangerAutomaton* makePostImageForOp_GeneralCase(DepGraph& depGraph, DepGraphOpNode* opNode, AnalysisResult& analysisResult);
 
     /****************************************************************************************************/
     /*********** OLD METHODS *********************************************/
@@ -124,9 +114,9 @@ private:
     static int autoDebugLevel;
     static StrangerAutomaton* uninit_node_default_initialization;
     NodesList f_unmodeled;
-    std::string getLiteralValue(DepGraphNode* node);
-    bool isLiteral(DepGraphNode* node, NodesList successors);
-    StrangerAutomaton* getLiteralorConstantNodeAuto(DepGraphNormalNode* node);
+    std::string getLiteralOrConstantValue(DepGraphNode* node);
+    bool isLiteralOrConstant(DepGraphNode* node, NodesList successors);
+    StrangerAutomaton* getLiteralorConstantNodeAuto(DepGraphNode* node);
 
     /**
      * If a successor does not have a corresponding automaton yet, calculate it doing a
