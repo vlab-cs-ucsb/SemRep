@@ -575,7 +575,7 @@ void StrangerPatcher::testNewFunctions() {
 	ImageComputer testImageComputer;
 
 //	cout << this->patcher_field_relevant_graph.toDot() << endl;
-//	testImageComputer.doForwardAnalysis_GeneralCase(patcher_dep_graph, patcher_dep_graph.getRoot(), testAnalysisResult);
+	testImageComputer.doForwardAnalysis_GeneralCase(patcher_dep_graph, patcher_dep_graph.getRoot(), testAnalysisResult);
 
 	testImageComputer.doBackwardAnalysis_GeneralCase(patcher_dep_graph,patcher_dep_graph,StrangerAutomaton::makeAnyString(), testAnalysisResult);
 }
