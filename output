@@ -1,0 +1,215 @@
+
+~~~~~~~~~~~>>> StrangerPatcher says: patcher uninit node(16) found for field x.
+
+~~~~~~~~~~~>>> StrangerPatcher says: patchee uninit node(8) found for field x.
+
+~~~~~~~~~~~>>> StrangerPatcher says: BEGIN VALIDATION ANALYSIS PHASE........................................
+
+~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patcher
+
+
+	validation function found!!!
+
+~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patchee
+	there is no validation function!!!
+
+~~~~~~~~~~~>>> StrangerPatcher says: computing validation patch
+
+~~~~~~~~~~~>>> StrangerPatcher says: validation patch is generated for input: x
+
+~~~~~~~~~~~>>> StrangerPatcher says: ........................................END VALIDATION ANALYSIS PHASE
+
+~~~~~~~~~~~>>> StrangerPatcher says: BEGIN SANITIZATION ANALYSIS PHASE........................................
+
+~~~~~~~~~~~>>> StrangerPatcher says: computing patcher sink post image...
+
+~~~~~~~~~~~>>> StrangerPatcher says: initializing patcher inputs with bottom
+
+~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(16) with sigma star
+
+~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patcher...
+
+
+
+~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patcher.
+
+~~~~~~~~~~~>>> StrangerPatcher says: ...computed patcher sink post image.
+
+~~~~~~~~~~~>>> StrangerPatcher says: initializing patchee inputs with bottom
+
+~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(8) with validation patch auto
+
+~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patchee
+
+
+
+~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patchee.
+
+~~~~~~~~~~~>>> StrangerPatcher says: checking difference between patcher and patchee
+
+~~~~~~~~~~~>>> StrangerPatcher says: BEGIN LENGTH PATCH ANALYSIS PHASE........................................
+
+~~~~~~~~~~~>>> StrangerPatcher says: length constraints contribute to the difference, fixing issue...
+
+~~~~~~~~~~~>>> StrangerPatcher says: starting a backward analysis to calculate length patch...
+
+~~~~~~~~~~~>>> StrangerPatcher says: ...length patch is generated
+
+~~~~~~~~~~~>>> StrangerPatcher says: ........................................END LENGTH_PATCH ANALYSIS PHASE
+
+~~~~~~~~~~~>>> StrangerPatcher says: CONTINUE SANITIZATION ANALYSIS PHASE........................................
+
+~~~~~~~~~~~>>> StrangerPatcher says: checking difference between patcher and patchee after length restriction
+
+~~~~~~~~~~~>>> StrangerPatcher says: starting last backward analysis for sanitization patch with diff auto after length restriction...
+
+~~~~~~~~~~~>>> StrangerPatcher says: ...finished last backward analysis for sanitization patch with diff after length restriction.
+
+~~~~~~~~~~~>>> StrangerPatcher says: ........................................END SANITIZATION ANALYSIS PHASE
+	    - validation patch is generated
+	 size : states 10 : bddnodes 75
+
+----------->>> DEBUGGER says: validation patch auto:
+digraph MONA_DFA {
+ rankdir = LR;
+ center = true;
+ size = "700.5,1000.5";
+ edge [fontname = Courier];
+ node [height = .5, width = .5];
+ node [shape = doublecircle]; 0; 2; 5; 7; 9;
+ node [shape = circle]; 1; 4; 6; 8;
+ node [shape = box];
+ init [shape = plaintext, label = ""];
+ init -> 0;
+ 0 -> 1 [label=" [NUL-;], [=-253]"];
+ 0 -> 2 [label=" <"];
+ 1 -> 4 [label=" [NUL-253]"];
+ 2 -> 4 [label=" [NUL-;], [=-253]"];
+ 2 -> 5 [label=" <"];
+ 4 -> 6 [label=" [NUL-253]"];
+ 5 -> 6 [label=" [NUL-;], [=-253]"];
+ 5 -> 7 [label=" <"];
+ 6 -> 8 [label=" [NUL-253]"];
+ 7 -> 8 [label=" [NUL-;], [=-253]"];
+ 7 -> 9 [label=" <"];
+ 8 -> 9 [label=" [NUL-253]"];
+ 9 -> 9 [label=" [NUL-253]"];
+}
+	    - length patch is generated
+	 size : states 11 : bddnodes 102
+
+----------->>> DEBUGGER says: length patch auto:
+digraph MONA_DFA {
+ rankdir = LR;
+ center = true;
+ size = "700.5,1000.5";
+ edge [fontname = Courier];
+ node [height = .5, width = .5];
+ node [shape = doublecircle]; 9; 10;
+ node [shape = circle]; 0; 1; 2; 4; 5; 6; 7; 8;
+ node [shape = box];
+ init [shape = plaintext, label = ""];
+ init -> 0;
+ 0 -> 1 [label=" [NUL-!], [#-253]"];
+ 0 -> 2 [label=" \""];
+ 1 -> 4 [label=" [NUL-!], [#-253]"];
+ 1 -> 5 [label=" \""];
+ 2 -> 5 [label=" [NUL-!], [#-253]"];
+ 2 -> 6 [label=" \""];
+ 4 -> 7 [label=" [NUL-!], [#-253]"];
+ 4 -> 8 [label=" \""];
+ 5 -> 8 [label=" [NUL-!], [#-253]"];
+ 5 -> 9 [label=" \""];
+ 6 -> 9 [label=" [NUL-253]"];
+ 7 -> 10 [label=" \""];
+ 8 -> 10 [label=" [NUL-253]"];
+ 9 -> 10 [label=" [NUL-253]"];
+}
+	    - sanitization patch is generated :
+	 size : states 11 : bddnodes 133
+
+----------->>> DEBUGGER says: sanitization patch auto:
+digraph MONA_DFA {
+ rankdir = LR;
+ center = true;
+ size = "700.5,1000.5";
+ edge [fontname = Courier];
+ node [height = .5, width = .5];
+ node [shape = doublecircle]; 6; 7; 9;
+ node [shape = circle]; 0; 1; 2; 3; 5; 8; 10;
+ node [shape = box];
+ init [shape = plaintext, label = ""];
+ init -> 0;
+ 0 -> 1 [label=" [NUL-!], [#-;], [=-253]\n"];
+ 0 -> 2 [label=" \""];
+ 0 -> 3 [label=" <"];
+ 1 -> 2 [label=" [NUL-!], [#-;], [=-253]\n"];
+ 1 -> 5 [label=" \""];
+ 1 -> 6 [label=" <"];
+ 2 -> 5 [label=" [NUL-!], [#-;], [=-253]\n"];
+ 2 -> 7 [label=" <"];
+ 3 -> 6 [label=" [NUL-!], [#-;], [=-253]\n"];
+ 3 -> 7 [label=" \""];
+ 3 -> 8 [label=" <"];
+ 5 -> 9 [label=" <"];
+ 6 -> 7 [label=" [NUL-!], [#-253]"];
+ 6 -> 9 [label=" \""];
+ 7 -> 9 [label=" [NUL-!], [#-253]"];
+ 8 -> 7 [label=" [NUL-!], [#-;], [=-253]\n"];
+ 8 -> 9 [label=" \""];
+ 8 -> 10 [label=" <"];
+ 10 -> 9 [label=" [NUL-!], [#-;], [=-253]\n"];
+}
+
+	 Validation Patch Analysis Info
+	 time : patchee backward analysis time : 37
+	 time : patcher backward analysis time : 2512
+	 time : validation comparison time : 98
+	 time : validation patch extraction total time : 2647
+
+	 Sanitization Patch Analysis Info
+	 time : patchee first forward analysis time : 3817
+	 time : patcher first forward analysis time : 4044
+	 time : length issue check time : 1087
+	 time : length issue backward time : 11226
+	 time : length issue patch extraction total time : 12313
+	 time : sanitization backward time : 8138
+	 time : sanitization comparison time : 306
+	 time : sanitization patch extraction total time : 16305
+
+	 Stranger Automaton Operations Info
+	 intersection : #19 : 995
+	 union : #13 : 380
+	 closure : #6 : 308
+	 complement : #6 : 223
+	 precisewiden : #0 : 0
+	 coarsewiden : #0 : 0
+	 concat : #12 : 876
+	 pre_concat : #0 : 0
+	 const_pre_concat : #0 : 0
+	 replace : #5 : 25034
+	 pre_replace : #1 : 57
+	 vlab_restrict : #2 : 975
+	 pre_vlab_restrict : #2 : 1216
+	 addslahses : #0 : 0
+	 pre_addslahses : #0 : 0
+	 htmlspecialchars : #0 : 0
+	 pre_htmlspecialchars : #0 : 0
+	 stripslashes : #0 : 0
+	 pre_stripslashes : #0 : 0
+	 mysql_escape_string : #0 : 0
+	 pre_mysql_escape_string : #0 : 0
+	 to_uppercase : #0 : 0
+	 pre_to_uppercase : #0 : 0
+	 to_lowercase : #0 : 0
+	 pre_to_lowercase : #0 : 0
+	 trim_spaces : #0 : 0
+	 pre_trim_spaces : #0 : 0
+	 trim_spaces_left : #0 : 0
+	 pre_trim_spaces_left : #0 : 0
+	 trim_spaces_rigth : #0 : 0
+	 pre_trim_spaces_rigth : #0 : 0
+	 trim_set : #0 : 0
+	 pre_trim_set : #0 : 0
+	 substr : #0 : 0
+	 pre_substr : #0 : 0
