@@ -42,7 +42,7 @@ public:
 
 
     /****************************************************************************************************/
-    /*********** SINGLE INPUT FORWARD IMAGE COMPUTATION METHODS **********************************************/
+    /*********** SINGLE INPUT POST-IMAGE COMPUTATION METHODS **********************************************/
     /****************************************************************************************************/
 
     void doForwardAnalysis_SingleInput(DepGraph& origDepGraph,  DepGraphUninitNode* inputNode, AnalysisResult& analysisResult);
@@ -50,7 +50,7 @@ public:
     void doPostImageComputation_SingleInput(DepGraph& origDepGraph,  DepGraph& inputDepGraph, DepGraphNode* node, AnalysisResult& analysisResult);
 
     /****************************************************************************************************/
-    /*********** REGULAR BACKWARD IMAGE COMPUTATION METHODS *********************************************/
+    /*********** GENERAL PRE-IMAGE COMPUTATION METHODS *********************************************/
     /****************************************************************************************************/
 
     AnalysisResult doBackwardAnalysis_GeneralCase(DepGraph& origDepGraph, DepGraph& inputDepGraph, StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
@@ -58,7 +58,7 @@ public:
     StrangerAutomaton* makePreImageForOpChild_GeneralCase(DepGraph& depGraph, DepGraphOpNode* opNode, DepGraphNode* childNode,AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult);
 
     /****************************************************************************************************/
-    /*********** GENERAL METHODS ************************************************************************/
+    /*********** GENERAL POST-IMAGE COMPUTATION METHODS ************************************************************************/
     /****************************************************************************************************/
 
     void doForwardAnalysis_GeneralCase(DepGraph& depGraph, DepGraphNode* node, AnalysisResult& analysisResult);
@@ -114,7 +114,11 @@ private:
     NodesList f_unmodeled;
     std::string getLiteralOrConstantValue(DepGraphNode* node);
     bool isLiteralOrConstant(DepGraphNode* node, NodesList successors);
-    StrangerAutomaton* getLiteralorConstantNodeAuto(DepGraphNode* node);
+    /**
+     *
+     * TODO pattern for __vlab_restrict and other replace operations handled differently. There are some cases not handled yet for this reason where a pattern variable flows into both functions.
+     */
+    StrangerAutomaton* getLiteralorConstantNodeAuto(DepGraphNode* node, bool is_vlab_restrict);
 
 };
 

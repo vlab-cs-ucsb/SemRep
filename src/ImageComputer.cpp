@@ -72,7 +72,6 @@ AnalysisResult ImageComputer::doBackwardAnalysis_ValidationCase(DepGraph& origDe
 
 		if (!has_validation) {
 			if (dynamic_cast< DepGraphNormalNode*>(curr) || dynamic_cast< DepGraphUninitNode*>(curr) || dynamic_cast< DepGraphOpNode*>(curr)) {
-
 				if (dynamic_cast< DepGraphOpNode*>(curr) ) {
 					DepGraphOpNode* op = dynamic_cast< DepGraphOpNode*>(curr);
 					if (op->getName().find("__vlab_restrict") != string::npos) {
@@ -122,7 +121,7 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 			// root is already initialized
 			newAuto = bwAnalysisResult[node->getID()];
 		} else if (successors.empty() && (normalNode = dynamic_cast< DepGraphNormalNode*>(node))) {
-			newAuto = getLiteralorConstantNodeAuto(normalNode);
+			newAuto = getLiteralorConstantNodeAuto(normalNode, false);
 		} else {
 
 			for (NodesListIterator it = predecessors.begin(); it != predecessors.end(); ++it) {
@@ -160,7 +159,6 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 	if (newAuto == NULL) {
 		throw new StrangerStringAnalysisException("SNH: pre-image is NULL: doBackwardNodeComputation_ValidationPhase()");
 	}
-
 	bwAnalysisResult[node->getID()] = newAuto;
 
 }
@@ -190,8 +188,8 @@ StrangerAutomaton* ImageComputer::makePreImageForOpChild_ValidationCase(DepGraph
 			DepGraphNode* complementNode = successors[2];
 
 			if (childNode->equals(subjectNode)) {
-
-				StrangerAutomaton* patternAuto = getLiteralorConstantNodeAuto(dynamic_cast<DepGraphNormalNode*>(patternNode));
+				//TODO handle general case for patternAuto and complementString
+				StrangerAutomaton* patternAuto = getLiteralorConstantNodeAuto(patternNode, true);
 				// Union __vlab_restricts considering complement parameter
 				string complementString = getLiteralOrConstantValue(complementNode);
 				if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
@@ -338,7 +336,20 @@ StrangerAutomaton* ImageComputer::makePreImageForOpChild_ValidationCase(DepGraph
 			StrangerAutomaton* forward = StrangerAutomaton::general_replace(patternAuto, replaceAuto, sigmaStar, subjectAuto->getID());
 			StrangerAutomaton* intersection = subjectAuto->intersect(forward, childNode->getID());
 			string replaceStr = replaceAuto->getStr();
-			retMe = intersection->preReplace(patternAuto, replaceStr, childNode->getID());
+
+			// TODO add general pre-replace where all parameters are automata
+			// checking for special case where a character is escaped by another character
+			if (patternAuto->isSingleton()) {
+				string patternStr = patternAuto->generateSatisfyingExample();
+				if ( replaceStr.length() == 2 && patternStr.length() == 1 && patternStr[0] == replaceStr[1]) {
+					retMe = StrangerAutomaton::general_replace(replaceAuto, patternAuto, intersection, childNode->getID());
+				} else {
+					retMe = intersection->preReplace(patternAuto, replaceStr, childNode->getID());
+				}
+			} else {
+				retMe = intersection->preReplace(patternAuto, replaceStr, childNode->getID());
+			}
+
 			delete sigmaStar;
 			delete forward;
 			delete intersection;
@@ -419,7 +430,7 @@ void ImageComputer::doForwardAnalysis_SingleInput(
 	// TODO remove that from here for a general option
 	if (uninit_node_default_initialization)
 		delete uninit_node_default_initialization;
-	uninit_node_default_initialization = StrangerAutomaton::makeBottom();
+	uninit_node_default_initialization = StrangerAutomaton::makePhi();
 
 	process_stack.push( inputDepGraph.getRoot() );
 	while (!process_stack.empty()) {
@@ -455,7 +466,7 @@ void ImageComputer::doPostImageComputation_SingleInput(
     DepGraphUninitNode* uninitNode;
     if ((normalnode = dynamic_cast<DepGraphNormalNode*>(node)) != NULL) {
     	if (successors.empty()) {
-			newAuto = getLiteralorConstantNodeAuto(normalnode);
+			newAuto = getLiteralorConstantNodeAuto(normalnode, false);
     	} else {
     		// an interior node, union of all its successors
     		for (NodesListIterator it = successors.begin(); it != successors.end(); it++) {
@@ -519,7 +530,6 @@ AnalysisResult ImageComputer::doBackwardAnalysis_GeneralCase(
 	// initialize root node
 	bwAnalysisResult[depGraph.getRoot()->getID()] = initialAuto;
 
-
 	process_queue.push(depGraph.getRoot());
 	while (!process_queue.empty()) {
 
@@ -558,7 +568,7 @@ void ImageComputer::doPreImageComputation_GeneralCase(
 			// root is already initialized
 			newAuto = bwAnalysisResult[node->getID()];
 		} else if (successors.empty() && (normalNode = dynamic_cast< DepGraphNormalNode*>(node))) {
-			newAuto = getLiteralorConstantNodeAuto(normalNode);
+			newAuto = getLiteralorConstantNodeAuto(normalNode, false);
 		} else {
 			// the automa is union of all prodecessors and interstect with forward analysis result
 			StrangerAutomaton* forwardAuto = fwAnalysisResult.find(node->getID())->second;
@@ -592,14 +602,16 @@ void ImageComputer::doPreImageComputation_GeneralCase(
 			if (newAuto == NULL) {
 				throw StrangerStringAnalysisException("Cannot calculate backward auto, fix me\nndoBackwardNodeComputation_RegularPhase()");
 			}
+
 			tempAuto = newAuto;
-			newAuto = newAuto->intersect(forwardAuto, node->getID());
+			newAuto = forwardAuto->intersect(newAuto, node->getID());
 			delete tempAuto;
 		}
 
 	} else {
 		throw new StrangerStringAnalysisException("SNH: cannot handle node type:\ndoBackwardNodeComputation_RegularPhase()");
 	}
+
 
 	if (newAuto == NULL) {
 		throw new StrangerStringAnalysisException("SNH: pre-image is NULL:\ndoBackwardNodeComputation_RegularPhase()");
@@ -752,8 +764,18 @@ StrangerAutomaton* ImageComputer::makePreImageForOpChild_GeneralCase(
 		StrangerAutomaton* replaceAuto = fwAnalysisResult.find(replaceNode->getID())->second;
 		string replaceStr = replaceAuto->getStr();
 
-		retMe = subjectAuto->preReplace(patternAuto, replaceStr, childNode->getID());
-
+		// TODO add general pre-replace where all parameters are automata
+		// checking for special case where a character is escaped by another character
+		if (patternAuto->isSingleton()) {
+			string patternStr = patternAuto->generateSatisfyingExample();
+			if ( replaceStr.length() == 2 && patternStr.length() == 1 && patternStr[0] == replaceStr[1]) {
+				retMe = StrangerAutomaton::general_replace(replaceAuto, patternAuto, subjectAuto, childNode->getID());
+			} else {
+				retMe = subjectAuto->preReplace(patternAuto, replaceStr, childNode->getID());
+			}
+		} else {
+			retMe = subjectAuto->preReplace(patternAuto, replaceStr, childNode->getID());
+		}
 
 	} else if (opName == "substr"){
 
@@ -2523,7 +2545,7 @@ string ImageComputer::getLiteralOrConstantValue( DepGraphNode* node) {
     if (normalNode == NULL)
         throw runtime_error("can not cast DepGraphNode into DepGraphNormalNode");
     TacPlace* place = normalNode->getPlace();
-    if (dynamic_cast<Literal*>(place) != NULL || dynamic_cast<Constant*>(place)) {
+    if (dynamic_cast<Literal*>(place) != NULL || dynamic_cast<Constant*>(place) != NULL) {
         retMe = place->toString();
     }
     else
@@ -2547,7 +2569,7 @@ bool ImageComputer::isLiteralOrConstant( DepGraphNode* node, NodesList successor
         return false;
 }
 
-StrangerAutomaton* ImageComputer::getLiteralorConstantNodeAuto(DepGraphNode* node) {
+StrangerAutomaton* ImageComputer::getLiteralorConstantNodeAuto(DepGraphNode* node, bool is_vlab_restrict) {
 	StrangerAutomaton* retMe = NULL;
     DepGraphNormalNode* normalNode = dynamic_cast< DepGraphNormalNode*>(node);
     if (normalNode == NULL)
@@ -2563,8 +2585,11 @@ StrangerAutomaton* ImageComputer::getLiteralorConstantNodeAuto(DepGraphNode* nod
 					regString.find_last_of('$') == (regString.length() -1)){
 				regString = "/" + regString.substr( 1,regString.length()-2) + "/";
 			}
-			else {
+			else if (is_vlab_restrict) {
 				regString = "/.*(" + regString + ").*/";
+			}
+			else {
+				regString = "/" + regString + "/";
 			}
 			retMe = StrangerAutomaton::regExToAuto(regString, true, node->getID());
 		}
@@ -2591,7 +2616,7 @@ void ImageComputer::doForwardAnalysis_GeneralCase(DepGraph& depGraph, DepGraphNo
 
 	// TODO remove that from here for a general option
 	if (!uninit_node_default_initialization)
-		uninit_node_default_initialization = StrangerAutomaton::makeBottom();
+		uninit_node_default_initialization = StrangerAutomaton::makePhi();
 
 	process_stack.push(node);
 	while (!process_stack.empty()) {
@@ -2627,7 +2652,7 @@ void ImageComputer::doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGr
 	DepGraphUninitNode* uninitNode;
 	if ((normalNode = dynamic_cast<DepGraphNormalNode*>(node)) != NULL) {
 		if (successors.empty()) {
-			newAuto = getLiteralorConstantNodeAuto(normalNode);
+			newAuto = getLiteralorConstantNodeAuto(normalNode, false);
 		} else {
 			// an interior node, union of all its successors
 			for (NodesListIterator it = successors.begin(); it != successors.end(); it++) {
@@ -2686,18 +2711,21 @@ StrangerAutomaton* ImageComputer::makePostImageForOp_GeneralCase(DepGraph& depGr
 				doForwardAnalysis_GeneralCase(depGraph, subjectNode, analysisResult);
 			}
 
+			// TODO handle general case
 			if (analysisResult.find(patternNode->getID()) == analysisResult.end()) {
-				doForwardAnalysis_GeneralCase(depGraph, patternNode, analysisResult);
+//				doForwardAnalysis_GeneralCase(depGraph, patternNode, analysisResult);
+				analysisResult[patternNode->getID()] = getLiteralorConstantNodeAuto(patternNode, true);
 			}
-
+			// TODO handle general case
 			if (analysisResult.find(complementNode->getID()) == analysisResult.end()) {
-				doForwardAnalysis_GeneralCase(depGraph, complementNode, analysisResult);
+//				doForwardAnalysis_GeneralCase(depGraph, complementNode, analysisResult);
+
 			}
 
 			StrangerAutomaton* subjectAuto = analysisResult[subjectNode->getID()];
 			StrangerAutomaton* patternAuto = analysisResult[patternNode->getID()];
-			string complementString = analysisResult[complementNode->getID()]->getStr();
-
+//			string complementString = analysisResult[complementNode->getID()]->getStr();
+			string complementString = getLiteralOrConstantValue(complementNode);
 			if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
 				retMe = subjectAuto->intersect(patternAuto, opNode->getID());
 			} else {

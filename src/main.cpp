@@ -5,7 +5,8 @@
  *      Author: baki
  */
 
-#include "StrangerPatcher.h"
+#include "SemRepair.hpp"
+#include <boost/filesystem.hpp>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		cout << endl << "\t------ Starting Analysis for: " << field_name << " ------" << endl;
 		cout << endl << "\t       Reference: " << patcher_name  << endl;
 		cout << endl << "\t       Target: " << patchee_name  << endl;
-		StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
+		SemRepair strangerPatcher(patcher_name, patchee_name, field_name);
 		strangerPatcher.calculate_rejected_set = false;
 		strangerPatcher.computeValidationPatch();
 		strangerPatcher.computeSanitizationPatch();
@@ -83,12 +84,19 @@ void generate_repairs_for_ss_cc_pairs(vector<string>& targets, vector<string>& f
 }
 
 int main(int argc, char *argv[]) {
-	string patcher_name = "/home/abaki/workspace/StrangerWrapper/test/test2.dot";
-	string patchee_name = "/home/abaki/workspace/StrangerWrapper/test/test2.dot";
-	string field_name = "username";
 
-	StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
-	strangerPatcher.testNewFunctions();
+	boost::filesystem3::path curr_path(boost::filesystem3::current_path());
+	string root_path = curr_path.generic_string();
+	string patcher_name = root_path + "/test/reference_depgraph.dot";
+	string patchee_name = root_path + "/test/target_depgraph.dot";
+	string field_name = "x";
+
+
+	SemRepair strangerPatcher(patcher_name, patchee_name, field_name);
+	strangerPatcher.calculate_rejected_set = true;
+	strangerPatcher.computeValidationPatch();
+	strangerPatcher.computeSanitizationPatch();
+	strangerPatcher.printResults();
 
 
 	return 0;
