@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>512B04F3-46C7-4E5D-8457-7685137FCABC</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SemRep</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B60A213D-7E35-4C37-9DFA-5FC6932C7A3E</key>
+		<string>https://github.com/vlab-cs-ucsb/SemRep.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SemRep.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B60A213D-7E35-4C37-9DFA-5FC6932C7A3E</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/vlab-cs-ucsb/SemRep.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B60A213D-7E35-4C37-9DFA-5FC6932C7A3E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B60A213D-7E35-4C37-9DFA-5FC6932C7A3E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SemRep</string>
+		</dict>
+	</array>
+</dict>
+</plist>
