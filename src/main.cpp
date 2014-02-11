@@ -39,7 +39,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		cout << endl << "\t       Reference: " << patcher_name  << endl;
 		cout << endl << "\t       Target: " << patchee_name  << endl;
 		StrangerPatcher strangerPatcher(patcher_name, patchee_name, field_name);
-		strangerPatcher.calculate_rejected_set = false;
+		strangerPatcher.calculate_rejected_set = true;
 		strangerPatcher.computeValidationPatch();
 		strangerPatcher.computeSanitizationPatch();
         
@@ -48,7 +48,7 @@ void call_patcher(string patcher_name, string patchee_name, string field_name){
 		cout << "\t    Patchee: " << patchee_name << endl;
         
 		strangerPatcher.printResults();
-		strangerPatcher.writeAutosforCodeGeneration(field_name, patcher_name, patchee_name);
+//		strangerPatcher.writeAutosforCodeGeneration(field_name, patcher_name, patchee_name);
         
 		cout << endl << "\t------ END RESULT for: " << field_name << " ------" << endl;
 	} catch (StrangerStringAnalysisException const &e) {
