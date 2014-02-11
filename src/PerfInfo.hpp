@@ -9,9 +9,6 @@
 #define PERFINFO_HPP_
 
 #include <string>
-#include <sstream>
-#include <cstdlib>
-
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 class PerfInfo {

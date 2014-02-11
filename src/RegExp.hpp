@@ -10,11 +10,9 @@
 
 #include "StrangerAutomaton.hpp"
 #include "StringBuilder.hpp"
-#include <string>
-#include <sstream>
+
 #include <stdexcept>
 #include <stdint.h>
-#include <exception>
 
 class StrangerAutomaton;
 

@@ -10,15 +10,10 @@
 
 #include "StrangerAutomaton.hpp"
 #include "StringAnalysisTypes.hpp"
+#include "StrangerStringAnalysisException.hpp"
 #include "ImageComputer.hpp"
 #include "DepGraph.hpp"
-#include "StrangerStringAnalysisException.hpp"
-#include <map>
-#include <vector>
-#include <set>
-#include <algorithm>
-#include <exception>
-#include <stdexcept>
+
 
 class StringAnalyzer {
 public:

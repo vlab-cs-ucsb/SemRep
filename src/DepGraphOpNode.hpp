@@ -9,8 +9,6 @@
 #define DEPGRAPHOPNODE_HPP_
 
 #include "DepGraphNode.hpp"
-#include "StringBuilder.hpp"
-
 
 class DepGraphOpNode: public DepGraphNode {
 public:

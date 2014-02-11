@@ -9,8 +9,7 @@
 #define CONSTANT_HPP_
 
 #include "TacPlace.hpp"
-#include <iostream>
-#include <exception>
+
 using namespace std;
 
 class Constant: public TacPlace {

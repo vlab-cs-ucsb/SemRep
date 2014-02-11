@@ -9,7 +9,7 @@
 #define VARIABLE_HPP_
 
 #include "TacPlace.hpp"
-#include <string>
+
 using namespace std;
 
 class Variable: public TacPlace {

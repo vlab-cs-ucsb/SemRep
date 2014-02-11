@@ -9,7 +9,6 @@
 #define LITERAL_HPP_
 
 #include "TacPlace.hpp"
-#include <string>
 
 class Literal: public TacPlace {
 public:

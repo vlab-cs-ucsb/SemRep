@@ -10,22 +10,13 @@
 
 #include "PerfInfo.hpp"
 #include "StringBuilder.hpp"
-#include "stranger.h"
 #include "StrangerAutomatonException.hpp"
-#include "stranger_lib_internal.h"
 #include "RegExp.hpp"
-#include <string>
-#include <sstream>
-#include <iostream>
+#include "stranger_lib_internal.h"
+#include "stranger.h"
+
 #include <stdexcept>
 #include <vector>
-#include <cstring>
-//#include <boost/config.hpp>
-//#include <boost/graph/edmonds_karp_max_flow.hpp>
-//#include <boost/graph/adjacency_list.hpp>
-//#include <boost/graph/read_dimacs.hpp>
-//#include <boost/graph/graph_utility.hpp>
-//#include <boost/graph/graphviz.hpp>
 
 class RegExp;
 

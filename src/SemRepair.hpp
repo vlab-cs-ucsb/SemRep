@@ -8,24 +8,7 @@
 #ifndef SEMREPAIR_HPP_
 #define SEMREPAIR_HPP_
 
-
-#include "stranger_lib_internal.h"
-#include <iostream>
-#include <vector>
-#include "bdd.h"
-#include "dfa.h"
-#include "bdd_dump.h"
-#include "bdd_external.h"
 #include "StrangerAutomaton.hpp"
-#include <fstream>
-#include <cstdio>
-#include <ctime>
-
-#include <string>
-#include <map>
-#include <utility>
-
-
 #include "DepGraph.hpp"
 #include "ImageComputer.hpp"
 #include "SemRepairDebugger.hpp"

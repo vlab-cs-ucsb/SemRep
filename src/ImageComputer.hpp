@@ -10,19 +10,8 @@
 
 #include "StringAnalysisTypes.hpp"
 #include "StrangerStringAnalysisException.hpp"
-#include "DepGraph.hpp"
 #include "StrangerAutomaton.hpp"
-#include "PerfInfo.hpp"
-#include "StringBuilder.hpp"
-#include <string>
-#include <map>
-#include <vector>
-#include <stack>
-#include <set>
-#include <queue>
-
-
-
+#include "DepGraph.hpp"
 
 class ImageComputer {
 public:

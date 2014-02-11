@@ -21,16 +21,12 @@
  */
 
 #include <boost/program_options.hpp>
+#include "SemRepair.hpp"
 
+using namespace std;
 using namespace boost;
 namespace po = boost::program_options;
 
-#include "SemRepair.hpp"
-
-#include<iostream>
-#include <algorithm>
-#include <iterator>
-using namespace std;
 
 
 void call_sem_repair(string reference_name, string target_name, string field_name){

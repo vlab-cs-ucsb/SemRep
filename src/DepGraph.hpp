@@ -13,16 +13,14 @@
 #include "DepGraphUninitNode.hpp"
 #include "DepGraphOpNode.hpp"
 #include "DepGraphNormalNode.hpp"
+
 #include <map>
 #include <vector>
 #include <stack>
+#include <queue>
 #include <set>
 #include <algorithm>
-#include <exception>
-#include <stdexcept>
 #include <fstream>
-#include <sstream>
-
 #include <boost/regex.hpp>
 
 struct NodeLessThan : public std::binary_function<const DepGraphNode*, const DepGraphNode*, bool> {

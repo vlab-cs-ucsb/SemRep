@@ -10,8 +10,6 @@
 
 #include "StrangerAutomaton.hpp"
 #include "DepGraph.hpp"
-#include <map>
-#include <vector>
 
 typedef std::map<const int, StrangerAutomaton*> AnalysisResult;
 typedef std::map<const int, StrangerAutomaton*>::iterator AnalysisResultIterator;

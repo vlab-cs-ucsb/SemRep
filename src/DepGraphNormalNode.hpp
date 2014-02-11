@@ -9,7 +9,6 @@
 #define DEPGRAPHNORMALNODE_HPP_
 
 #include "DepGraphNode.hpp"
-#include "StringBuilder.hpp"
 #include "TacPlace.hpp"
 #include "Variable.hpp"
 #include "Literal.hpp"
