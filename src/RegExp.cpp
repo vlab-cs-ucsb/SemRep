@@ -1,20 +1,7 @@
-// Generated from /testJ2c/src/RegExp.java
+
 #include "RegExp.hpp"
 
 using namespace std;
-
-
-struct stringbuilder
-{
-   std::stringstream ss;
-   template<typename T>
-   stringbuilder & operator << (const T &data)
-   {
-        ss << data;
-        return *this;
-   }
-   operator std::string() { return ss.str(); }
-};
 
 int RegExp::id;
 

@@ -1,8 +1,13 @@
-// Generated from /testJ2c/src/UnsupportedRegexException.java
+/*
+ * UnsupportedRegexException.hpp
+ *
+ *  Created on: Feb 11, 2014
+ *      Author: baki
+ */
 
-#pragma once
+#ifndef UNSUPPORTEDREGEXEXCEPTION_HPP_
+#define UNSUPPORTEDREGEXEXCEPTION_HPP_
 
-#include <fwd-testJ2c.hpp>
 #include <string>
 
 class UnsupportedRegexException
@@ -11,3 +16,6 @@ public:
     UnsupportedRegexException(){throw new std::runtime_error;};
     UnsupportedRegexException(std::string message){throw new std::runtime_error(message);};
 };
+
+
+#endif /* UNSUPPORTEDREGEXEXCEPTION_HPP_ */

@@ -1,6 +1,12 @@
-// Generated from /testJ2c/src/StrangerAutomatonException.java
+/*
+ * StrangerAutomatonException.hpp
+ *
+ *  Created on: Feb 11, 2014
+ *      Author: baki
+ */
 
-#pragma once
+#ifndef STRANGERAUTOMATONEXCEPTION_HPP_
+#define STRANGERAUTOMATONEXCEPTION_HPP_
 
 #include <string>
 
@@ -11,3 +17,6 @@ public:
     StrangerAutomatonException(std::string msg) {};
     StrangerAutomatonException(){};
 };
+
+
+#endif /* STRANGERAUTOMATONEXCEPTION_HPP_ */

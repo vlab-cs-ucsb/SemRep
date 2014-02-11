@@ -1,16 +1,15 @@
-//
-//  StringAnalysisTypes.h
-//  stranger
-//
-//  Created by Muath Alkhalaf on 9/5/13.
-//  Copyright (c) 2013 Muath Alkhalaf. All rights reserved.
-//
+/*
+ * StringAnalysisTypes.hpp
+ *
+ *  Created on: Feb 11, 2014
+ *      Author: baki
+ */
 
-#ifndef stranger_StringAnalysisTypes_h
-#define stranger_StringAnalysisTypes_h
+#ifndef STRINGANALYSISTYPES_HPP_
+#define STRINGANALYSISTYPES_HPP_
 
 #include "StrangerAutomaton.hpp"
-#include "DepGraph.h"
+#include "DepGraph.hpp"
 #include <map>
 #include <vector>
 
@@ -22,4 +21,5 @@ typedef std::map<int, NodesList> SccNodes;
 typedef std::map<int, NodesList>::iterator SccNodesIterator;
 typedef std::map<int, NodesList>::const_iterator SccNodesConstIterator;
 
-#endif
+
+#endif /* STRINGANALYSISTYPES_HPP_ */

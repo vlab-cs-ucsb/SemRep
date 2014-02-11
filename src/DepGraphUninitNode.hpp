@@ -1,14 +1,14 @@
 /*
- * DepGraphUninitNode.h
+ * DepGraphUninitNode.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef DEPGRAPHUNINITNODE_H_
-#define DEPGRAPHUNINITNODE_H_
+#ifndef DEPGRAPHUNINITNODE_HPP_
+#define DEPGRAPHUNINITNODE_HPP_
 
-#include "DepGraphNode.h"
+#include "DepGraphNode.hpp"
 
 class DepGraphUninitNode: public DepGraphNode {
 public:
@@ -25,4 +25,5 @@ public:
 	DepGraphUninitNode* clone() const { return new DepGraphUninitNode(*this); };
 };
 
-#endif /* DEPGRAPHUNINITNODE_H_ */
+
+#endif /* DEPGRAPHUNINITNODE_HPP_ */

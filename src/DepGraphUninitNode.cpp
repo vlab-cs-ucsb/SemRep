@@ -5,7 +5,7 @@
  *      Author: muath
  */
 
-#include "DepGraphUninitNode.h"
+#include "DepGraphUninitNode.hpp"
 
 DepGraphUninitNode::DepGraphUninitNode() {
 	// TODO Auto-generated constructor stub

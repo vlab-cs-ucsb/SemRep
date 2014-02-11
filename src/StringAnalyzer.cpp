@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Muath Alkhalaf. All rights reserved.
 //
 
-#include "StringAnalyzer.h"
+#include "StringAnalyzer.hpp"
 
 using namespace std;
 

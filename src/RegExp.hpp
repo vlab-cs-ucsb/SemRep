@@ -1,9 +1,15 @@
-// Generated from /testJ2c/src/RegExp.java
+/*
+ * RegExp.hpp
+ *
+ *  Created on: Feb 11, 2014
+ *      Author: baki
+ */
 
-#pragma once
-
+#ifndef REGEXP_HPP_
+#define REGEXP_HPP_
 
 #include "StrangerAutomaton.hpp"
+#include "StringBuilder.hpp"
 #include <string>
 #include <sstream>
 #include <stdexcept>
@@ -144,3 +150,6 @@ private:
 };
 
 int to_int(std::string input);
+
+
+#endif /* REGEXP_HPP_ */

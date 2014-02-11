@@ -1,15 +1,15 @@
 /*
- * DepGraphOpNode.h
+ * DepGraphOpNode.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef DEPGRAPHOPNODE_H_
-#define DEPGRAPHOPNODE_H_
+#ifndef DEPGRAPHOPNODE_HPP_
+#define DEPGRAPHOPNODE_HPP_
 
-#include "DepGraphNode.h"
-#include "StringBuilder.h"
+#include "DepGraphNode.hpp"
+#include "StringBuilder.hpp"
 
 
 class DepGraphOpNode: public DepGraphNode {
@@ -33,4 +33,5 @@ private:
 
 };
 
-#endif /* DEPGRAPHOPNODE_H_ */
+
+#endif /* DEPGRAPHOPNODE_HPP_ */

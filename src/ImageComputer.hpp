@@ -1,19 +1,19 @@
 /*
- * ImageComputer.h
+ * ImageComputer.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef IMAGECOMPUTER_H_
-#define IMAGECOMPUTER_H_
+#ifndef IMAGECOMPUTER_HPP_
+#define IMAGECOMPUTER_HPP_
 
-#include "StringAnalysisTypes.h"
-#include "StrangerStringAnalysisException.h"
-#include "DepGraph.h"
+#include "StringAnalysisTypes.hpp"
+#include "StrangerStringAnalysisException.hpp"
+#include "DepGraph.hpp"
 #include "StrangerAutomaton.hpp"
-#include "PerfInfo.h"
-#include "StringBuilder.h"
+#include "PerfInfo.hpp"
+#include "StringBuilder.hpp"
 #include <string>
 #include <map>
 #include <vector>
@@ -79,7 +79,7 @@ public:
                            AnalysisResult& analysisResult, DepGraphNode* node,
                            AnalysisResult& inputValuesMap, bool multiTrack);
     StrangerAutomaton* makeAutoForOp(DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph, bool multiTrack);
-    
+
 //********************************************************************************************************************
 
     AnalysisResult computeBwImage(DepGraph& origDepGraph, DepGraph& acyclicWorkGraph,
@@ -122,4 +122,5 @@ private:
 
 };
 
-#endif /* FORWARDIMAGECOMPUTER_H_ */
+
+#endif /* IMAGECOMPUTER_HPP_ */

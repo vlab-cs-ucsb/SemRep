@@ -1,14 +1,14 @@
 /*
- * Constant.h
+ * Constant.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef CONSTANT_H_
-#define CONSTANT_H_
+#ifndef CONSTANT_HPP_
+#define CONSTANT_HPP_
 
-#include "TacPlace.h"
+#include "TacPlace.hpp"
 #include <iostream>
 #include <exception>
 using namespace std;
@@ -30,4 +30,6 @@ private:
 	string label;
 };
 
-#endif /* CONSTANT_H_ */
+
+
+#endif /* CONSTANT_HPP_ */

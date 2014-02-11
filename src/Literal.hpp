@@ -1,15 +1,15 @@
 /*
- * Literal.h
+ * Literal.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef LITERAL_H_
-#define LITERAL_H_
+#ifndef LITERAL_HPP_
+#define LITERAL_HPP_
 
-#include "TacPlace.h"
-#include "string"
+#include "TacPlace.hpp"
+#include <string>
 
 class Literal: public TacPlace {
 public:
@@ -30,4 +30,5 @@ private:
 	std::string literalValue;
 };
 
-#endif /* LITERAL_H_ */
+
+#endif /* LITERAL_HPP_ */

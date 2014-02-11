@@ -5,7 +5,7 @@
  *      Author: muath
  */
 
-#include "DepGraphNode.h"
+#include "DepGraphNode.hpp"
 
 
 void DepGraphNode::init() {

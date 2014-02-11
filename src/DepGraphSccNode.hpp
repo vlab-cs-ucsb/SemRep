@@ -1,14 +1,14 @@
 /*
- * DepGraphSccNode.h
+ * DepGraphSccNode.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef DEPGRAPHSCCNODE_H_
-#define DEPGRAPHSCCNODE_H_
+#ifndef DEPGRAPHSCCNODE_HPP_
+#define DEPGRAPHSCCNODE_HPP_
 
-#include "DepGraphNode.h"
+#include "DepGraphNode.hpp"
 
 
 class DepGraphSccNode: public DepGraphNode {
@@ -25,4 +25,5 @@ public:
 	DepGraphSccNode* clone() const { return new DepGraphSccNode(*this); };
 };
 
-#endif /* DEPGRAPHSCCNODE_H_ */
+
+#endif /* DEPGRAPHSCCNODE_HPP_ */

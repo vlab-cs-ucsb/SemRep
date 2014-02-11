@@ -12,13 +12,11 @@
 #include "stranger_lib_internal.h"
 #include <iostream>
 #include <vector>
-#include "stranger.h"
 #include "bdd.h"
 #include "dfa.h"
 #include "bdd_dump.h"
 #include "bdd_external.h"
 #include "StrangerAutomaton.hpp"
-#include <regex>
 #include <fstream>
 #include <cstdio>
 #include <ctime>
@@ -28,8 +26,8 @@
 #include <utility>
 
 
-#include "DepGraph.h"
-#include "ImageComputer.h"
+#include "DepGraph.hpp"
+#include "ImageComputer.hpp"
 #include "SemRepairDebugger.hpp"
 
 using namespace std;

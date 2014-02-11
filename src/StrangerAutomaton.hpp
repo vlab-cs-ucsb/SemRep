@@ -1,8 +1,15 @@
-// Generated from /testJ2c/src/StrangerAutomaton.java
+/*
+ * StrangerAutomaton.hpp
+ *
+ *  Created on: Feb 11, 2014
+ *      Author: baki
+ */
 
-#pragma once
+#ifndef STRANGERAUTOMATON_HPP_
+#define STRANGERAUTOMATON_HPP_
 
-#include "PerfInfo.h"
+#include "PerfInfo.hpp"
+#include "StringBuilder.hpp"
 #include "stranger.h"
 #include "StrangerAutomatonException.hpp"
 #include "stranger_lib_internal.h"
@@ -185,7 +192,7 @@ public:
     static StrangerAutomaton* getUndesiredXSSTest();
     static StrangerAutomaton* getUndesiredMFETest();
 //    std::set<char> mincut();
-    
+
     void printAutomaton();
     void printAutomatonVitals();
     void toDot();
@@ -213,17 +220,17 @@ public:
 //    static PerfInfo& getPerfInfo() { return perfInfo; };
     static void staticInit();
     static PerfInfo* perfInfo;
-    
+
     StrangerAutomaton* restrict(StrangerAutomaton* otherAuto, int id){
         StrangerAutomaton* retMe = this->intersect(otherAuto);
         retMe->ID = id;
         return retMe;
     };
-    
+
     StrangerAutomaton* restrict(StrangerAutomaton* otherAuto){
         return this->restrict(otherAuto, traceID);
     };
-    
+
     StrangerAutomaton* restrict(std::string regExp, int id){
         StrangerAutomaton* regExpAuto = regExToAuto(regExp);
         StrangerAutomaton* retMe = this->intersect(regExpAuto);
@@ -231,11 +238,11 @@ public:
         retMe->ID = id;
         return retMe;
     };
-    
+
     StrangerAutomaton* restrict(std::string regExp){
         return this->restrict(regExp, traceID);
     }
-    
+
     StrangerAutomaton* preRestrict(std::string regExp, int id){
         StrangerAutomaton* regExpAuto = regExToAuto(regExp);
         StrangerAutomaton* regExpAutoComplement = regExpAuto->complement();
@@ -245,11 +252,11 @@ public:
         retMe->ID = id;
         return retMe;
     };
-    
+
     StrangerAutomaton* preRestrict(std::string regExp){
         return this->preRestrict(regExp, traceID);
     };
-    
+
     StrangerAutomaton* preRestrict(StrangerAutomaton* otherAuto, int id){
         StrangerAutomaton* otherAutoComplement = otherAuto->complement();
         StrangerAutomaton* retMe = this->union_(otherAutoComplement);
@@ -257,13 +264,13 @@ public:
         retMe->ID = id;
         return retMe;
     };
-    
+
     StrangerAutomaton* preRestrict(StrangerAutomaton* otherAuto){
         return this->preRestrict(otherAuto, traceID);
     };
     DFA* dfa;
 private:
-    
+
     int ID;
     int autoTraceID;
     bool top;
@@ -284,3 +291,6 @@ private:
     static void resetTraceID();
     static std::string escapeSpecialChars(std::string s);
 };
+
+
+#endif /* STRANGERAUTOMATON_HPP_ */

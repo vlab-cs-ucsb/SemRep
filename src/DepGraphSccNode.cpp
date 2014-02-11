@@ -5,7 +5,7 @@
  *      Author: muath
  */
 
-#include "DepGraphSccNode.h"
+#include "DepGraphSccNode.hpp"
 
 DepGraphSccNode::DepGraphSccNode() {
 	// TODO Auto-generated constructor stub

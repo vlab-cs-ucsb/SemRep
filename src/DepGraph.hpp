@@ -1,18 +1,18 @@
 /*
- * DepGraph.h
+ * DepGraph.hpp
  *
- *  Created on: Aug 20, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef DEPGRAPH_H_
-#define DEPGRAPH_H_
+#ifndef DEPGRAPH_HPP_
+#define DEPGRAPH_HPP_
 
-#include "DepGraphNode.h"
-#include "DepGraphSccNode.h"
-#include "DepGraphUninitNode.h"
-#include "DepGraphOpNode.h"
-#include "DepGraphNormalNode.h"
+#include "DepGraphNode.hpp"
+#include "DepGraphSccNode.hpp"
+#include "DepGraphUninitNode.hpp"
+#include "DepGraphOpNode.hpp"
+#include "DepGraphNormalNode.hpp"
 #include <map>
 #include <vector>
 #include <stack>
@@ -190,4 +190,6 @@ private:
 	    			DepGraph& inputDepGraph) ;
 };
 
-#endif /* DEPGRAPH_H_ */
+
+
+#endif /* DEPGRAPH_HPP_ */

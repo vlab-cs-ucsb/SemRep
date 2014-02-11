@@ -1,13 +1,14 @@
 /*
- * DepGraphNode.h
+ * DepGraphNode.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef DEPGRAPHNODE_H_
-#define DEPGRAPHNODE_H_
-#include "StringBuilder.h"
+#ifndef DEPGRAPHNODE_HPP_
+#define DEPGRAPHNODE_HPP_
+
+#include "StringBuilder.hpp"
 #include <string>
 #include <stdexcept>
 
@@ -17,7 +18,7 @@ public:
     {
         init();
     };
-	
+
     DepGraphNode(std::string filename, int origLineno, int id, int order, int sccID)
     : fileName(filename), origLineno(origLineno), id(id), order(order), sccID(sccID)
     {
@@ -72,4 +73,5 @@ private:
 
 };
 
-#endif /* DEPGRAPHNODE_H_ */
+
+#endif /* DEPGRAPHNODE_HPP_ */

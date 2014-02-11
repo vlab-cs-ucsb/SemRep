@@ -5,7 +5,7 @@
 // *      Author: muath
 // */
 
-#include "ImageComputer.h"
+#include "ImageComputer.hpp"
 
 using namespace std;
 

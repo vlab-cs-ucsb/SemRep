@@ -1,12 +1,13 @@
 /*
- * StringBuilder.h
+ * StringBuilder.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef STRINGBUILDER_H_
-#define STRINGBUILDER_H_
+#ifndef STRINGBUILDER_HPP_
+#define STRINGBUILDER_HPP_
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -23,4 +24,5 @@ struct stringbuilder
    operator std::string() { return ss.str(); }
 };
 
-#endif /* STRINGBUILDER_H_ */
+
+#endif /* STRINGBUILDER_HPP_ */

@@ -5,7 +5,7 @@
  *      Author: muath
  */
 
-#include "DepGraph.h"
+#include "DepGraph.hpp"
 
 using namespace std;
 

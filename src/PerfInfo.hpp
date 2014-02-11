@@ -1,17 +1,16 @@
 /*
- * PerfInfo.h
+ * PerfInfo.hpp
  *
- *  Created on: Aug 4, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef PERFINFO_H_
-#define PERFINFO_H_
+#ifndef PERFINFO_HPP_
+#define PERFINFO_HPP_
 
 #include <string>
 #include <sstream>
 #include <cstdlib>
-#include <sys/time.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -131,8 +130,7 @@ public:
 	 unsigned int number_of_pre_trim_set;
 	 unsigned int number_of_substr;
 	 unsigned int number_of_pre_substr;
-
-
 };
 
-#endif /* PERFINFO_H_ */
+
+#endif /* PERFINFO_HPP_ */

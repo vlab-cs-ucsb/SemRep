@@ -1,19 +1,18 @@
-//
-//  StringAnalyzer.h
-//  stranger
-//
-//  Created by Muath Alkhalaf on 8/25/13.
-//  Copyright (c) 2013 Muath Alkhalaf. All rights reserved.
-//
+/*
+ * StringAnalyzer.hpp
+ *
+ *  Created on: Feb 11, 2014
+ *      Author: baki
+ */
 
-#ifndef stranger_StringAnalyzer_h
-#define stranger_StringAnalyzer_h
+#ifndef STRINGANALYZER_HPP_
+#define STRINGANALYZER_HPP_
 
 #include "StrangerAutomaton.hpp"
-#include "StringAnalysisTypes.h"
-#include "ImageComputer.h"
-#include "DepGraph.h"
-#include "StrangerStringAnalysisException.h"
+#include "StringAnalysisTypes.hpp"
+#include "ImageComputer.hpp"
+#include "DepGraph.hpp"
+#include "StrangerStringAnalysisException.hpp"
 #include <map>
 #include <vector>
 #include <set>
@@ -21,14 +20,13 @@
 #include <exception>
 #include <stdexcept>
 
-
 class StringAnalyzer {
 public:
-    StringAnalyzer(std::string depGraphFileName, string depGraphFileName2, std::string analysisName);
+    StringAnalyzer(std::string depGraphFileName, std::string depGraphFileName2, std::string analysisName);
     StringAnalyzer(DepGraph depGraph);
     virtual ~StringAnalyzer(){};
     void analyze();
-    
+
 private:
     ImageComputer imageComputer;
     DepGraph depGraph;
@@ -37,4 +35,5 @@ private:
     AnalysisResult annotateInputWithSigmaStar(UninitNodesList inputNodes);
 };
 
-#endif
+
+#endif /* STRINGANALYZER_HPP_ */

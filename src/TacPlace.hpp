@@ -1,12 +1,13 @@
 /*
- * TacPlace.h
+ * TacPlace.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef TACPLACE_H_
-#define TACPLACE_H_
+#ifndef TACPLACE_HPP_
+#define TACPLACE_HPP_
+
 #include <string>
 
 class TacPlace {
@@ -18,4 +19,5 @@ public:
 	virtual TacPlace* clone() const = 0;
 };
 
-#endif /* TACPLACE_H_ */
+
+#endif /* TACPLACE_HPP_ */

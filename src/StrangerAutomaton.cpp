@@ -1,22 +1,8 @@
-// Generated from /testJ2c/src/StrangerAutomaton.java
+
 #include "StrangerAutomaton.hpp"
 
-//#include "RegExp.hpp"
-#include "StrangerAutomatonException.hpp"
 
 using namespace std;
-
-struct stringbuilder
-{
-    std::stringstream ss;
-    template<typename T>
-    stringbuilder & operator << (const T &data)
-    {
-        ss << data;
-        return *this;
-    }
-    operator std::string() { return ss.str(); }
-};
 
 StrangerAutomaton::StrangerAutomaton(DFA* dfa)
 {

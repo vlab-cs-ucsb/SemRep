@@ -1,18 +1,19 @@
 /*
- * DepGraphNormalNode.h
+ * DepGraphNormalNode.hpp
  *
- *  Created on: Aug 19, 2013
- *      Author: muath
+ *  Created on: Feb 11, 2014
+ *      Author: baki
  */
 
-#ifndef DEPGRAPHNORMALNODE_H_
-#define DEPGRAPHNORMALNODE_H_
-#include "DepGraphNode.h"
-#include "StringBuilder.h"
-#include "TacPlace.h"
-#include "Variable.h"
-#include "Literal.h"
-#include "Constant.h"
+#ifndef DEPGRAPHNORMALNODE_HPP_
+#define DEPGRAPHNORMALNODE_HPP_
+
+#include "DepGraphNode.hpp"
+#include "StringBuilder.hpp"
+#include "TacPlace.hpp"
+#include "Variable.hpp"
+#include "Literal.hpp"
+#include "Constant.hpp"
 
 
 class DepGraphNormalNode: public DepGraphNode {
@@ -21,7 +22,7 @@ public:
     {
         isTainted = false;
     };
-    
+
 	DepGraphNormalNode(const DepGraphNormalNode& other)
 		: DepGraphNode(other), isTainted(other.isTainted){
 		place = other.place->clone();
@@ -43,4 +44,5 @@ private:
 
 };
 
-#endif /* DEPGRAPHNORMALNODE_H_ */
+
+#endif /* DEPGRAPHNORMALNODE_HPP_ */

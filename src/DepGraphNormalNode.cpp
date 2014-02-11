@@ -5,7 +5,7 @@
  *      Author: muath
  */
 
-#include "DepGraphNormalNode.h"
+#include "DepGraphNormalNode.hpp"
 
 
 //DepGraphNormalNode::DepGraphNormalNode(TacPlace* place) {

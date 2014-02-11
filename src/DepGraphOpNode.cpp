@@ -5,7 +5,7 @@
  *      Author: muath
  */
 
-#include "DepGraphOpNode.h"
+#include "DepGraphOpNode.hpp"
 
 //DepGraphOpNode::DepGraphOpNode(std::string name, bool builtin) {
 //	this->name = name;
