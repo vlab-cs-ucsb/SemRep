@@ -9,7 +9,7 @@
 #define STRINGANALYSISTYPES_HPP_
 
 #include "StrangerAutomaton.hpp"
-#include "DepGraph.hpp"
+#include "depgraph/DepGraph.hpp"
 
 typedef std::map<const int, StrangerAutomaton*> AnalysisResult;
 typedef std::map<const int, StrangerAutomaton*>::iterator AnalysisResultIterator;

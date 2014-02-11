@@ -10,7 +10,7 @@
 
 #include "PerfInfo.hpp"
 #include "StringBuilder.hpp"
-#include "StrangerAutomatonException.hpp"
+#include "exceptions/StrangerAutomatonException.hpp"
 #include "RegExp.hpp"
 #include "stranger_lib_internal.h"
 #include "stranger.h"

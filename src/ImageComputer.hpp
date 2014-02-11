@@ -9,9 +9,9 @@
 #define IMAGECOMPUTER_HPP_
 
 #include "StringAnalysisTypes.hpp"
-#include "StrangerStringAnalysisException.hpp"
+#include "exceptions/StrangerStringAnalysisException.hpp"
 #include "StrangerAutomaton.hpp"
-#include "DepGraph.hpp"
+#include "depgraph/DepGraph.hpp"
 
 class ImageComputer {
 public:

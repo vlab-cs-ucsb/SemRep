@@ -8,7 +8,7 @@
 #ifndef DEPGRAPHNODE_HPP_
 #define DEPGRAPHNODE_HPP_
 
-#include "StringBuilder.hpp"
+#include "../StringBuilder.hpp"
 #include <string>
 #include <stdexcept>
 

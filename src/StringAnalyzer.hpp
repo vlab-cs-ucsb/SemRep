@@ -10,9 +10,9 @@
 
 #include "StrangerAutomaton.hpp"
 #include "StringAnalysisTypes.hpp"
-#include "StrangerStringAnalysisException.hpp"
+#include "exceptions/StrangerStringAnalysisException.hpp"
 #include "ImageComputer.hpp"
-#include "DepGraph.hpp"
+#include "depgraph/DepGraph.hpp"
 
 
 class StringAnalyzer {

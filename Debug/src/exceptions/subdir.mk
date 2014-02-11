@@ -4,38 +4,20 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/ImageComputer.cpp \
-../src/PerfInfo.cpp \
-../src/RegExp.cpp \
-../src/SemRepair.cpp \
-../src/SemRepairDebugger.cpp \
-../src/StrangerAutomaton.cpp \
-../src/StringAnalyzer.cpp \
-../src/main.cpp 
+../src/exceptions/StrangerAutomatonException.cpp \
+../src/exceptions/UnsupportedRegexException.cpp 
 
 OBJS += \
-./src/ImageComputer.o \
-./src/PerfInfo.o \
-./src/RegExp.o \
-./src/SemRepair.o \
-./src/SemRepairDebugger.o \
-./src/StrangerAutomaton.o \
-./src/StringAnalyzer.o \
-./src/main.o 
+./src/exceptions/StrangerAutomatonException.o \
+./src/exceptions/UnsupportedRegexException.o 
 
 CPP_DEPS += \
-./src/ImageComputer.d \
-./src/PerfInfo.d \
-./src/RegExp.d \
-./src/SemRepair.d \
-./src/SemRepairDebugger.d \
-./src/StrangerAutomaton.d \
-./src/StringAnalyzer.d \
-./src/main.d 
+./src/exceptions/StrangerAutomatonException.d \
+./src/exceptions/UnsupportedRegexException.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-src/%.o: ../src/%.cpp
+src/exceptions/%.o: ../src/exceptions/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
 	g++ -I"/home/abaki/workspace/strangerlib" -I"/home/abaki/workspace/MONA/BDD" -I"/home/abaki/workspace/MONA/DFA" -I"/home/abaki/workspace/MONA/Mem" -O0 -g3 -Wall -c -fmessage-length=0 -std=c++11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"

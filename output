@@ -172,35 +172,35 @@ digraph MONA_DFA {
 }
 
 	 Validation Patch Analysis Info
-	 time : patchee backward analysis time : 38
-	 time : patcher backward analysis time : 2434
-	 time : validation comparison time : 106
-	 time : validation patch extraction total time : 2578
+	 time : patchee backward analysis time : 34
+	 time : patcher backward analysis time : 2594
+	 time : validation comparison time : 108
+	 time : validation patch extraction total time : 2736
 
 	 Sanitization Patch Analysis Info
-	 time : patchee first forward analysis time : 3703
-	 time : patcher first forward analysis time : 4138
-	 time : length issue check time : 985
-	 time : length issue backward time : 10467
-	 time : length issue patch extraction total time : 11452
-	 time : sanitization backward time : 7733
-	 time : sanitization comparison time : 278
-	 time : sanitization patch extraction total time : 15852
+	 time : patchee first forward analysis time : 3664
+	 time : patcher first forward analysis time : 4063
+	 time : length issue check time : 1126
+	 time : length issue backward time : 11551
+	 time : length issue patch extraction total time : 12677
+	 time : sanitization backward time : 8733
+	 time : sanitization comparison time : 304
+	 time : sanitization patch extraction total time : 16764
 
 	 Stranger Automaton Operations Info
-	 intersection : #19 : 929
-	 union : #13 : 385
-	 closure : #6 : 297
-	 complement : #6 : 226
+	 intersection : #19 : 1038
+	 union : #13 : 387
+	 closure : #6 : 324
+	 complement : #6 : 225
 	 precisewiden : #0 : 0
 	 coarsewiden : #0 : 0
-	 concat : #12 : 857
+	 concat : #12 : 898
 	 pre_concat : #0 : 0
 	 const_pre_concat : #0 : 0
-	 replace : #5 : 23887
-	 pre_replace : #1 : 45
-	 vlab_restrict : #2 : 989
-	 pre_vlab_restrict : #2 : 1158
+	 replace : #5 : 25732
+	 pre_replace : #1 : 48
+	 vlab_restrict : #2 : 1003
+	 pre_vlab_restrict : #2 : 1249
 	 addslahses : #0 : 0
 	 pre_addslahses : #0 : 0
 	 htmlspecialchars : #0 : 0

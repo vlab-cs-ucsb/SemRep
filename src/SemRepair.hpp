@@ -9,9 +9,9 @@
 #define SEMREPAIR_HPP_
 
 #include "StrangerAutomaton.hpp"
-#include "DepGraph.hpp"
 #include "ImageComputer.hpp"
 #include "SemRepairDebugger.hpp"
+#include "depgraph/DepGraph.hpp"
 
 using namespace std;
 
