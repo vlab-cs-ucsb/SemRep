@@ -1,71 +1,81 @@
 
-~~~~~~~~~~~>>> StrangerPatcher says: patcher uninit node(16) found for field x.
+	------ Starting Analysis for: x ------
 
-~~~~~~~~~~~>>> StrangerPatcher says: patchee uninit node(8) found for field x.
+	       Reference: /home/abaki/workspace/StrangerWrapper/test/reference_depgraph.dot
 
-~~~~~~~~~~~>>> StrangerPatcher says: BEGIN VALIDATION ANALYSIS PHASE........................................
+	       Target: /home/abaki/workspace/StrangerWrapper/test/target_depgraph.dot
 
-~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patcher
+~~~~~~~~~~~>>> SemRepair says: reference uninit node(16) found for field x.
+
+~~~~~~~~~~~>>> SemRepair says: target uninit node(8) found for field x.
+
+~~~~~~~~~~~>>> SemRepair says: BEGIN VALIDATION ANALYSIS PHASE........................................
+
+~~~~~~~~~~~>>> SemRepair says: extracting validation from reference
 
 
 	validation function found!!!
 
-~~~~~~~~~~~>>> StrangerPatcher says: extracting validation from patchee
+~~~~~~~~~~~>>> SemRepair says: extracting validation from target
 	there is no validation function!!!
 
-~~~~~~~~~~~>>> StrangerPatcher says: computing validation patch
+~~~~~~~~~~~>>> SemRepair says: computing validation patch
 
-~~~~~~~~~~~>>> StrangerPatcher says: validation patch is generated for input: x
+~~~~~~~~~~~>>> SemRepair says: validation patch is generated for input: x
 
-~~~~~~~~~~~>>> StrangerPatcher says: ........................................END VALIDATION ANALYSIS PHASE
+~~~~~~~~~~~>>> SemRepair says: ........................................END VALIDATION ANALYSIS PHASE
 
-~~~~~~~~~~~>>> StrangerPatcher says: BEGIN SANITIZATION ANALYSIS PHASE........................................
+~~~~~~~~~~~>>> SemRepair says: BEGIN SANITIZATION ANALYSIS PHASE........................................
 
-~~~~~~~~~~~>>> StrangerPatcher says: computing patcher sink post image...
+~~~~~~~~~~~>>> SemRepair says: computing reference sink post image...
 
-~~~~~~~~~~~>>> StrangerPatcher says: initializing patcher inputs with bottom
+~~~~~~~~~~~>>> SemRepair says: initializing reference inputs with bottom
 
-~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(16) with sigma star
+~~~~~~~~~~~>>> SemRepair says: initializing input node(16) with sigma star
 
-~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patcher...
-
-
-
-~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patcher.
-
-~~~~~~~~~~~>>> StrangerPatcher says: ...computed patcher sink post image.
-
-~~~~~~~~~~~>>> StrangerPatcher says: initializing patchee inputs with bottom
-
-~~~~~~~~~~~>>> StrangerPatcher says: initializing input node(8) with validation patch auto
-
-~~~~~~~~~~~>>> StrangerPatcher says: starting forward analysis for patchee
+~~~~~~~~~~~>>> SemRepair says: starting forward analysis for reference...
 
 
 
-~~~~~~~~~~~>>> StrangerPatcher says: ...finished forward analysis for patchee.
+~~~~~~~~~~~>>> SemRepair says: ...finished forward analysis for reference.
 
-~~~~~~~~~~~>>> StrangerPatcher says: checking difference between patcher and patchee
+~~~~~~~~~~~>>> SemRepair says: ...computed reference sink post image.
 
-~~~~~~~~~~~>>> StrangerPatcher says: BEGIN LENGTH PATCH ANALYSIS PHASE........................................
+~~~~~~~~~~~>>> SemRepair says: initializing target inputs with bottom
 
-~~~~~~~~~~~>>> StrangerPatcher says: length constraints contribute to the difference, fixing issue...
+~~~~~~~~~~~>>> SemRepair says: initializing input node(8) with validation patch auto
 
-~~~~~~~~~~~>>> StrangerPatcher says: starting a backward analysis to calculate length patch...
+~~~~~~~~~~~>>> SemRepair says: starting forward analysis for target
 
-~~~~~~~~~~~>>> StrangerPatcher says: ...length patch is generated
 
-~~~~~~~~~~~>>> StrangerPatcher says: ........................................END LENGTH_PATCH ANALYSIS PHASE
 
-~~~~~~~~~~~>>> StrangerPatcher says: CONTINUE SANITIZATION ANALYSIS PHASE........................................
+~~~~~~~~~~~>>> SemRepair says: ...finished forward analysis for target.
 
-~~~~~~~~~~~>>> StrangerPatcher says: checking difference between patcher and patchee after length restriction
+~~~~~~~~~~~>>> SemRepair says: checking difference between reference and target
 
-~~~~~~~~~~~>>> StrangerPatcher says: starting last backward analysis for sanitization patch with diff auto after length restriction...
+~~~~~~~~~~~>>> SemRepair says: BEGIN LENGTH PATCH ANALYSIS PHASE........................................
 
-~~~~~~~~~~~>>> StrangerPatcher says: ...finished last backward analysis for sanitization patch with diff after length restriction.
+~~~~~~~~~~~>>> SemRepair says: length constraints contribute to the difference, fixing issue...
 
-~~~~~~~~~~~>>> StrangerPatcher says: ........................................END SANITIZATION ANALYSIS PHASE
+~~~~~~~~~~~>>> SemRepair says: starting a backward analysis to calculate length patch...
+
+~~~~~~~~~~~>>> SemRepair says: ...length patch is generated
+
+~~~~~~~~~~~>>> SemRepair says: ........................................END LENGTH_PATCH ANALYSIS PHASE
+
+~~~~~~~~~~~>>> SemRepair says: CONTINUE SANITIZATION ANALYSIS PHASE........................................
+
+~~~~~~~~~~~>>> SemRepair says: checking difference between reference and target after length restriction
+
+~~~~~~~~~~~>>> SemRepair says: starting last backward analysis for sanitization patch with diff auto after length restriction...
+
+~~~~~~~~~~~>>> SemRepair says: ...finished last backward analysis for sanitization patch with diff after length restriction.
+
+~~~~~~~~~~~>>> SemRepair says: ........................................END SANITIZATION ANALYSIS PHASE
+
+	------ OVERALL RESULT for: x ------
+	    Reference: /home/abaki/workspace/StrangerWrapper/test/reference_depgraph.dot
+	    Target: /home/abaki/workspace/StrangerWrapper/test/target_depgraph.dot
 	    - validation patch is generated
 	 size : states 10 : bddnodes 75
 
@@ -162,35 +172,35 @@ digraph MONA_DFA {
 }
 
 	 Validation Patch Analysis Info
-	 time : patchee backward analysis time : 37
-	 time : patcher backward analysis time : 2512
-	 time : validation comparison time : 98
-	 time : validation patch extraction total time : 2647
+	 time : patchee backward analysis time : 44
+	 time : patcher backward analysis time : 2566
+	 time : validation comparison time : 87
+	 time : validation patch extraction total time : 2697
 
 	 Sanitization Patch Analysis Info
-	 time : patchee first forward analysis time : 3817
-	 time : patcher first forward analysis time : 4044
-	 time : length issue check time : 1087
-	 time : length issue backward time : 11226
-	 time : length issue patch extraction total time : 12313
-	 time : sanitization backward time : 8138
-	 time : sanitization comparison time : 306
-	 time : sanitization patch extraction total time : 16305
+	 time : patchee first forward analysis time : 3186
+	 time : patcher first forward analysis time : 3799
+	 time : length issue check time : 968
+	 time : length issue backward time : 10459
+	 time : length issue patch extraction total time : 11427
+	 time : sanitization backward time : 7947
+	 time : sanitization comparison time : 281
+	 time : sanitization patch extraction total time : 15213
 
 	 Stranger Automaton Operations Info
-	 intersection : #19 : 995
-	 union : #13 : 380
-	 closure : #6 : 308
-	 complement : #6 : 223
+	 intersection : #19 : 928
+	 union : #13 : 395
+	 closure : #6 : 311
+	 complement : #6 : 213
 	 precisewiden : #0 : 0
 	 coarsewiden : #0 : 0
-	 concat : #12 : 876
+	 concat : #12 : 853
 	 pre_concat : #0 : 0
 	 const_pre_concat : #0 : 0
-	 replace : #5 : 25034
-	 pre_replace : #1 : 57
-	 vlab_restrict : #2 : 975
-	 pre_vlab_restrict : #2 : 1216
+	 replace : #5 : 23441
+	 pre_replace : #1 : 47
+	 vlab_restrict : #2 : 911
+	 pre_vlab_restrict : #2 : 1246
 	 addslahses : #0 : 0
 	 pre_addslahses : #0 : 0
 	 htmlspecialchars : #0 : 0
@@ -213,3 +223,5 @@ digraph MONA_DFA {
 	 pre_trim_set : #0 : 0
 	 substr : #0 : 0
 	 pre_substr : #0 : 0
+
+	------ END RESULT for: x ------

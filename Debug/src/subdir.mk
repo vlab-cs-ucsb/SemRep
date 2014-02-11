@@ -17,8 +17,6 @@ CPP_SRCS += \
 ../src/SemRepairDebugger.cpp \
 ../src/StrangerAutomaton.cpp \
 ../src/StrangerAutomatonException.cpp \
-../src/StrangerDebugger.cpp \
-../src/StrangerPatcher.cpp \
 ../src/StringAnalyzer.cpp \
 ../src/UnsupportedRegexException.cpp \
 ../src/main.cpp 
@@ -37,8 +35,6 @@ OBJS += \
 ./src/SemRepairDebugger.o \
 ./src/StrangerAutomaton.o \
 ./src/StrangerAutomatonException.o \
-./src/StrangerDebugger.o \
-./src/StrangerPatcher.o \
 ./src/StringAnalyzer.o \
 ./src/UnsupportedRegexException.o \
 ./src/main.o 
@@ -57,8 +53,6 @@ CPP_DEPS += \
 ./src/SemRepairDebugger.d \
 ./src/StrangerAutomaton.d \
 ./src/StrangerAutomatonException.d \
-./src/StrangerDebugger.d \
-./src/StrangerPatcher.d \
 ./src/StringAnalyzer.d \
 ./src/UnsupportedRegexException.d \
 ./src/main.d 

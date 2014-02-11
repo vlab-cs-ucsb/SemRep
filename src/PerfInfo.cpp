@@ -20,14 +20,14 @@ PerfInfo::~PerfInfo() {
 void PerfInfo::reset() {
 
 	//	Validation Extraction Time
-	 validation_patchee_backward_time = boost::posix_time::microseconds(0);
-	 validation_patcher_backward_time = boost::posix_time::microseconds(0);
+	 validation_target_backward_time = boost::posix_time::microseconds(0);
+	 validation_reference_backward_time = boost::posix_time::microseconds(0);
 	 validation_comparison_time = boost::posix_time::microseconds(0);
 	 validation_patch_extraction_total_time = boost::posix_time::microseconds(0);
 
 //    Sanitization Extraction Time
-	 sanitization_patchee_first_forward_time = boost::posix_time::microseconds(0);
-	 sanitization_patcher_first_forward_time = boost::posix_time::microseconds(0);
+	 sanitization_target_first_forward_time = boost::posix_time::microseconds(0);
+	 sanitization_reference_first_forward_time = boost::posix_time::microseconds(0);
 	 sanitization_length_issue_check_time = boost::posix_time::microseconds(0);
 	 sanitization_length_backward_time = boost::posix_time::microseconds(0);
 	 sanitization_length_patch_extraction_total_time = boost::posix_time::microseconds(0);
@@ -126,7 +126,7 @@ boost::posix_time::ptime PerfInfo::current_time() {
 }
 
 void PerfInfo::calculate_total_validation_extraction_time() {
-	validation_patch_extraction_total_time = validation_patchee_backward_time + validation_patcher_backward_time + validation_comparison_time;
+	validation_patch_extraction_total_time = validation_target_backward_time + validation_reference_backward_time + validation_comparison_time;
 }
 
 void PerfInfo::calculate_total_sanitization_length_extraction_time() {
@@ -134,14 +134,14 @@ void PerfInfo::calculate_total_sanitization_length_extraction_time() {
 }
 
 void PerfInfo::calculate_total_sanitization_extraction_time() {
-	sanitization_patch_extraction_total_time = sanitization_patchee_first_forward_time + sanitization_patcher_first_forward_time +
+	sanitization_patch_extraction_total_time = sanitization_target_first_forward_time + sanitization_reference_first_forward_time +
 			sanitization_patch_backward_time + sanitization_comparison_time;
 }
 
 void PerfInfo::print_validation_extraction_info() {
 	cout << endl << "\t Validation Patch Analysis Info" << endl;
-	cout << "\t time : patchee backward analysis time : " << validation_patchee_backward_time.total_microseconds() << endl;
-	cout << "\t time : patcher backward analysis time : " << validation_patcher_backward_time.total_microseconds() << endl;
+	cout << "\t time : patchee backward analysis time : " << validation_target_backward_time.total_microseconds() << endl;
+	cout << "\t time : patcher backward analysis time : " << validation_reference_backward_time.total_microseconds() << endl;
 	cout << "\t time : validation comparison time : " << validation_comparison_time.total_microseconds() << endl;
 	cout << "\t time : validation patch extraction total time : " << validation_patch_extraction_total_time.total_microseconds() << endl;
 
@@ -149,8 +149,8 @@ void PerfInfo::print_validation_extraction_info() {
 
 void PerfInfo::print_sanitization_extraction_info() {
 	cout << endl << "\t Sanitization Patch Analysis Info" << endl;
-	cout << "\t time : patchee first forward analysis time : " << sanitization_patchee_first_forward_time.total_microseconds() << endl;
-	cout << "\t time : patcher first forward analysis time : " << sanitization_patcher_first_forward_time.total_microseconds() << endl;
+	cout << "\t time : patchee first forward analysis time : " << sanitization_target_first_forward_time.total_microseconds() << endl;
+	cout << "\t time : patcher first forward analysis time : " << sanitization_reference_first_forward_time.total_microseconds() << endl;
 	cout << "\t time : length issue check time : " << sanitization_length_issue_check_time.total_microseconds() << endl;
 	cout << "\t time : length issue backward time : " << sanitization_length_backward_time.total_microseconds() << endl;
 	cout << "\t time : length issue patch extraction total time : " << sanitization_length_patch_extraction_total_time.total_microseconds() << endl;

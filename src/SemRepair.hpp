@@ -36,16 +36,16 @@ using namespace std;
 
 class SemRepair {
 public:
-	SemRepair(string patcher_dep_graph_file_name, string patchee_dep_graph_file_name, string input_field_name);
+	SemRepair(string reference_dep_graph_file_name, string target_dep_graph_file_name, string input_field_name);
 	virtual ~SemRepair();
 
 	StrangerAutomaton* computeValidationPatch();
 	StrangerAutomaton* computeSanitizationPatch();
 
-	StrangerAutomaton* computePatcherFWAnalysis();
-	AnalysisResult computePatcheeFWAnalysis();
-	StrangerAutomaton* computePatcheeLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
-	StrangerAutomaton* computePatcheeSanitizationPatch(StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
+	StrangerAutomaton* computeReferenceFWAnalysis();
+	AnalysisResult computeTargetFWAnalysis();
+	StrangerAutomaton* computeTargetLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult);
+	StrangerAutomaton* computeTargetSanitizationPatch(StrangerAutomaton* initialAuto, const AnalysisResult& fwAnalysisResult);
 
 	StrangerAutomaton* getValidationPatchAuto() { return validation_patch_auto; }
 	StrangerAutomaton* getLengthPatchAuto() { return length_patch_auto; }
@@ -65,22 +65,22 @@ public:
 
 	static PerfInfo perfInfo;
 private:
-	string patcher_dep_graph_file_name;
-	string patchee_dep_graph_file_name;
+	string reference_dep_graph_file_name;
+	string target_dep_graph_file_name;
 	string input_field_name;
 
-	DepGraph patcher_dep_graph;
-	DepGraph patchee_dep_graph;
-	DepGraph patcher_field_relevant_graph;
-	DepGraph patchee_field_relevant_graph;
+	DepGraph reference_dep_graph;
+	DepGraph target_dep_graph;
+	DepGraph reference_field_relevant_graph;
+	DepGraph target_field_relevant_graph;
 
-	DepGraphNode* patcher_uninit_field_node;
-	DepGraphNode* patchee_uninit_field_node;
+	DepGraphNode* reference_uninit_field_node;
+	DepGraphNode* target_uninit_field_node;
 
-	NodesList patcher_sorted_field_relevant_nodes;
-	NodesList patchee_sorted_field_relevant_nodes;
+	NodesList reference_sorted_field_relevant_nodes;
+	NodesList target_sorted_field_relevant_nodes;
 
-	StrangerAutomaton* patcher_sink_auto;
+	StrangerAutomaton* reference_sink_auto;
 
 	StrangerAutomaton* length_patch_auto;
 	StrangerAutomaton* validation_patch_auto;

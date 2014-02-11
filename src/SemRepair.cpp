@@ -9,51 +9,51 @@
 
 PerfInfo SemRepair::perfInfo;
 
-SemRepair::SemRepair(string patcher_dep_graph_file_name,string patchee_dep_graph_file_name, string input_field_name) {
+SemRepair::SemRepair(string reference_dep_graph_file_name,string target_dep_graph_file_name, string input_field_name) {
 
-	this->patcher_dep_graph_file_name = patcher_dep_graph_file_name;
-	this->patcher_dep_graph_file_name = patchee_dep_graph_file_name;
+	this->reference_dep_graph_file_name = reference_dep_graph_file_name;
+	this->reference_dep_graph_file_name = target_dep_graph_file_name;
 	this->input_field_name = input_field_name;
 
 	// read dep graphs
-	this->patcher_dep_graph = DepGraph::parseDotFile(patcher_dep_graph_file_name);
-	this->patchee_dep_graph = DepGraph::parseDotFile(patchee_dep_graph_file_name);
+	this->reference_dep_graph = DepGraph::parseDotFile(reference_dep_graph_file_name);
+	this->target_dep_graph = DepGraph::parseDotFile(target_dep_graph_file_name);
 
 	// initialize input nodes
-	this->patcher_uninit_field_node = patcher_dep_graph.findInputNode(input_field_name);
-	if (patcher_uninit_field_node == NULL) {
-		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in patcher dep graph.");
+	this->reference_uninit_field_node = reference_dep_graph.findInputNode(input_field_name);
+	if (reference_uninit_field_node == NULL) {
+		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in reference dep graph.");
 	}
-	message(stringbuilder() << "patcher uninit node(" << patcher_uninit_field_node->getID() << ") found for field " << input_field_name << ".");
+	message(stringbuilder() << "reference uninit node(" << reference_uninit_field_node->getID() << ") found for field " << input_field_name << ".");
 
-	this->patchee_uninit_field_node = patchee_dep_graph.findInputNode(input_field_name);
-	if (patchee_uninit_field_node == NULL) {
-		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in patchee dep graph.");
+	this->target_uninit_field_node = target_dep_graph.findInputNode(input_field_name);
+	if (target_uninit_field_node == NULL) {
+		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in target dep graph.");
 	}
-	message(stringbuilder() << "patchee uninit node(" << patchee_uninit_field_node->getID() << ") found for field " << input_field_name << ".");
+	message(stringbuilder() << "target uninit node(" << target_uninit_field_node->getID() << ") found for field " << input_field_name << ".");
 
 	// initialize input relevant graphs
-	this->patcher_field_relevant_graph = patcher_dep_graph.getInputRelevantGraph(patcher_uninit_field_node);
-	this->patchee_field_relevant_graph = patchee_dep_graph.getInputRelevantGraph(patchee_uninit_field_node);
+	this->reference_field_relevant_graph = reference_dep_graph.getInputRelevantGraph(reference_uninit_field_node);
+	this->target_field_relevant_graph = target_dep_graph.getInputRelevantGraph(target_uninit_field_node);
 
 	// get sorted node lists for each field
-	patcher_field_relevant_graph.sort(patcher_field_relevant_graph);
-	this->patcher_sorted_field_relevant_nodes = patcher_field_relevant_graph.getSortedNodes();
-	patchee_field_relevant_graph.sort(patchee_field_relevant_graph);
-	this->patchee_sorted_field_relevant_nodes = patchee_field_relevant_graph.getSortedNodes();
+	reference_field_relevant_graph.sort(reference_field_relevant_graph);
+	this->reference_sorted_field_relevant_nodes = reference_field_relevant_graph.getSortedNodes();
+	target_field_relevant_graph.sort(target_field_relevant_graph);
+	this->target_sorted_field_relevant_nodes = target_field_relevant_graph.getSortedNodes();
 
 	if (DEBUG_ENABLED_INIT != 0) {
 		DEBUG_MESSAGE("------------ Debugging Initalization ------------");
 
-//		DEBUG_MESSAGE("Patcher Dependency Graph");
-//		this->patcher_dep_graph.toDot();
-//		DEBUG_MESSAGE("Patcher Field Relevant Dependency Graph");
-//		this->patcher_field_relevant_graph.toDot();
+//		DEBUG_MESSAGE("reference Dependency Graph");
+//		this->reference_dep_graph.toDot();
+//		DEBUG_MESSAGE("reference Field Relevant Dependency Graph");
+//		this->reference_field_relevant_graph.toDot();
 
-		DEBUG_MESSAGE("Patchee Dependency Graph");
-		this->patchee_dep_graph.toDot();
-		DEBUG_MESSAGE("Patchee Field Relevant Dependency Graph");
-		this->patchee_field_relevant_graph.toDot();
+		DEBUG_MESSAGE("Target Dependency Graph");
+		this->target_dep_graph.toDot();
+		DEBUG_MESSAGE("Target Field Relevant Dependency Graph");
+		this->target_field_relevant_graph.toDot();
 
 	}
 
@@ -62,12 +62,12 @@ SemRepair::SemRepair(string patcher_dep_graph_file_name,string patchee_dep_graph
 }
 
 SemRepair::~SemRepair() {
-	delete this->patcher_uninit_field_node;
-	delete this->patchee_uninit_field_node;
+	delete this->reference_uninit_field_node;
+	delete this->target_uninit_field_node;
 }
 
 void SemRepair::message(string msg) {
-	cout << endl << "~~~~~~~~~~~>>> StrangerPatcher says: " << msg << endl;
+	cout << endl << "~~~~~~~~~~~>>> SemRepair says: " << msg << endl;
 }
 
 
@@ -136,21 +136,21 @@ void SemRepair::printResults() {
 	perfInfo.reset();
 }
 // TODO parameterize paths
-void SemRepair::writeAutosforCodeGeneration(string field_name, string patcherName, string patcheeName) {
-	string patcher_name = patcherName.substr( patcherName.find_last_of('/') + 1,patcherName.find_last_of('.') - patcherName.find_last_of('/') - 1 );
-	string patchee_name = patcheeName.substr( patcheeName.find_last_of('/') + 1,patcheeName.find_last_of('.') - patcheeName.find_last_of('/') - 1 );
+void SemRepair::writeAutosforCodeGeneration(string field_name, string referenceName, string targetName) {
+	string reference_name = referenceName.substr( referenceName.find_last_of('/') + 1,referenceName.find_last_of('.') - referenceName.find_last_of('/') - 1 );
+	string target_name = targetName.substr( targetName.find_last_of('/') + 1,targetName.find_last_of('.') - targetName.find_last_of('/') - 1 );
 	string type = "accept";
 	if (calculate_rejected_set) {
 		type = "reject";
 	}
 	if (is_validation_patch_required) {
-		string v_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << field_name << "_" << patcher_name << "_" << patchee_name <<
+		string v_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << field_name << "_" << reference_name << "_" << target_name <<
 				"_VP_" << type << "_auto.dot";
 		validation_patch_auto->toDotFile(v_patch_auto_path);
 		message(stringbuilder() << "Validation Patch auto is written... : " << v_patch_auto_path);
 	}
 	if (is_length_patch_required) {
-		string l_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << patcher_name << "_" << patchee_name <<
+		string l_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << reference_name << "_" << target_name <<
 						"_LP_" << type << "_auto.dot";
 		length_patch_auto->toDotFile(l_patch_auto_path);
 		message(stringbuilder() << "Length Patch auto is written... : " << l_patch_auto_path);
@@ -158,9 +158,9 @@ void SemRepair::writeAutosforCodeGeneration(string field_name, string patcherNam
 	if (is_sanitization_patch_required) {
 		string path = "/home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/";
 
-		string ref_auto_name = path + "references/" + field_name + "_" + patcher_name + "_" + patchee_name + "_auto.dot";
-		string patch_auto_name = path + "patches/" + field_name + "_" + patcher_name + "_" + patchee_name + "_auto.dot";
-		patcher_sink_auto->toDotFile(ref_auto_name);
+		string ref_auto_name = path + "references/" + field_name + "_" + reference_name + "_" + target_name + "_auto.dot";
+		string patch_auto_name = path + "patches/" + field_name + "_" + reference_name + "_" + target_name + "_auto.dot";
+		reference_sink_auto->toDotFile(ref_auto_name);
 		sanitization_patch_auto->toDotFile(patch_auto_name);
 		message(stringbuilder() << "Sanitization Patch autos are written for mincut... : " << "ref auto: " << ref_auto_name << ", patch auto: " << patch_auto_name);
 		cout << endl << "\t Automata for Mincut are written:" << endl;
@@ -176,21 +176,21 @@ void SemRepair::writeAutosforCodeGeneration(string field_name, string patcherNam
  * result 1 : there is a maximum length restriction (may also have minimum inside)
  * result 2 : there is a minimum length restriction (max length is infinite in that case)
  */
-int SemRepair::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto) {
+int SemRepair::isLengthAnIssue(StrangerAutomaton* referenceAuto, StrangerAutomaton*targetAuto) {
 	message("BEGIN LENGTH PATCH ANALYSIS PHASE........................................");
 	boost::posix_time::ptime start_time = perfInfo.current_time();
 	int result = 0;
-	if(patcherAuto->isLengthFinite()) {
-		if (patcheeAuto->isLengthFinite()) {
-			if (patcherAuto->getMaxLength() < patcheeAuto->getMaxLength()) {
+	if(referenceAuto->isLengthFinite()) {
+		if (targetAuto->isLengthFinite()) {
+			if (referenceAuto->getMaxLength() < targetAuto->getMaxLength()) {
 				result = 1;
 			}
 		}
 		else {
 			result = 1;
 		}
-	} else if (patcherAuto->checkEmptyString()) {
-		if( !patcheeAuto->checkEmptyString() ) {
+	} else if (referenceAuto->checkEmptyString()) {
+		if( !targetAuto->checkEmptyString() ) {
 			result = 2;
 		}
 	}
@@ -208,45 +208,45 @@ StrangerAutomaton* SemRepair::computeValidationPatch() {
 	ImageComputer analyzer;
 	boost::posix_time::ptime start_time;
 	try {
-		message("extracting validation from patcher");
+		message("extracting validation from reference");
 		start_time = perfInfo.current_time();
-		AnalysisResult patcher_validationExtractionResults =
-				analyzer.doBackwardAnalysis_ValidationCase(patcher_dep_graph, patcher_field_relevant_graph, StrangerAutomaton::makeBottom());
-		StrangerAutomaton* patcher_negVPatch = patcher_validationExtractionResults[patcher_uninit_field_node->getID()];
-		StrangerAutomaton* patcher_validation = patcher_negVPatch;
+		AnalysisResult reference_validationExtractionResults =
+				analyzer.doBackwardAnalysis_ValidationCase(reference_dep_graph, reference_field_relevant_graph, StrangerAutomaton::makeBottom());
+		StrangerAutomaton* reference_negVPatch = reference_validationExtractionResults[reference_uninit_field_node->getID()];
+		StrangerAutomaton* reference_validation = reference_negVPatch;
 		if ( !calculate_rejected_set ) {
-			patcher_validation = patcher_negVPatch->complement(patcher_uninit_field_node->getID());
+			reference_validation = reference_negVPatch->complement(reference_uninit_field_node->getID());
 		}
 
-		perfInfo.validation_patcher_backward_time = perfInfo.current_time() - start_time;
+		perfInfo.validation_reference_backward_time = perfInfo.current_time() - start_time;
 		if (DEBUG_ENABLED_VP != 0) {
-			DEBUG_MESSAGE("patcher validation auto:");
-			DEBUG_AUTO(patcher_validation);
+			DEBUG_MESSAGE("reference validation auto:");
+			DEBUG_AUTO(reference_validation);
 		}
 
-		message("extracting validation from patchee");
+		message("extracting validation from target");
 		start_time = perfInfo.current_time();
-		AnalysisResult patchee_validationExtractionResults =
-				analyzer.doBackwardAnalysis_ValidationCase(patchee_dep_graph, patchee_field_relevant_graph, StrangerAutomaton::makeBottom());
-		StrangerAutomaton* patchee_negVPatch = patchee_validationExtractionResults[patchee_uninit_field_node->getID()];
-		StrangerAutomaton* patchee_validation = patchee_negVPatch;
+		AnalysisResult target_validationExtractionResults =
+				analyzer.doBackwardAnalysis_ValidationCase(target_dep_graph, target_field_relevant_graph, StrangerAutomaton::makeBottom());
+		StrangerAutomaton* target_negVPatch = target_validationExtractionResults[target_uninit_field_node->getID()];
+		StrangerAutomaton* target_validation = target_negVPatch;
 		if ( !calculate_rejected_set ) {
-			patchee_validation = patchee_negVPatch->complement(patchee_uninit_field_node->getID());
+			target_validation = target_negVPatch->complement(target_uninit_field_node->getID());
 		}
-		perfInfo.validation_patchee_backward_time = perfInfo.current_time() - start_time;
+		perfInfo.validation_target_backward_time = perfInfo.current_time() - start_time;
 		if (DEBUG_ENABLED_VP != 0) {
-			DEBUG_MESSAGE("patchee validation auto:");
-			DEBUG_AUTO(patchee_validation);
+			DEBUG_MESSAGE("target validation auto:");
+			DEBUG_AUTO(target_validation);
 		}
 
 		message("computing validation patch");
 		start_time = perfInfo.current_time();
 		StrangerAutomaton* diffAuto = NULL;
 		if (calculate_rejected_set)  {
-			diffAuto = patcher_validation->difference(patchee_validation, patchee_uninit_field_node->getID());
+			diffAuto = reference_validation->difference(target_validation, target_uninit_field_node->getID());
 		}
 		else {
-			diffAuto = patchee_validation->difference(patcher_validation, patchee_uninit_field_node->getID());
+			diffAuto = target_validation->difference(reference_validation, target_uninit_field_node->getID());
 		}
 		if (DEBUG_ENABLED_VP != 0) {
 			DEBUG_MESSAGE("difference auto:");
@@ -256,19 +256,19 @@ StrangerAutomaton* SemRepair::computeValidationPatch() {
 			if (diffAuto->isEmpty()) {
 				message("difference auto is empty, no validation patch is required!!!");
 				is_validation_patch_required = false;
-				validation_patch_auto = StrangerAutomaton::makeBottom(patchee_uninit_field_node->getID());
+				validation_patch_auto = StrangerAutomaton::makeBottom(target_uninit_field_node->getID());
 
 			} else {
 				message("validation patch is generated for input: " + input_field_name);
 				is_validation_patch_required = true;
-				validation_patch_auto = diffAuto->clone(patchee_uninit_field_node->getID());
+				validation_patch_auto = diffAuto->clone(target_uninit_field_node->getID());
 				if (DEBUG_ENABLED_VP != 0) {
 					DEBUG_MESSAGE("validation patch is difference auto...");
 				}
 			}
 		}
 		else {
-			StrangerAutomaton* interAuto = patchee_validation->intersect(patcher_validation, patchee_uninit_field_node->getID());
+			StrangerAutomaton* interAuto = target_validation->intersect(reference_validation, target_uninit_field_node->getID());
 			if (DEBUG_ENABLED_VP != 0) {
 				DEBUG_MESSAGE("intersection auto:");
 				DEBUG_AUTO(interAuto);
@@ -276,8 +276,8 @@ StrangerAutomaton* SemRepair::computeValidationPatch() {
 			if (diffAuto->isEmpty()) {
 				message("difference auto is empty, no validation patch is required!!!");
 				is_validation_patch_required = false;
-				validation_patch_auto = StrangerAutomaton::makeAnyString(patchee_uninit_field_node->getID());
-//				validation_patch_auto = patchee_validation;
+				validation_patch_auto = StrangerAutomaton::makeAnyString(target_uninit_field_node->getID());
+//				validation_patch_auto = target_validation;
 				delete interAuto;
 
 			} else if (interAuto->isEmpty()) {
@@ -299,8 +299,8 @@ StrangerAutomaton* SemRepair::computeValidationPatch() {
 
 		perfInfo.validation_comparison_time = perfInfo.current_time() - start_time;
 
-		delete patcher_validation;
-		delete patchee_validation;
+		delete reference_validation;
+		delete target_validation;
 		delete diffAuto;
 
 	} catch (StrangerStringAnalysisException const &e) {
@@ -314,94 +314,94 @@ StrangerAutomaton* SemRepair::computeValidationPatch() {
 }
 
 /**
- * Computes sink post image for patcher
+ * Computes sink post image for reference
  */
-StrangerAutomaton* SemRepair::computePatcherFWAnalysis() {
+StrangerAutomaton* SemRepair::computeReferenceFWAnalysis() {
 
-	message("computing patcher sink post image...");
-	AnalysisResult patcherAnalysisResult;
-	UninitNodesList patcherUninitNodes = patcher_dep_graph.getUninitNodes();
+	message("computing reference sink post image...");
+	AnalysisResult referenceAnalysisResult;
+	UninitNodesList referenceUninitNodes = reference_dep_graph.getUninitNodes();
 
-	// initialize patcher input nodes to bottom
-	message("initializing patcher inputs with bottom");
-	for (UninitNodesListConstIterator it = patcherUninitNodes.begin(); it != patcherUninitNodes.end(); it++) {
-		patcherAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
+	// initialize reference input nodes to bottom
+	message("initializing reference inputs with bottom");
+	for (UninitNodesListConstIterator it = referenceUninitNodes.begin(); it != referenceUninitNodes.end(); it++) {
+		referenceAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
 	}
 	// initialize uninit node that we are interested in with sigma star
-	message(stringbuilder() << "initializing input node(" << patcher_uninit_field_node->getID() << ") with sigma star");
-	delete patcherAnalysisResult[patcher_uninit_field_node->getID()];
-	patcherAnalysisResult[patcher_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(patcher_uninit_field_node->getID());
+	message(stringbuilder() << "initializing input node(" << reference_uninit_field_node->getID() << ") with sigma star");
+	delete referenceAnalysisResult[reference_uninit_field_node->getID()];
+	referenceAnalysisResult[reference_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(reference_uninit_field_node->getID());
 
-	ImageComputer patcherAnalyzer;
+	ImageComputer referenceAnalyzer;
 
 	try {
-		message("starting forward analysis for patcher...");
-		patcherAnalyzer.doForwardAnalysis_SingleInput(patcher_dep_graph, patcher_field_relevant_graph, patcherAnalysisResult);
-		message("...finished forward analysis for patcher.");
+		message("starting forward analysis for reference...");
+		referenceAnalyzer.doForwardAnalysis_SingleInput(reference_dep_graph, reference_field_relevant_graph, referenceAnalysisResult);
+		message("...finished forward analysis for reference.");
 
 	} catch (StrangerStringAnalysisException const &e) {
         cerr << e.what();
         exit(EXIT_FAILURE);
     }
 
-	patcher_sink_auto = patcherAnalysisResult[patcher_field_relevant_graph.getRoot()->getID()];
-	message("...computed patcher sink post image.");
-	return patcher_sink_auto;
+	reference_sink_auto = referenceAnalysisResult[reference_field_relevant_graph.getRoot()->getID()];
+	message("...computed reference sink post image.");
+	return reference_sink_auto;
 }
 
 /**
- * Computes sink post image for patchee, first time
+ * Computes sink post image for target, first time
  */
-AnalysisResult SemRepair::computePatcheeFWAnalysis() {
-	AnalysisResult patcheeAnalysisResult;
-	UninitNodesList patcheeUninitNodes = patchee_dep_graph.getUninitNodes();
+AnalysisResult SemRepair::computeTargetFWAnalysis() {
+	AnalysisResult targetAnalysisResult;
+	UninitNodesList targetUninitNodes = target_dep_graph.getUninitNodes();
 
-	message("initializing patchee inputs with bottom");
-	for (UninitNodesListConstIterator it = patcheeUninitNodes.begin(); it != patcheeUninitNodes.end(); it++) {
-		patcheeAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
+	message("initializing target inputs with bottom");
+	for (UninitNodesListConstIterator it = targetUninitNodes.begin(); it != targetUninitNodes.end(); it++) {
+		targetAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
 	}
 
 	// initialize uninit node that we are interested in with validation patch_auto
-	message(stringbuilder() << "initializing input node(" << patchee_uninit_field_node->getID() << ") with validation patch auto");
-	delete patcheeAnalysisResult[patchee_uninit_field_node->getID()];
+	message(stringbuilder() << "initializing input node(" << target_uninit_field_node->getID() << ") with validation patch auto");
+	delete targetAnalysisResult[target_uninit_field_node->getID()];
 	if (calculate_rejected_set) {
-		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto->complement(patchee_uninit_field_node->getID());
+		targetAnalysisResult[target_uninit_field_node->getID()] = validation_patch_auto->complement(target_uninit_field_node->getID());
 	} else {
-		patcheeAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto;
+		targetAnalysisResult[target_uninit_field_node->getID()] = validation_patch_auto;
 	}
 
 
-	ImageComputer patcheeAnalyzer;
+	ImageComputer targetAnalyzer;
 
 	try {
 
-		message("starting forward analysis for patchee");
-		patcheeAnalyzer.doForwardAnalysis_SingleInput(patchee_dep_graph, patchee_field_relevant_graph, patcheeAnalysisResult);
-		message("...finished forward analysis for patchee.");
+		message("starting forward analysis for target");
+		targetAnalyzer.doForwardAnalysis_SingleInput(target_dep_graph, target_field_relevant_graph, targetAnalysisResult);
+		message("...finished forward analysis for target.");
 
 	} catch (StrangerStringAnalysisException const &e) {
         cerr << e.what();
         exit(EXIT_FAILURE);
     }
 
-	return patcheeAnalysisResult;
+	return targetAnalysisResult;
 }
 
-StrangerAutomaton* SemRepair::computePatcheeLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult) {
+StrangerAutomaton* SemRepair::computeTargetLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult) {
 	message("starting a backward analysis to calculate length patch...");
-	ImageComputer patcheeAnalyzer;
+	ImageComputer targetAnalyzer;
 	try {
-		fwAnalysisResult[patchee_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(-5);
+		fwAnalysisResult[target_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(-5);
 		boost::posix_time::ptime start_time = perfInfo.current_time();
-		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_GeneralCase(patchee_dep_graph, patchee_field_relevant_graph, initialAuto, fwAnalysisResult);
+		AnalysisResult bwResult = targetAnalyzer.doBackwardAnalysis_GeneralCase(target_dep_graph, target_field_relevant_graph, initialAuto, fwAnalysisResult);
 		perfInfo.sanitization_length_backward_time = perfInfo.current_time() - start_time;
-		StrangerAutomaton* negPatchAuto = bwResult[patchee_uninit_field_node->getID()];
+		StrangerAutomaton* negPatchAuto = bwResult[target_uninit_field_node->getID()];
 		if ( calculate_rejected_set ) {
 			length_patch_auto = negPatchAuto->clone(-5);
 		} else {
 			length_patch_auto = negPatchAuto->complement(-5);
 		}
-//		fwAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto->intersect(length_patch_auto,-5);
+//		fwAnalysisResult[target_uninit_field_node->getID()] = validation_patch_auto->intersect(length_patch_auto,-5);
 
 	} catch (StrangerStringAnalysisException const &e) {
         cerr << e.what();
@@ -411,10 +411,10 @@ StrangerAutomaton* SemRepair::computePatcheeLengthPatch(StrangerAutomaton* initi
 	return length_patch_auto;
 }
 
-StrangerAutomaton* SemRepair::computePatcheeSanitizationPatch(StrangerAutomaton* initialAuto,	const AnalysisResult& fwAnalysisResult) {
-	ImageComputer patcheeAnalyzer;
-	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_GeneralCase(patchee_dep_graph, patchee_field_relevant_graph, initialAuto, fwAnalysisResult);
-	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
+StrangerAutomaton* SemRepair::computeTargetSanitizationPatch(StrangerAutomaton* initialAuto,	const AnalysisResult& fwAnalysisResult) {
+	ImageComputer targetAnalyzer;
+	AnalysisResult bwResult = targetAnalyzer.doBackwardAnalysis_GeneralCase(target_dep_graph, target_field_relevant_graph, initialAuto, fwAnalysisResult);
+	sanitization_patch_auto = bwResult[target_uninit_field_node->getID()];
 	return sanitization_patch_auto;
 }
 
@@ -425,24 +425,24 @@ StrangerAutomaton* SemRepair::computePatcheeSanitizationPatch(StrangerAutomaton*
 StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 	message("BEGIN SANITIZATION ANALYSIS PHASE........................................");
 	boost::posix_time::ptime start_time = perfInfo.current_time();
-	patcher_sink_auto = computePatcherFWAnalysis();
-	perfInfo.sanitization_patcher_first_forward_time = perfInfo.current_time() - start_time;
+	reference_sink_auto = computeReferenceFWAnalysis();
+	perfInfo.sanitization_reference_first_forward_time = perfInfo.current_time() - start_time;
 	if (DEBUG_ENABLED_SC != 0) {
-		DEBUG_MESSAGE("Patcher Sink Auto - First forward analysis");
-		DEBUG_AUTO(patcher_sink_auto);
+		DEBUG_MESSAGE("Reference Sink Auto - First forward analysis");
+		DEBUG_AUTO(reference_sink_auto);
 	}
 	start_time = perfInfo.current_time();
-	AnalysisResult patcheeAnalysisResult = computePatcheeFWAnalysis();
-	StrangerAutomaton* patcheeSinkAuto = patcheeAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
-	perfInfo.sanitization_patchee_first_forward_time = perfInfo.current_time() - start_time;
+	AnalysisResult targetAnalysisResult = computeTargetFWAnalysis();
+	StrangerAutomaton* targetSinkAuto = targetAnalysisResult[target_field_relevant_graph.getRoot()->getID()];
+	perfInfo.sanitization_target_first_forward_time = perfInfo.current_time() - start_time;
 	if (DEBUG_ENABLED_SC != 0) {
-		DEBUG_MESSAGE("Patchee Sink Auto - First forward analysis");
-		DEBUG_AUTO(patcheeSinkAuto);
+		DEBUG_MESSAGE("Target Sink Auto - First forward analysis");
+		DEBUG_AUTO(targetSinkAuto);
 	}
 
-	message("checking difference between patcher and patchee");
+	message("checking difference between reference and target");
 	boost::posix_time::ptime comp_time = perfInfo.current_time();
-	StrangerAutomaton* differenceAuto = patcheeSinkAuto->difference(patcher_sink_auto, -3);
+	StrangerAutomaton* differenceAuto = targetSinkAuto->difference(reference_sink_auto, -3);
 	bool isDifferenceAutoEmpty = differenceAuto->isEmpty();
 	perfInfo.sanitization_comparison_time = perfInfo.current_time() - comp_time;
 	if (DEBUG_ENABLED_SC != 0) {
@@ -457,36 +457,36 @@ StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 		length_patch_auto = NULL;
 		is_sanitization_patch_required = false;
 		is_length_patch_required = false;
-	} else if( (length_check_result = isLengthAnIssue(patcher_sink_auto,patcheeSinkAuto)) != 0) {
+	} else if( (length_check_result = isLengthAnIssue(reference_sink_auto,targetSinkAuto)) != 0) {
 		message("length constraints contribute to the difference, fixing issue...");
 		StrangerAutomaton* lengthRestrictAuto = NULL;
 		if (length_check_result == 1) {
 			start_time = perfInfo.current_time();
-			lengthRestrictAuto = patcheeSinkAuto->restrictLengthByOtherAutomatonFinite(patcher_sink_auto, -4);
+			lengthRestrictAuto = targetSinkAuto->restrictLengthByOtherAutomatonFinite(reference_sink_auto, -4);
 			perfInfo.sanitization_length_issue_check_time += perfInfo.current_time() - start_time; // adding to length issue check in if statements
 		} else if (length_check_result == 2) {
 			start_time = perfInfo.current_time();
 			StrangerAutomaton* emptyAuto = StrangerAutomaton::makeEmptyString(-4);
 			StrangerAutomaton* negEmptyAuto = emptyAuto->complement(-4);
-			lengthRestrictAuto = patcheeSinkAuto->intersect(negEmptyAuto);
+			lengthRestrictAuto = targetSinkAuto->intersect(negEmptyAuto);
 			delete emptyAuto;
 			delete negEmptyAuto;
 			perfInfo.sanitization_length_issue_check_time += perfInfo.current_time() - start_time;
 		}
 
 		if (DEBUG_ENABLED_LP != 0) {
-			DEBUG_MESSAGE("Length restricted patchee sink automaton:");
+			DEBUG_MESSAGE("Length restricted target sink automaton:");
 			DEBUG_AUTO(lengthRestrictAuto);
 		}
 
 		try {
 			// use negation of length restricted auto to solve the problem of overapproximation
 			StrangerAutomaton* negLengthRestrictAuto = lengthRestrictAuto->complement(-4);
-			StrangerAutomaton* rejectedLengthAuto = patcheeSinkAuto->intersect(negLengthRestrictAuto, -4);
+			StrangerAutomaton* rejectedLengthAuto = targetSinkAuto->intersect(negLengthRestrictAuto, -4);
 			delete negLengthRestrictAuto;
 //			cout << "rejected length automaton: " << endl;
 //			rejectedLengthAuto->toDotAscii(0);
-			computePatcheeLengthPatch(rejectedLengthAuto, patcheeAnalysisResult);
+			computeTargetLengthPatch(rejectedLengthAuto, targetAnalysisResult);
 
 			if (DEBUG_ENABLED_LP != 0) {
 				DEBUG_MESSAGE("Length patch automaton");
@@ -494,10 +494,10 @@ StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 			}
 			message("........................................END LENGTH_PATCH ANALYSIS PHASE");
 			message("CONTINUE SANITIZATION ANALYSIS PHASE........................................");
-			message("checking difference between patcher and patchee after length restriction");
+			message("checking difference between reference and target after length restriction");
 			delete differenceAuto;
 			comp_time = perfInfo.current_time();
-			differenceAuto = lengthRestrictAuto->difference(patcher_sink_auto, -3);
+			differenceAuto = lengthRestrictAuto->difference(reference_sink_auto, -3);
 			bool isDifferenceAutoEmpty = differenceAuto->isEmpty();
 			perfInfo.sanitization_comparison_time += perfInfo.current_time() - comp_time;
 			if (DEBUG_ENABLED_SP != 0) {
@@ -514,7 +514,7 @@ StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 			} else {
 				message("starting last backward analysis for sanitization patch with diff auto after length restriction...");
 				start_time = perfInfo.current_time();
-				sanitization_patch_auto = computePatcheeSanitizationPatch(differenceAuto, patcheeAnalysisResult);
+				sanitization_patch_auto = computeTargetSanitizationPatch(differenceAuto, targetAnalysisResult);
 				perfInfo.sanitization_patch_backward_time = perfInfo.current_time() - start_time;
 				if (DEBUG_ENABLED_SP != 0) {
 					DEBUG_MESSAGE("Sanitization patch auto");
@@ -534,7 +534,7 @@ StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 		message("CONTINUE SANITIZATION ANALYSIS PHASE........................................");
 		message("starting last backward analysis for sanitization patch with diff auto...");
 		start_time = perfInfo.current_time();
-		sanitization_patch_auto = computePatcheeSanitizationPatch(differenceAuto, patcheeAnalysisResult);
+		sanitization_patch_auto = computeTargetSanitizationPatch(differenceAuto, targetAnalysisResult);
 		perfInfo.sanitization_patch_backward_time = perfInfo.current_time() - start_time;
 		if (DEBUG_ENABLED_SP != 0) {
 			DEBUG_MESSAGE("Sanitization patch auto");
@@ -550,14 +550,14 @@ StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 	return sanitization_patch_auto;
 }
 
-//StrangerAutomaton* StrangerPatcher::testVulnerabilitySignature(){
+//StrangerAutomaton* SemRepair::testVulnerabilitySignature(){
 //
 //	validation_patch_auto = StrangerAutomaton::makeAnyString();
-//	AnalysisResult patcheeAnalysisResult = computePatcheeFWAnalysis();
-//	StrangerAutomaton* sinkAuto = patcheeAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
+//	AnalysisResult targetAnalysisResult = computeTargetFWAnalysis();
+//	StrangerAutomaton* sinkAuto = targetAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
 //	StrangerAutomaton* attackPattern = StrangerAutomaton::regExToAuto("/.*<script.*>.*/");
 //	StrangerAutomaton* intersection = sinkAuto->intersect(attackPattern);
-//	StrangerAutomaton* signature = computePatcheeSanitizationPatch(intersection, patcheeAnalysisResult);
+//	StrangerAutomaton* signature = computeTargetSanitizationPatch(intersection, targetAnalysisResult);
 //
 //	cout << "********************************** signature **********************************" << endl;
 //	signature->toDotAscii(0);
@@ -570,10 +570,10 @@ void SemRepair::testNewFunctions() {
 	AnalysisResult testAnalysisResult;
 	ImageComputer testImageComputer;
 
-//	cout << this->patcher_field_relevant_graph.toDot() << endl;
-	testImageComputer.doForwardAnalysis_GeneralCase(patcher_dep_graph, patcher_dep_graph.getRoot(), testAnalysisResult);
+//	cout << this->reference_field_relevant_graph.toDot() << endl;
+	testImageComputer.doForwardAnalysis_GeneralCase(reference_dep_graph, reference_dep_graph.getRoot(), testAnalysisResult);
 
-	testImageComputer.doBackwardAnalysis_GeneralCase(patcher_dep_graph,patcher_dep_graph,StrangerAutomaton::makeAnyString(), testAnalysisResult);
+	testImageComputer.doBackwardAnalysis_GeneralCase(reference_dep_graph,reference_dep_graph,StrangerAutomaton::makeAnyString(), testAnalysisResult);
 }
 
 

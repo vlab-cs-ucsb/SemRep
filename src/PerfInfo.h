@@ -33,14 +33,14 @@ public:
 	 void calculate_total_sanitization_extraction_time();
 
 //	Validation Extraction Time
-	 boost::posix_time::time_duration validation_patchee_backward_time;
-	 boost::posix_time::time_duration validation_patcher_backward_time;
+	 boost::posix_time::time_duration validation_target_backward_time;
+	 boost::posix_time::time_duration validation_reference_backward_time;
 	 boost::posix_time::time_duration validation_comparison_time;
 	 boost::posix_time::time_duration validation_patch_extraction_total_time;
 
 //    Sanitization Extraction Time
-	 boost::posix_time::time_duration sanitization_patchee_first_forward_time;
-	 boost::posix_time::time_duration sanitization_patcher_first_forward_time;
+	 boost::posix_time::time_duration sanitization_target_first_forward_time;
+	 boost::posix_time::time_duration sanitization_reference_first_forward_time;
 	 boost::posix_time::time_duration sanitization_length_issue_check_time;
 	 boost::posix_time::time_duration sanitization_length_backward_time;
 	 boost::posix_time::time_duration sanitization_length_patch_extraction_total_time;
