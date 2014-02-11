@@ -16,6 +16,7 @@ DepGraph::DepGraph() {
 	leavesReduced = false;
     label = "";
     labelloc = "";
+    time = 0;
 
 }
 
@@ -32,6 +33,8 @@ DepGraph::DepGraph(const DepGraph& other){
     this->currentOrder = other.currentOrder;
     this->label = other.label;
     this->labelloc = other.labelloc;
+    this->components = other.components;
+    time = 0;
 }
 
 DepGraph::~DepGraph() {
@@ -53,6 +56,7 @@ DepGraph& DepGraph::operator=(const DepGraph &other){
     this->currentOrder = other.currentOrder;
     this->label = other.label;
     this->labelloc = other.labelloc;
+    this->components = other.components;
     return *this;
 }
 
@@ -607,4 +611,44 @@ void DepGraph::sort(DepGraph& origGraph){
 //            sccs.add(scc);
 //        }
 //    }
+
+//vector<vector<int> > DepGraph::getSccs() {
+//    int n = getNumOfNodes();
+//    lowlink = new int[n];
+//    used = new bool[n];
+//
+//    for (int u = 0; u < n; u++)
+//      if (!used[u])
+//    	  dfsSCC(u);
+//
+//    return components;
+//}
+
+void DepGraph::dfsSCC(int u) {
+//    lowlink[u] = time++;
+//    used[u] = true;
+//    process_stack.push(u);
+//    bool is_component_root = true;
+//
+//    for (int v : graph[u]) {
+//      if (!used[v])
+//    	  dfsSCC(v);
+//      if (lowlink[u] > lowlink[v]) {
+//        lowlink[u] = lowlink[v];
+//        is_component_root = false;
+//      }
+//    }
+//
+//    if (is_component_root) {
+//      List<Integer> component = new ArrayList<>();
+//      while (true) {
+//        int k = stack.remove(stack.size() - 1);
+//        component.add(k);
+//        lowlink[k] = Integer.MAX_VALUE;
+//        if (k == u)
+//          break;
+//      }
+//      components.add(component);
+//    }
+}
 

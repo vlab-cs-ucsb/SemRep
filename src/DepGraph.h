@@ -15,6 +15,7 @@
 #include "DepGraphNormalNode.h"
 #include <map>
 #include <vector>
+#include <stack>
 #include <set>
 #include <algorithm>
 #include <exception>
@@ -117,6 +118,8 @@ public:
 	std::vector<NodesList> getSccs()  {
 		throw std::runtime_error("DepGraph.getSccs() not implemented yet.");
 	};
+//	vector<vector<int> > getSccs();
+
 	// sort the graph in a topologically
 	void sort(DepGraph *origGraph);
 	NodesList getSortedNodes()  {
@@ -166,6 +169,16 @@ private:
 	    static int currentID;
 	    static int currentSccID;
 	    static int currentOrder;
+
+	    // tarjan's algorithm params
+	    int time;
+//	    List<Integer>[] graph;
+	    int* lowlink;
+	    bool* used;
+	    stack<int> process_stack;
+	    vector<vector<int>> components;
+
+	    void dfsSCC(int u);
 
 	    void sccVisit(DepGraphNode* v, NodesList stack,
 	            std::map<const DepGraphNode*,int> dfsnum,

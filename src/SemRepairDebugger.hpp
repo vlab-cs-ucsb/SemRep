@@ -1,12 +1,12 @@
 /*
- * StrangerDebugger.hpp
+ * SemRepairDebugger.hpp
  *
  *  Created on: Dec 17, 2013
  *      Author: baki
  */
 
-#ifndef STRANGERDEBUGGER_HPP_
-#define STRANGERDEBUGGER_HPP_
+#ifndef SEMREPAIRDEBUGGER_HPP_
+#define SEMREPAIRDEBUGGER_HPP_
 
 #include <string>
 #include <iostream>
@@ -38,4 +38,4 @@ extern unsigned char DEBUG_ENABLED_RESULTS;
 
 void DEBUG_MESSAGE(std::string msg);
 
-#endif /* STRANGERDEBUGGER_HPP_ */
+#endif /* SEMREPAIRDEBUGGER_HPP_ */

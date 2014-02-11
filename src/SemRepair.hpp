@@ -1,12 +1,13 @@
 /*
- * StrangerPatcher.h
+ * SemRepair.hpp
  *
- *  Created on: Oct 30, 2013
+ *  Created on: Feb 10, 2014
  *      Author: baki
  */
 
-#ifndef STRANGERPATCHER_H_
-#define STRANGERPATCHER_H_
+#ifndef SEMREPAIR_HPP_
+#define SEMREPAIR_HPP_
+
 
 #include "stranger_lib_internal.h"
 #include <iostream>
@@ -29,14 +30,14 @@
 
 #include "DepGraph.h"
 #include "ImageComputer.h"
-#include "StrangerDebugger.hpp"
+#include "SemRepairDebugger.hpp"
 
 using namespace std;
 
-class StrangerPatcher {
+class SemRepair {
 public:
-	StrangerPatcher(string patcher_dep_graph_file_name, string patchee_dep_graph_file_name, string input_field_name);
-	virtual ~StrangerPatcher();
+	SemRepair(string patcher_dep_graph_file_name, string patchee_dep_graph_file_name, string input_field_name);
+	virtual ~SemRepair();
 
 	StrangerAutomaton* computeValidationPatch();
 	StrangerAutomaton* computeSanitizationPatch();
@@ -50,7 +51,8 @@ public:
 	StrangerAutomaton* getLengthPatchAuto() { return length_patch_auto; }
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
 
-//	sStrangerAutomaton* testVulnerabilitySignature();
+//	StrangerAutomaton* testVulnerabilitySignature();
+	void testNewFunctions();
 
 	void printResults();
 	void writeAutosforCodeGeneration(string field_name, string referenceName, string patchName);
@@ -91,4 +93,5 @@ private:
 };
 
 
-#endif /* STRANGERPATCHER_H_ */
+
+#endif /* SEMREPAIR_HPP_ */

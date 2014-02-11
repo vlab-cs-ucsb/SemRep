@@ -473,7 +473,11 @@ StrangerAutomaton* StrangerAutomaton::makePhi() {
 
 std::string StrangerAutomaton::generateSatisfyingExample()
 {
-    return NULL;
+	char* example = dfaGenerateExample(this->dfa, num_ascii_track, u_indices_main);
+	if (example == NULL)
+		throw StrangerAutomatonException("no satifying example");
+
+    return std::string (example);
 }
 
 //***************************************************************************************

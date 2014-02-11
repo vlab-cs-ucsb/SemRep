@@ -13,6 +13,8 @@ CPP_SRCS += \
 ../src/ImageComputer.cpp \
 ../src/PerfInfo.cpp \
 ../src/RegExp.cpp \
+../src/SemRepair.cpp \
+../src/SemRepairDebugger.cpp \
 ../src/StrangerAutomaton.cpp \
 ../src/StrangerAutomatonException.cpp \
 ../src/StrangerDebugger.cpp \
@@ -31,6 +33,8 @@ OBJS += \
 ./src/ImageComputer.o \
 ./src/PerfInfo.o \
 ./src/RegExp.o \
+./src/SemRepair.o \
+./src/SemRepairDebugger.o \
 ./src/StrangerAutomaton.o \
 ./src/StrangerAutomatonException.o \
 ./src/StrangerDebugger.o \
@@ -49,6 +53,8 @@ CPP_DEPS += \
 ./src/ImageComputer.d \
 ./src/PerfInfo.d \
 ./src/RegExp.d \
+./src/SemRepair.d \
+./src/SemRepairDebugger.d \
 ./src/StrangerAutomaton.d \
 ./src/StrangerAutomatonException.d \
 ./src/StrangerDebugger.d \

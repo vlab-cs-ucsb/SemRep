@@ -1,15 +1,15 @@
 /*
- * StrangerPatcher.cpp
+ * SemRepair.cpp
  *
- *  Created on: Oct 30, 2013
+ *  Created on: Feb 10, 2014
  *      Author: baki
  */
 
-#include "StrangerPatcher.h"
+#include "SemRepair.hpp"
 
-PerfInfo StrangerPatcher::perfInfo;
+PerfInfo SemRepair::perfInfo;
 
-StrangerPatcher::StrangerPatcher(string patcher_dep_graph_file_name,string patchee_dep_graph_file_name, string input_field_name) {
+SemRepair::SemRepair(string patcher_dep_graph_file_name,string patchee_dep_graph_file_name, string input_field_name) {
 
 	this->patcher_dep_graph_file_name = patcher_dep_graph_file_name;
 	this->patcher_dep_graph_file_name = patchee_dep_graph_file_name;
@@ -57,22 +57,22 @@ StrangerPatcher::StrangerPatcher(string patcher_dep_graph_file_name,string patch
 
 	}
 
-	ImageComputer::perfInfo = &StrangerPatcher::perfInfo;
+	ImageComputer::perfInfo = &SemRepair::perfInfo;
 	ImageComputer::staticInit();
 }
 
-StrangerPatcher::~StrangerPatcher() {
+SemRepair::~SemRepair() {
 	delete this->patcher_uninit_field_node;
 	delete this->patchee_uninit_field_node;
 }
 
-void StrangerPatcher::message(string msg) {
+void SemRepair::message(string msg) {
 	cout << endl << "~~~~~~~~~~~>>> StrangerPatcher says: " << msg << endl;
 }
 
 
 
-void StrangerPatcher::printAnalysisResults(AnalysisResult& result) {
+void SemRepair::printAnalysisResults(AnalysisResult& result) {
 	cout << endl;
 	for (AnalysisResultConstIterator it = result.begin(); it != result.end(); it++ ) {
 		cout << "Printing automata for node ID: " << it->first << endl;
@@ -81,7 +81,7 @@ void StrangerPatcher::printAnalysisResults(AnalysisResult& result) {
 	}
 }
 
-void StrangerPatcher::printNodeList(NodesList nodes) {
+void SemRepair::printNodeList(NodesList nodes) {
 	cout << endl;
 	for (NodesListConstIterator it = nodes.begin(); it != nodes.end(); it++ ) {
 		cout << (*it)->getID() << " ";
@@ -89,7 +89,7 @@ void StrangerPatcher::printNodeList(NodesList nodes) {
 	cout << endl;
 }
 
-void StrangerPatcher::printResults() {
+void SemRepair::printResults() {
 	if (is_validation_patch_required) {
 		cout << "\t    - validation patch is generated" << endl;
 		cout << "\t size : states " << validation_patch_auto->get_num_of_states() << " : "
@@ -136,7 +136,7 @@ void StrangerPatcher::printResults() {
 	perfInfo.reset();
 }
 // TODO parameterize paths
-void StrangerPatcher::writeAutosforCodeGeneration(string field_name, string patcherName, string patcheeName) {
+void SemRepair::writeAutosforCodeGeneration(string field_name, string patcherName, string patcheeName) {
 	string patcher_name = patcherName.substr( patcherName.find_last_of('/') + 1,patcherName.find_last_of('.') - patcherName.find_last_of('/') - 1 );
 	string patchee_name = patcheeName.substr( patcheeName.find_last_of('/') + 1,patcheeName.find_last_of('.') - patcheeName.find_last_of('/') - 1 );
 	string type = "accept";
@@ -176,7 +176,7 @@ void StrangerPatcher::writeAutosforCodeGeneration(string field_name, string patc
  * result 1 : there is a maximum length restriction (may also have minimum inside)
  * result 2 : there is a minimum length restriction (max length is infinite in that case)
  */
-int StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto) {
+int SemRepair::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto) {
 	message("BEGIN LENGTH PATCH ANALYSIS PHASE........................................");
 	boost::posix_time::ptime start_time = perfInfo.current_time();
 	int result = 0;
@@ -201,7 +201,7 @@ int StrangerPatcher::isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAut
 /**
  * Initial backward analysis phase for extracting validation behavior
  */
-StrangerAutomaton* StrangerPatcher::computeValidationPatch() {
+StrangerAutomaton* SemRepair::computeValidationPatch() {
 
 	message("BEGIN VALIDATION ANALYSIS PHASE........................................");
 
@@ -211,7 +211,7 @@ StrangerAutomaton* StrangerPatcher::computeValidationPatch() {
 		message("extracting validation from patcher");
 		start_time = perfInfo.current_time();
 		AnalysisResult patcher_validationExtractionResults =
-				analyzer.doBackwardAnalysis_ValidationPhase(patcher_dep_graph, patcher_field_relevant_graph, patcher_sorted_field_relevant_nodes);
+				analyzer.doBackwardAnalysis_ValidationCase(patcher_dep_graph, patcher_field_relevant_graph, StrangerAutomaton::makeBottom());
 		StrangerAutomaton* patcher_negVPatch = patcher_validationExtractionResults[patcher_uninit_field_node->getID()];
 		StrangerAutomaton* patcher_validation = patcher_negVPatch;
 		if ( !calculate_rejected_set ) {
@@ -227,7 +227,7 @@ StrangerAutomaton* StrangerPatcher::computeValidationPatch() {
 		message("extracting validation from patchee");
 		start_time = perfInfo.current_time();
 		AnalysisResult patchee_validationExtractionResults =
-				analyzer.doBackwardAnalysis_ValidationPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes);
+				analyzer.doBackwardAnalysis_ValidationCase(patchee_dep_graph, patchee_field_relevant_graph, StrangerAutomaton::makeBottom());
 		StrangerAutomaton* patchee_negVPatch = patchee_validationExtractionResults[patchee_uninit_field_node->getID()];
 		StrangerAutomaton* patchee_validation = patchee_negVPatch;
 		if ( !calculate_rejected_set ) {
@@ -256,7 +256,7 @@ StrangerAutomaton* StrangerPatcher::computeValidationPatch() {
 			if (diffAuto->isEmpty()) {
 				message("difference auto is empty, no validation patch is required!!!");
 				is_validation_patch_required = false;
-				validation_patch_auto = StrangerAutomaton::makePhi(patchee_uninit_field_node->getID());
+				validation_patch_auto = StrangerAutomaton::makeBottom(patchee_uninit_field_node->getID());
 
 			} else {
 				message("validation patch is generated for input: " + input_field_name);
@@ -316,7 +316,7 @@ StrangerAutomaton* StrangerPatcher::computeValidationPatch() {
 /**
  * Computes sink post image for patcher
  */
-StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
+StrangerAutomaton* SemRepair::computePatcherFWAnalysis() {
 
 	message("computing patcher sink post image...");
 	AnalysisResult patcherAnalysisResult;
@@ -336,7 +336,7 @@ StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
 
 	try {
 		message("starting forward analysis for patcher...");
-		patcherAnalyzer.doForwardAnalysis_RegularPhase(patcher_dep_graph,patcher_field_relevant_graph,patcher_sorted_field_relevant_nodes,patcherAnalysisResult);
+		patcherAnalyzer.doForwardAnalysis_SingleInput(patcher_dep_graph, patcher_field_relevant_graph, patcherAnalysisResult);
 		message("...finished forward analysis for patcher.");
 
 	} catch (StrangerStringAnalysisException const &e) {
@@ -352,7 +352,7 @@ StrangerAutomaton* StrangerPatcher::computePatcherFWAnalysis() {
 /**
  * Computes sink post image for patchee, first time
  */
-AnalysisResult StrangerPatcher::computePatcheeFWAnalysis() {
+AnalysisResult SemRepair::computePatcheeFWAnalysis() {
 	AnalysisResult patcheeAnalysisResult;
 	UninitNodesList patcheeUninitNodes = patchee_dep_graph.getUninitNodes();
 
@@ -376,7 +376,7 @@ AnalysisResult StrangerPatcher::computePatcheeFWAnalysis() {
 	try {
 
 		message("starting forward analysis for patchee");
-		patcheeAnalyzer.doForwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes, patcheeAnalysisResult);
+		patcheeAnalyzer.doForwardAnalysis_SingleInput(patchee_dep_graph, patchee_field_relevant_graph, patcheeAnalysisResult);
 		message("...finished forward analysis for patchee.");
 
 	} catch (StrangerStringAnalysisException const &e) {
@@ -387,13 +387,13 @@ AnalysisResult StrangerPatcher::computePatcheeFWAnalysis() {
 	return patcheeAnalysisResult;
 }
 
-StrangerAutomaton* StrangerPatcher::computePatcheeLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult) {
+StrangerAutomaton* SemRepair::computePatcheeLengthPatch(StrangerAutomaton* initialAuto, AnalysisResult& fwAnalysisResult) {
 	message("starting a backward analysis to calculate length patch...");
 	ImageComputer patcheeAnalyzer;
 	try {
 		fwAnalysisResult[patchee_uninit_field_node->getID()] = StrangerAutomaton::makeAnyString(-5);
 		boost::posix_time::ptime start_time = perfInfo.current_time();
-		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
+		AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_GeneralCase(patchee_dep_graph, patchee_field_relevant_graph, initialAuto, fwAnalysisResult);
 		perfInfo.sanitization_length_backward_time = perfInfo.current_time() - start_time;
 		StrangerAutomaton* negPatchAuto = bwResult[patchee_uninit_field_node->getID()];
 		if ( calculate_rejected_set ) {
@@ -401,12 +401,6 @@ StrangerAutomaton* StrangerPatcher::computePatcheeLengthPatch(StrangerAutomaton*
 		} else {
 			length_patch_auto = negPatchAuto->complement(-5);
 		}
-
-		if (DEBUG_ENABLED_LP != 0) {
-			DEBUG_MESSAGE("Length patch:");
-			DEBUG_AUTO(length_patch_auto);
-		}
-
 //		fwAnalysisResult[patchee_uninit_field_node->getID()] = validation_patch_auto->intersect(length_patch_auto,-5);
 
 	} catch (StrangerStringAnalysisException const &e) {
@@ -417,9 +411,9 @@ StrangerAutomaton* StrangerPatcher::computePatcheeLengthPatch(StrangerAutomaton*
 	return length_patch_auto;
 }
 
-StrangerAutomaton* StrangerPatcher::computePatcheeSanitizationPatch(StrangerAutomaton* initialAuto,	const AnalysisResult& fwAnalysisResult) {
+StrangerAutomaton* SemRepair::computePatcheeSanitizationPatch(StrangerAutomaton* initialAuto,	const AnalysisResult& fwAnalysisResult) {
 	ImageComputer patcheeAnalyzer;
-	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_RegularPhase(patchee_dep_graph, patchee_field_relevant_graph, patchee_sorted_field_relevant_nodes,initialAuto, fwAnalysisResult);
+	AnalysisResult bwResult = patcheeAnalyzer.doBackwardAnalysis_GeneralCase(patchee_dep_graph, patchee_field_relevant_graph, initialAuto, fwAnalysisResult);
 	sanitization_patch_auto = bwResult[patchee_uninit_field_node->getID()];
 	return sanitization_patch_auto;
 }
@@ -428,7 +422,7 @@ StrangerAutomaton* StrangerPatcher::computePatcheeSanitizationPatch(StrangerAuto
 /**
  *
  */
-StrangerAutomaton* StrangerPatcher::computeSanitizationPatch() {
+StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 	message("BEGIN SANITIZATION ANALYSIS PHASE........................................");
 	boost::posix_time::ptime start_time = perfInfo.current_time();
 	patcher_sink_auto = computePatcherFWAnalysis();
@@ -490,6 +484,8 @@ StrangerAutomaton* StrangerPatcher::computeSanitizationPatch() {
 			StrangerAutomaton* negLengthRestrictAuto = lengthRestrictAuto->complement(-4);
 			StrangerAutomaton* rejectedLengthAuto = patcheeSinkAuto->intersect(negLengthRestrictAuto, -4);
 			delete negLengthRestrictAuto;
+//			cout << "rejected length automaton: " << endl;
+//			rejectedLengthAuto->toDotAscii(0);
 			computePatcheeLengthPatch(rejectedLengthAuto, patcheeAnalysisResult);
 
 			if (DEBUG_ENABLED_LP != 0) {
@@ -569,4 +565,17 @@ StrangerAutomaton* StrangerPatcher::computeSanitizationPatch() {
 //	return signature;
 //
 //}
+
+void SemRepair::testNewFunctions() {
+	AnalysisResult testAnalysisResult;
+	ImageComputer testImageComputer;
+
+//	cout << this->patcher_field_relevant_graph.toDot() << endl;
+	testImageComputer.doForwardAnalysis_GeneralCase(patcher_dep_graph, patcher_dep_graph.getRoot(), testAnalysisResult);
+
+	testImageComputer.doBackwardAnalysis_GeneralCase(patcher_dep_graph,patcher_dep_graph,StrangerAutomaton::makeAnyString(), testAnalysisResult);
+}
+
+
+
 
