@@ -74,9 +74,6 @@ private:
 	DepGraphNode* reference_uninit_field_node;
 	DepGraphNode* target_uninit_field_node;
 
-	NodesList reference_sorted_field_relevant_nodes;
-	NodesList target_sorted_field_relevant_nodes;
-
 	StrangerAutomaton* reference_sink_auto;
 
 	StrangerAutomaton* length_patch_auto;

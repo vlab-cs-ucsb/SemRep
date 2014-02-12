@@ -35,6 +35,7 @@ void call_sem_repair(string reference_name, string target_name, string field_nam
 		cout << endl << "\t       Reference: " << reference_name  << endl;
 		cout << endl << "\t       Target: " << target_name  << endl;
 		SemRepair semRepair(reference_name, target_name, field_name);
+//		semRepair.testNewFunctions();
 		semRepair.calculate_rejected_set = true;
 		semRepair.computeValidationPatch();
 		semRepair.computeSanitizationPatch();
@@ -44,7 +45,7 @@ void call_sem_repair(string reference_name, string target_name, string field_nam
 		cout << "\t    Target: " << target_name << endl;
 
 		semRepair.printResults();
-//		semRepair.writeAutosforCodeGeneration(field_name, reference_name, target_name);
+		semRepair.writeAutosforCodeGeneration(field_name, reference_name, target_name);
 
 		cout << endl << "\t------ END RESULT for: " << field_name << " ------" << endl;
 	} catch (StrangerStringAnalysisException const &e) {

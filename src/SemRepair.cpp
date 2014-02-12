@@ -52,11 +52,6 @@ SemRepair::SemRepair(string reference_dep_graph_file_name,string target_dep_grap
 	this->reference_field_relevant_graph = reference_dep_graph.getInputRelevantGraph(reference_uninit_field_node);
 	this->target_field_relevant_graph = target_dep_graph.getInputRelevantGraph(target_uninit_field_node);
 
-	// get sorted node lists for each field
-	reference_field_relevant_graph.sort(reference_field_relevant_graph);
-	this->reference_sorted_field_relevant_nodes = reference_field_relevant_graph.getSortedNodes();
-	target_field_relevant_graph.sort(target_field_relevant_graph);
-	this->target_sorted_field_relevant_nodes = target_field_relevant_graph.getSortedNodes();
 
 	if (DEBUG_ENABLED_INIT != 0) {
 		DEBUG_MESSAGE("------------ Debugging Initalization ------------");
@@ -583,13 +578,8 @@ StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 //}
 
 void SemRepair::testNewFunctions() {
-	AnalysisResult testAnalysisResult;
-	ImageComputer testImageComputer;
+	this->reference_dep_graph.calculateSCCs();
 
-//	cout << this->reference_field_relevant_graph.toDot() << endl;
-	testImageComputer.doForwardAnalysis_GeneralCase(reference_dep_graph, reference_dep_graph.getRoot(), testAnalysisResult);
-
-	testImageComputer.doBackwardAnalysis_GeneralCase(reference_dep_graph,reference_dep_graph,StrangerAutomaton::makeAnyString(), testAnalysisResult);
 }
 
 

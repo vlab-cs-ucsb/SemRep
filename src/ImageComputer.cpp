@@ -885,27 +885,27 @@ void ImageComputer::doForwardAnalysis(
 		// Start decorating nodes. Note that we decorate nodes in
 		// topological order
     
-    DepGraphNode* node;
-    NodesList sortedNodes = acyclicWorkGraph.getSortedNodes();
-		for (NodesListIterator it = sortedNodes.begin();
-             it != sortedNodes.end();
-             ++it) {
-            node = *it;
-            if (analysisResult.find(node->getID()) == analysisResult.end())
-                analysisResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
+//    DepGraphNode* node;
+//    NodesList sortedNodes = acyclicWorkGraph.getSortedNodes();
+//		for (NodesListIterator it = sortedNodes.begin();
+//             it != sortedNodes.end();
+//             ++it) {
+//            node = *it;
+//            if (analysisResult.find(node->getID()) == analysisResult.end())
+//                analysisResult[node->getID()] = StrangerAutomaton::makePhi(node->getID());
 			// if an SCC node then do the fix point computation
 //			if (node instanceof DepGraphSccNode) {
 //				DepGraphSccNode sccNode = (DepGraphSccNode) node;
 //				doFixPointComputationForSCC(acyclicWorkGraph, origDepGraph, forwardDeco,
 //						sccNode, sccNodes, multiTrack);
 //			} else {// a regular node in the graph
-				doNodeComputation(acyclicWorkGraph, origDepGraph, analysisResult, node, inputValuesMap, multiTrack);
+//				doNodeComputation(acyclicWorkGraph, origDepGraph, analysisResult, node, inputValuesMap, multiTrack);
 				//debugAuto(forwardDeco.get(node));
 				//perfInfo->printInfo();
 //			}
 			//debugMemoryUsage();
 			//debug("--------------------------", 2);
-		}
+//		}
 
 //		if (!multiTrack)
 //			perfInfo->forwardTime = (stopForward - startForward);
@@ -920,37 +920,37 @@ AnalysisResult ImageComputer::computeBwImage(DepGraph& origDepGraph, DepGraph& a
                                                     AnalysisResult& fwAnalysisResult){
     AnalysisResult bwAnalysisResult;
 
-		cout << "\n***  Stranger Sanit Backward Analysis BEGIN ***\n" << endl;
-
-		string graphNameBase;
-
-
-		DepGraph inputDepGraph = acyclicWorkGraph.getInputRelevantGraph(inputNode);
-
-		 int inputDepGraphsCount = 1;
-		 graphNameBase = stringbuilder() << "stranger_" << origDepGraph.getRoot()->getFileName() << inputDepGraphsCount;
-		 inputDepGraph.dumpDot(stringbuilder() << graphNameBase << "_inputdepgraph");
-	//						 inputDepGraph.dumpSortedDot(graphNameBase + "_sorted_inputdepgraph",
-	//									MyOptions.graphPath, origDepGraph.getUninitNodes(), this.dci);
-
-    NodesList sortedNodes = inputDepGraph.getSortedNodes();
-		 bwAnalysisResult = doBackwardAnalysis(origDepGraph, inputDepGraph, /*sccNodes,*/ sortedNodes, intersectionAuto, fwAnalysisResult);
-		 string dotName;
-    if (dynamic_cast<DepGraphUninitNode*>(inputNode) != NULL){
-        const DepGraphNode* temp = *(origDepGraph.getPredecessors(inputNode).begin());
-        dotName = temp->dotName();
-    }
-		 else
-			 dotName = inputNode->dotName();
-		 cout << "\nBackward analysis automaton result for input node ==> " << dotName << "  ID=" << inputNode->getID() << " :" << endl;
-		 cout << "----------------------------" << endl;
-		 //backwardDeco.get(node).printAutomaton();
-		 //outputDotAuto(backwardDeco.get(node));
-		 //backwardDeco.get(node).printAutomatonVitals();
-		 cout << "----------------------------" << endl;
-
-
-		 cout << "\n***  Stranger Sanit Backward Analysis End ***\n\n" << endl;
+//		cout << "\n***  Stranger Sanit Backward Analysis BEGIN ***\n" << endl;
+//
+//		string graphNameBase;
+//
+//
+//		DepGraph inputDepGraph = acyclicWorkGraph.getInputRelevantGraph(inputNode);
+//
+//		 int inputDepGraphsCount = 1;
+//		 graphNameBase = stringbuilder() << "stranger_" << origDepGraph.getRoot()->getFileName() << inputDepGraphsCount;
+//		 inputDepGraph.dumpDot(stringbuilder() << graphNameBase << "_inputdepgraph");
+//	//						 inputDepGraph.dumpSortedDot(graphNameBase + "_sorted_inputdepgraph",
+//	//									MyOptions.graphPath, origDepGraph.getUninitNodes(), this.dci);
+//
+//    NodesList sortedNodes = inputDepGraph.getSortedNodes();
+//		 bwAnalysisResult = doBackwardAnalysis(origDepGraph, inputDepGraph, /*sccNodes,*/ sortedNodes, intersectionAuto, fwAnalysisResult);
+//		 string dotName;
+//    if (dynamic_cast<DepGraphUninitNode*>(inputNode) != NULL){
+//        const DepGraphNode* temp = *(origDepGraph.getPredecessors(inputNode).begin());
+//        dotName = temp->dotName();
+//    }
+//		 else
+//			 dotName = inputNode->dotName();
+//		 cout << "\nBackward analysis automaton result for input node ==> " << dotName << "  ID=" << inputNode->getID() << " :" << endl;
+//		 cout << "----------------------------" << endl;
+//		 //backwardDeco.get(node).printAutomaton();
+//		 //outputDotAuto(backwardDeco.get(node));
+//		 //backwardDeco.get(node).printAutomatonVitals();
+//		 cout << "----------------------------" << endl;
+//
+//
+//		 cout << "\n***  Stranger Sanit Backward Analysis End ***\n\n" << endl;
 
 		 return bwAnalysisResult;
 	}

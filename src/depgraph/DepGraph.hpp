@@ -129,16 +129,10 @@ public:
 	};
 	NodesList getNodes();
 	UninitNodesList getUninitNodes() ;
-	std::vector<NodesList> getSccs()  {
-		throw std::runtime_error("DepGraph.getSccs() not implemented yet.");
-	};
-//	vector<vector<int> > getSccs();
 
-	// sort the graph in a topologically
-	void sort(DepGraph *origGraph);
-	NodesList getSortedNodes()  {
-		return sortedNodes;
-	};
+	void calculateSCCs();
+
+
 	DepGraph getInputRelevantGraph(DepGraphNode* inputNode) ;
 	bool containsNode(const DepGraphNode* node) ;
 	// you must only draw edges between already existing nodes in the graph
@@ -149,59 +143,45 @@ public:
     static DepGraph parseDotFile(std::string fname);
     std::string toDot();
     void dumpDot(string fname);
-    void sort(DepGraph& origGraph);
 
     DepGraphUninitNode* findInputNode(string name);
 
     std::string label;
     std::string labelloc;
 private:
-	// map from a node to *the same* node;
-	    // necessary due to the usual limitation of java.util.Set
-	    NodesMap nodes;
+// map from a node to *the same* node;
+	NodesMap nodes;
 
-	    // the root node (is also contained in "nodes")
-	    DepGraphNormalNode *root;
+	// the root node (is also contained in "nodes")
+	DepGraphNormalNode *root;
 
-	    // node where we should start fix point computation for StrangerAnalysis
-	    // this node should be the one with the highest topological order number
-	    DepGraphNode *topLeaf;
+	// node where we should start fix point computation for StrangerAnalysis
+	// this node should be the one with the highest topological order number
+	DepGraphNode *topLeaf;
 
-	    // edges (from -> to)
-	    EdgesMap edges;
-
-	    // nodes sorted topologically
-	    NodesList sortedNodes;
-
-	    // just a helper for SCC computation
-	    int n;
-
-	    // set to true if reduceWithLeaves() is called
-	    bool leavesReduced;
+	// edges (from -> to)
+	EdgesMap edges;
 
 
-	    static int currentID;
-	    static int currentSccID;
-	    static int currentOrder;
+	// set to true if reduceWithLeaves() is called
+	bool leavesReduced;
 
-	    // tarjan's algorithm params
-	    int time;
-//	    List<Integer>[] graph;
-	    int* lowlink;
-	    bool* used;
-	    stack<int> process_stack;
-	    vector<vector<int>> components;
 
-	    void dfsSCC(int u);
+	static int currentID;
+	static int currentSccID;
+	static int currentOrder;
 
-	    void sccVisit(DepGraphNode* v, NodesList stack,
-	            std::map<const DepGraphNode*,int> dfsnum,
-	            std::map<const DepGraphNode*,int> low,
-	            NodesList old,
-	            vector<NodesList> sccs)  {throw std::runtime_error("DepGraph.sccVisit() not implemented yet.");};
+	// members for scc nodes (computed with tarjan's algorithm)
+	map<int, vector<DepGraphNode*>> scc_components;
+	// contains an entry for a node if it is involved in a cycle that has more than one node
+	map<int, int> scc_map;
 
-	    void doGetInputRelevantGraph(DepGraphNode* node,
-	    			DepGraph& inputDepGraph) ;
+	void dfsSCC(DepGraphNode* node, int& time_count, map<int, int>& lowlink, map<int, bool>& used, stack<int>& process_stack);
+
+	void printSCCInfo();
+
+	void doGetInputRelevantGraph(DepGraphNode* node,
+				DepGraph& inputDepGraph) ;
 };
 
 

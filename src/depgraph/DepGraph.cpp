@@ -28,11 +28,9 @@ using namespace std;
 DepGraph::DepGraph() {
     root = NULL;
     topLeaf = NULL;
-    n = 0;
 	leavesReduced = false;
     label = "";
     labelloc = "";
-    time = 0;
 
 }
 
@@ -41,16 +39,14 @@ DepGraph::DepGraph(const DepGraph& other){
     this->nodes = other.nodes;
     this->topLeaf = other.topLeaf;
     this->edges = other.edges;
-    this->sortedNodes = other.sortedNodes;
-    this->n = other.n;
     this->leavesReduced = other.leavesReduced;
     this->currentID = other.currentID;
     this->currentSccID = other.currentSccID;
     this->currentOrder = other.currentOrder;
     this->label = other.label;
     this->labelloc = other.labelloc;
-    this->components = other.components;
-    time = 0;
+    this->scc_components = other.scc_components;
+    this->scc_map = other.scc_map;
 }
 
 DepGraph::~DepGraph() {
@@ -64,15 +60,14 @@ DepGraph& DepGraph::operator=(const DepGraph &other){
     this->nodes = other.nodes;
     this->topLeaf = other.topLeaf;
     this->edges = other.edges;
-    this->sortedNodes = other.sortedNodes;
-    this->n = other.n;
     this->leavesReduced = other.leavesReduced;
     this->currentID = other.currentID;
     this->currentSccID = other.currentSccID;
     this->currentOrder = other.currentOrder;
     this->label = other.label;
     this->labelloc = other.labelloc;
-    this->components = other.components;
+    this->scc_components = other.scc_components;
+    this->scc_map = other.scc_map;
     return *this;
 }
 
@@ -172,27 +167,11 @@ DepGraphUninitNode* DepGraph::findInputNode(string name){
 		return NULL;
 }
 
+
 DepGraph DepGraph::getInputRelevantGraph(DepGraphNode* inputNode) {
 	DepGraph inputDepGraph(this->getRoot());
 	inputDepGraph.addNode(inputNode);
 	this->doGetInputRelevantGraph(inputNode, inputDepGraph);
-	// we add the sorted nodes from original graph in reverse order
-	// such that root will be the first node in inputDepGraph to
-	// accomodate backward analysis
-    inputDepGraph.sortedNodes = NodesList(this->sortedNodes.size());
-    auto it = std::copy_if(this->sortedNodes.begin(), this->sortedNodes.end(),
-                           inputDepGraph.sortedNodes.begin(),
-                                         [&](const DepGraphNode* node) {
-                                             return (inputDepGraph.containsNode(node));
-                                         });
-    inputDepGraph.sortedNodes.resize(std::distance(inputDepGraph.sortedNodes.begin(), it));
-    reverse(inputDepGraph.sortedNodes.begin(), inputDepGraph.sortedNodes.end());
-//	for (NodesConstListConstIterator it = this->sortedNodes.begin(); it != this->sortedNodes.end(); ++it){
-//		const DepGraphNode* node = *it;
-//		NodesMapConstIterator it2 = inputDepGraph->nodes.find(node->getID());
-//		if (it2 == inputDepGraph->nodes.end())
-//			inputDepGraph->sortedNodes.insert(inputDepGraph->sortedNodes.begin(), node);
-//	}
 	inputDepGraph.setTopLeaf(this->root);
 	return inputDepGraph;
 }
@@ -436,235 +415,77 @@ void DepGraph::dumpDot(string fname){
             ofs.close();
     }
 }
-//  ********************************************************************************
-    // sort the graph topologically
-void DepGraph::sort(DepGraph& origGraph){
 
-//        // Get strongly connected components of the graph
-//    	vector<NodesList> sccs = this.getSccs();
-//    	// first a map between each scc and its nodes
-//        Map<DepGraphSccNode, List<DepGraphNode>> sccNodes = new HashMap<DepGraphSccNode, List<DepGraphNode>>();
-//    	// for each scc set an ID
-//        currentSccID = 0;
-//        // eleminate cycles from current graph before sorting
-//        for (List<DepGraphNode> scc : sccs) {
-//
-//            // one-element sccs are no problem
-//            if (scc.size() < 2) {
-//                continue;
-//            }
-//
-//
-//            // determine edges pointing into this SCC
-//            Set<DepGraphNode> sccPredecessors = new HashSet<DepGraphNode>();
-//            for (DepGraphNode sccMember : scc) {
-//            	sccMember.setSccID(currentSccID);
-//                Set<DepGraphNode> predecessors = this.getPredecessors(sccMember);
-//                predecessors.removeAll(scc);  // don't take predecessors that are inside the SCC
-//                sccPredecessors.addAll(predecessors);
-//            }
-//
-//            // determine edges going out of this SCC
-//            Set<DepGraphNode> sccSuccessors = new HashSet<DepGraphNode>();
-//            for (DepGraphNode sccMember : scc) {
-//                List<DepGraphNode> successors = this.getSuccessors(sccMember);
-//                successors.removeAll(scc);  // don't take predecessors that are inside the SCC
-//                sccSuccessors.addAll(successors);
-//            }
-//
-//            // remove scc members
-//            for (DepGraphNode sccMember : scc) {
-//                //this.remove(sccMember, new HashSet<DepGraphNode>());
-//                this.nodes.remove(sccMember);
-//                this.edges.remove(sccMember);
-//            }
-//
-//            // the replacement node
-//            DepGraphSccNode sccNode = new DepGraphSccNode();
-//            // TODO: you may get the wrong ID if this sorting has been done after generating
-//            // another new graph
-//            sccNode.setID(DepGraph.currentID++);
-//            sccNode.setSccID(currentSccID);
-//            sccNode.setOrder(-1);
-//            sccNodes.put(sccNode, scc);
-//            this.addNode(sccNode);
-//
-//
-//
-//            // adjust nodes coming in to the SCC
-//            for (DepGraphNode pre : sccPredecessors) {
-//                // remove stale nodes from the out-list
-//                List<DepGraphNode> out = this.edges.get(pre);
-//                for (Iterator iter = out.iterator(); iter.hasNext();) {
-//                    DepGraphNode outNode = (DepGraphNode) iter.next();
-//                    if (!this.nodes.containsKey(outNode)) {
-//                        iter.remove();
-//                    }
-//                }
-//                // add new replacement node to the out-list
-//                out.add(sccNode);
-//            }
-//
-//            // adjust nodes going out of the SCC
-//            this.edges.put(sccNode, new LinkedList<DepGraphNode>(sccSuccessors));
-//
-//            currentSccID++;
-//            // done!
-//
-//        }
+void DepGraph::calculateSCCs() {
+	int time_count;
+	map<int, int> lowlink;
+	map<int, bool> used;
+	stack<int> process_stack;
 
-        // Now do a breadth first search with a work queue and assign each node an order.
-        // The nodes are going to be inserted in sorted list such that the root will be
-        // the last node and one of the leaf nodes the first
-
-        // prepare the list of sorted nodes. this list should include the nodes sorted
-        // topologically. for each scc there would be only one node which is
-        // the node in scc with the next successor in topological order
-
-        // workqueue is used for the breadth first search algorithm
-    	NodesList workQueue;
-    	// avoid sorting nodes which has been already been sorted
-    	NodesList visited;
-        currentOrder = 0;
-        DepGraphNode* root = this->getRoot();
-        workQueue.push_back(root);
-        while (!workQueue.empty()){
-        	topLeaf = *(workQueue.begin());
-            workQueue.erase(workQueue.begin());
-        	// make sure all parents are visited and sorted before this node
-        	bool allParentsVisited = true;
-//        	for (NodesConstSetConstIterator it = this->getPredecessors(topLeaf).begin(); it != this->getPredecessors(topLeaf).end(); ++it){
-//                const DepGraphNode* node = *it;
-            for (auto node : this->getPredecessors(topLeaf)){
-        		if (node->getOrder() == -1){
-        			allParentsVisited = false;
-        			break;
-        		}
-        	}
-        	if (!allParentsVisited){
-        		workQueue.push_back(topLeaf);
-        	}
-        	else {
-        		sortedNodes.insert(sortedNodes.begin(), topLeaf);
-        		topLeaf->setOrder(currentOrder);
-//        		// if scc node then set order for original ones
-//        		if (topLeaf instanceof DepGraphSccNode){
-//        			for (DepGraphNode* node: sccNodes.get(topLeaf))
-//        				node.setOrder(currentOrder);
-//        		}
-        		currentOrder++;
-        	}
-//        	for (NodesConstListConstIterator it = this->getSuccessors(topLeaf).begin(); it != this->getSuccessors(topLeaf).end(); ++it){
-//                const DepGraphNode* node = *it;
-            for (auto node : this->getSuccessors(topLeaf)){
-                NodesListConstIterator it2;
-                //if node is not visited
-        		if ((it2 = std::find_if(visited.begin(), visited.end(), std::bind2nd(NodeEqual(), node))) == visited.end())
-                {
-        			workQueue.push_back(node);
-        			visited.push_back(node);
-        		}
-        	}
-        }
-        // TODO: if topLeaf is an SCC node then this will not work
-        origGraph.topLeaf = topLeaf;
+    for (auto node_ptr : getNodes()) {
+      if (!used[node_ptr->getID()]) {
+    	  dfsSCC(node_ptr, time_count, lowlink, used, process_stack);
+      }
     }
 
-    //  ********************************************************************************
+    printSCCInfo();
 
-    // returns a list of strongly connected components;
-    // uses the algorithm from "The Design and Analysis of Computer Algorithms"
-    // (Aho, Hopcroft, Ullman), Chapter 5.5 ("Strong Connectivity")
-//    vector<NodesList> DepGraph::getSccs() const {
-//        n = 1;
-//        List<List<DepGraphNode>> sccs = new LinkedList<List<DepGraphNode>>();
-//        List<DepGraphNode> stack = new LinkedList<DepGraphNode>();
-//        Map<DepGraphNode,Integer> dfsnum = new HashMap<DepGraphNode,Integer>();
-//        Map<DepGraphNode,Integer> low = new HashMap<DepGraphNode,Integer>();
-//        Set<DepGraphNode> old = new HashSet<DepGraphNode>();
-//        sccVisit(this.root, stack, dfsnum, low, old, sccs);
-//        return sccs;
-//    }
+    return;
+}
 
-//  ********************************************************************************
+void DepGraph::dfsSCC(DepGraphNode* node, int& time_count, map<int, int>& lowlink, map<int, bool>& used, stack<int>& process_stack) {
+	int u = node->getID();
+	lowlink[u] = time_count++;
+	used[u] = true;
+	process_stack.push(u);
+	bool is_component_root = true;
 
-    // helper function for SCC computation
-//    void DepGraph::sccVisit(DepGraphNode* v, NodesList stack,
-//            map<const DepGraphNode*,int> dfsnum,
-//            map<const DepGraphNode*,int> low,
-//            NodesSet old,
-//            vector<NodesList> sccs) const {
-//
-//        old.add(v);
-//        dfsnum.put(v, n);
-//        low.put(v, n);
-//        n++;
-//        stack.add(v);
-//
-//        for (DepGraphNode w : this.getSuccessors(v)) {
-//            if (!old.contains(w)) {
-//                sccVisit(w, stack, dfsnum, low, old, sccs);
-//                int low_v = low.get(v);
-//                int low_w = low.get(w);
-//                low.put(v, Math.min(low_v, low_w));
-//            } else {
-//                int dfsnum_v = dfsnum.get(v);
-//                int dfsnum_w = dfsnum.get(w);
-//                if (dfsnum_w < dfsnum_v && stack.contains(w)) {
-//                    int low_v = low.get(v);
-//                    low.put(v, Math.min(dfsnum_w, low_v));
-//                }
-//            }
-//        }
-//
-//        if (low.get(v).equals(dfsnum.get(v))) {
-//            List<DepGraphNode> scc = new LinkedList<DepGraphNode>();
-//            DepGraphNode x;
-//            do {
-//                x = stack.remove(stack.size() - 1);
-//                scc.add(x);
-//            } while (!x.equals(v));
-//            sccs.add(scc);
-//        }
-//    }
+	for (auto succ_node : getSuccessors(node)) {
+		int v = succ_node->getID();
+		if (!used[v])
+			dfsSCC(succ_node, time_count, lowlink, used, process_stack);
+		if (lowlink[u] > lowlink[v]) {
+			lowlink[u] = lowlink[v];
+			is_component_root = false;
+		}
+	}
 
-//vector<vector<int> > DepGraph::getSccs() {
-//    int n = getNumOfNodes();
-//    lowlink = new int[n];
-//    used = new bool[n];
-//
-//    for (int u = 0; u < n; u++)
-//      if (!used[u])
-//    	  dfsSCC(u);
-//
-//    return components;
-//}
-//
-//void DepGraph::dfsSCC(int u) {
-//    lowlink[u] = time++;
-//    used[u] = true;
-//    process_stack.push(u);
-//    bool is_component_root = true;
-//
-//    for (int v : graph[u]) {
-//      if (!used[v])
-//    	  dfsSCC(v);
-//      if (lowlink[u] > lowlink[v]) {
-//        lowlink[u] = lowlink[v];
-//        is_component_root = false;
-//      }
-//    }
-//
-//    if (is_component_root) {
-//      List<Integer> component = new ArrayList<>();
-//      while (true) {
-//        int k = stack.remove(stack.size() - 1);
-//        component.add(k);
-//        lowlink[k] = Integer.MAX_VALUE;
-//        if (k == u)
-//          break;
-//      }
-//      components.add(component);
-//    }
-//}
+	if (is_component_root) {
+		int k;
+		vector<DepGraphNode* > scc_component;
+		while (true) {
+			k = process_stack.top();
+			process_stack.pop();
+			scc_component.push_back(getNode(k));
+			scc_map[k] = u;
+			lowlink[k] = INT_MAX;
+			if (k == u)
+				break;
+		}
+		// only keep the scc nodes that has more than 1 element
+		if (scc_component.size() > 1) {
+			scc_components[u] = scc_component;
+		} else {
+			scc_map.erase(k);
+		}
+	}
+}
+
+void DepGraph::printSCCInfo() {
+    cout << "components: "<< endl;
+    for (auto& it : scc_components) {
+    	cout << "u: " << it.first << " =>  ";
+    	for (auto& c : it.second ) {
+    		cout << c->getID() << " ";
+    	}
+    	cout << endl;
+    }
+    cout << "------------------" << endl;
+
+    cout << "scc map: " << endl;
+    for (auto& it : scc_map) {
+    	cout << it.first << " => " << it.second << " ";
+    }
+    cout << endl << "------------------" << endl;
+}
 
