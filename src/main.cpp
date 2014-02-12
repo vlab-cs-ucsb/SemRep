@@ -1,5 +1,5 @@
 /*
- * Stranger
+ * SemRep
  * Copyright (C) 2013-2014 University of California Santa Barbara.
  *
  * This program is free software; you can redistribute it and/or modify
