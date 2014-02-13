@@ -60,35 +60,15 @@ typedef std::vector<DepGraphNode*>::iterator NodesListIterator;
 typedef std::vector<DepGraphNode*>::const_iterator NodesListConstIterator;
 typedef std::vector<DepGraphNode*>::reverse_iterator NodesListReverseIterator;
 typedef std::vector<DepGraphNode *>::const_reverse_iterator NodesListConstReverseIterator;
-//typedef std::vector<const DepGraphNode*> NodesConstList;
-//typedef std::vector<const DepGraphNode*>::iterator NodesConstListIterator;
-//typedef std::vector<const DepGraphNode*>::const_iterator NodesConstListConstIterator;
+
 typedef std::map<const DepGraphNode*, NodesList, NodeLessThan> EdgesMap;
 typedef std::map<const DepGraphNode*, NodesList, NodeLessThan>::iterator EdgesMapIterator;
 typedef std::map<const DepGraphNode*, NodesList, NodeLessThan>::const_iterator EdgesMapConstIterator;
-//typedef std::set<DepGraphNode*, NodeLessThan> NodesSet;
-//typedef std::set<DepGraphNode*, NodeLessThan>::iterator NodesSetIterator;
-//typedef std::set<DepGraphNode*, NodeLessThan>::const_iterator NodesSetConstIterator;
-//typedef std::set<const DepGraphNode*, NodeLessThan> NodesConstSet;
-//typedef std::set<const DepGraphNode*, NodeLessThan>::iterator NodesConstSetIterator;
-//typedef std::set<const DepGraphNode*, NodeLessThan>::const_iterator NodesConstSetConstIterator;
-//typedef std::set<DepGraphOpNode*, NodeLessThan> OpNodesSet;
-//typedef std::set<DepGraphOpNode*, NodeLessThan>::iterator OpNodesSetIterator;
-//typedef std::set<DepGraphOpNode*, NodeLessThan>::const_iterator OpNodesSetConstIterator;
-//typedef std::set<const DepGraphOpNode*, NodeLessThan> OpNodesConstSet;
-//typedef std::set<const DepGraphOpNode*, NodeLessThan>::iterator OpNodesConstSetIterator;
-//typedef std::set<const DepGraphOpNode*, NodeLessThan>::const_iterator OpNodesConstSetConstIterator;
+
 typedef std::vector<DepGraphOpNode*> OpNodesList;
 typedef std::vector<DepGraphOpNode*>::iterator OpNodesListIterator;
 typedef std::set<DepGraphOpNode*>::const_iterator OpNodesListConstIterator;
 
-
-//typedef std::set<DepGraphUninitNode*, NodeLessThan> UninitNodesSet;
-//typedef std::set<DepGraphUninitNode*, NodeLessThan>::iterator UninitNodesSetIterator;
-//typedef std::set<DepGraphUninitNode*, NodeLessThan>::const_iterator UninitNodesSetConstIterator;
-//typedef std::set<const DepGraphUninitNode*, NodeLessThan> UninitNodesConstSet;
-//typedef std::set<const DepGraphUninitNode*, NodeLessThan>::iterator UninitNodesConstSetIterator;
-//typedef std::set<const DepGraphUninitNode*, NodeLessThan>::const_iterator UninitNodesConstSetConstIterator;
 typedef std::vector<DepGraphUninitNode*> UninitNodesList;
 typedef std::vector<DepGraphUninitNode*>::iterator UninitNodesListIterator;
 typedef std::vector<DepGraphUninitNode*>::const_iterator UninitNodesListConstIterator;
@@ -98,28 +78,33 @@ typedef std::vector<DepGraphUninitNode*>::const_iterator UninitNodesListConstIte
 class DepGraph {
 public:
 	DepGraph();
-	DepGraph(DepGraphNormalNode* root) : leavesReduced(false) { this->root = root; this->addNode(root);};
+	DepGraph(DepGraphNormalNode* root) { this->root = root; this->addNode(root); this->topLeaf = nullptr;};
     DepGraph(const DepGraph& other);
     DepGraph& operator=(const DepGraph &other);
 	virtual ~DepGraph();
+
 	NodesList getPredecessors(const DepGraphNode* node);
 	NodesList getSuccessors(DepGraphNode* node);
+
 	DepGraphNormalNode *getRoot() {
 		return this->root;
 	};
 	void setRoot(DepGraphNormalNode* root) {
 		this->root = root;
 	};
+
 	DepGraphNode *getTopLeaf()  {
 			return this->topLeaf;
 	};
+
 	void setTopLeaf(DepGraphNode* topLeaf) {
 		this->topLeaf = topLeaf;
 	};
-	OpNodesList getFuncsNodes(const std::vector<std::string> funcsNames) ;
+
 	int getNumOfNodes() const{
 	    	return ((int)nodes.size());
 	};
+
 	int getNumOfEdges() const {
 		int num = 0;
 		for (EdgesMapConstIterator it = edges.begin(); it != edges.end(); ++it){
@@ -127,13 +112,27 @@ public:
 		}
 		return num;
 	};
+
 	NodesList getNodes();
+
 	UninitNodesList getUninitNodes() ;
+
+	OpNodesList getFuncsNodes(const std::vector<std::string> funcsNames) ;
+
+	DepGraph getInputRelevantGraph(DepGraphNode* inputNode) ;
+
+
+    DepGraphUninitNode* findInputNode(string name);
 
 	void calculateSCCs();
 
+	bool isSCCElement(DepGraphNode* node);
+	int getSCCID(DepGraphNode* node);
+	NodesList getSCCNodes(int scc_id);
+	// returns the all scc nodes, given a node from that scc
+	NodesList getSCCNodes(DepGraphNode* node);
 
-	DepGraph getInputRelevantGraph(DepGraphNode* inputNode) ;
+
 	bool containsNode(const DepGraphNode* node) ;
 	// you must only draw edges between already existing nodes in the graph
 	void addEdge(DepGraphNode* from, DepGraphNode* to);
@@ -141,10 +140,9 @@ public:
 	DepGraphNode* addNode(DepGraphNode* node);
     DepGraphNode* getNode(const int id) ;
     static DepGraph parseDotFile(std::string fname);
+
     std::string toDot();
     void dumpDot(string fname);
-
-    DepGraphUninitNode* findInputNode(string name);
 
     std::string label;
     std::string labelloc;
@@ -162,17 +160,12 @@ private:
 	// edges (from -> to)
 	EdgesMap edges;
 
-
-	// set to true if reduceWithLeaves() is called
-	bool leavesReduced;
-
-
 	static int currentID;
 	static int currentSccID;
 	static int currentOrder;
 
 	// members for scc nodes (computed with tarjan's algorithm)
-	map<int, vector<DepGraphNode*>> scc_components;
+	map<int, NodesList> scc_components;
 	// contains an entry for a node if it is involved in a cycle that has more than one node
 	map<int, int> scc_map;
 

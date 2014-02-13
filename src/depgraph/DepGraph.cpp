@@ -26,9 +26,8 @@
 using namespace std;
 
 DepGraph::DepGraph() {
-    root = NULL;
-    topLeaf = NULL;
-	leavesReduced = false;
+    root = nullptr;
+    topLeaf = nullptr;
     label = "";
     labelloc = "";
 
@@ -39,7 +38,6 @@ DepGraph::DepGraph(const DepGraph& other){
     this->nodes = other.nodes;
     this->topLeaf = other.topLeaf;
     this->edges = other.edges;
-    this->leavesReduced = other.leavesReduced;
     this->currentID = other.currentID;
     this->currentSccID = other.currentSccID;
     this->currentOrder = other.currentOrder;
@@ -50,9 +48,7 @@ DepGraph::DepGraph(const DepGraph& other){
 }
 
 DepGraph::~DepGraph() {
-//    for (auto nodePair : nodes){
-//        delete nodePair.second;
-//    }
+
 }
 
 DepGraph& DepGraph::operator=(const DepGraph &other){
@@ -60,7 +56,6 @@ DepGraph& DepGraph::operator=(const DepGraph &other){
     this->nodes = other.nodes;
     this->topLeaf = other.topLeaf;
     this->edges = other.edges;
-    this->leavesReduced = other.leavesReduced;
     this->currentID = other.currentID;
     this->currentSccID = other.currentSccID;
     this->currentOrder = other.currentOrder;
@@ -228,7 +223,7 @@ bool DepGraph::containsNode(const DepGraphNode* node) {
 	return (it != nodes.end());
 }
 
-DepGraph DepGraph::parseDotFile(std::string fname){
+DepGraph DepGraph::parseDotFile(std::string fname) {
     DepGraph depGraph;
 
     std::ifstream ifs;
@@ -360,6 +355,9 @@ DepGraph DepGraph::parseDotFile(std::string fname){
             ifs.close();
         exit(EXIT_FAILURE);
     }
+
+    depGraph.calculateSCCs();
+
     return depGraph;
 }
 
@@ -469,6 +467,21 @@ void DepGraph::dfsSCC(DepGraphNode* node, int& time_count, map<int, int>& lowlin
 			scc_map.erase(k);
 		}
 	}
+}
+
+bool DepGraph::isSCCElement(DepGraphNode* node) {
+	return scc_map.find(node->getID()) != scc_map.end();
+}
+
+int DepGraph::getSCCID(DepGraphNode* node) {
+	return scc_map[node->getID()];
+}
+NodesList DepGraph::getSCCNodes(int scc_id) {
+	return scc_components[scc_id];
+}
+
+NodesList DepGraph::getSCCNodes(DepGraphNode* node) {
+	return scc_components[getSCCID(node)];
 }
 
 void DepGraph::printSCCInfo() {

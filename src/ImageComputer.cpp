@@ -835,31 +835,6 @@ AnalysisResult ImageComputer::computeFwImage(
                 bool multiTrack){
 
     AnalysisResult analysisResult;
-		// used to remove the auto from deco after processing all its parents
-//		numOfProcessedNodes = 0;
-
-//		perfInfo->addGraphInfo(origDepGraph.getRoot()->dotName()
-//				, origDepGraph.getNumOfNodes(), origDepGraph.getNumOfEdges());
-
-    StrangerAutomaton::debugToFile(stringbuilder() << "//*******************************************************************************\n");
-    StrangerAutomaton::debugToFile(stringbuilder() << "// starting a new SINK analysis: " << origDepGraph.getRoot()->dotName());
-    StrangerAutomaton::debugToFile(stringbuilder() << "// *******************************************************************************\n");
-
-		cout << "-----------------------------------------------------------------------------------------------------------------" << endl;
-		cout << "Starting analysis for SINK: " + origDepGraph.getRoot()->dotName();
-		cout << "-----------------------------------------------------------------------------------------------------------------\n" << endl;
-
-		// dump the dependency graph
-		// graphcount is needed to provide uniqueness to names of dot graphs
-		string fileName = acyclicWorkGraph.getRoot()->dotFileName();//MyOptions.entryFile.getName();
-		string graphNameBase = stringbuilder() << "stranger_" << fileName;
-		origDepGraph.dumpDot(stringbuilder() << graphNameBase);
-//			acyclicWorkGraph.dumpDot(graphNameBase + "_workgraph",
-//					MyOptions.graphPath, origDepGraph.getUninitNodes(), this.dci);
-//			acyclicWorkGraph.dumpSortedDot(graphNameBase + "_sorted_workgraph",
-//					MyOptions.graphPath, origDepGraph.getUninitNodes(), this.dci);
-//			minGraph.dumpDot(graphNameBase + "_min_graph_",
-//					MyOptions.graphPath, origDepGraph.getUninitNodes(), this.dci);
 
 		/*******************************************************************/
 		//do the actual forward analysis
@@ -920,18 +895,7 @@ AnalysisResult ImageComputer::computeBwImage(DepGraph& origDepGraph, DepGraph& a
                                                     AnalysisResult& fwAnalysisResult){
     AnalysisResult bwAnalysisResult;
 
-//		cout << "\n***  Stranger Sanit Backward Analysis BEGIN ***\n" << endl;
-//
-//		string graphNameBase;
-//
-//
-//		DepGraph inputDepGraph = acyclicWorkGraph.getInputRelevantGraph(inputNode);
-//
-//		 int inputDepGraphsCount = 1;
-//		 graphNameBase = stringbuilder() << "stranger_" << origDepGraph.getRoot()->getFileName() << inputDepGraphsCount;
-//		 inputDepGraph.dumpDot(stringbuilder() << graphNameBase << "_inputdepgraph");
-//	//						 inputDepGraph.dumpSortedDot(graphNameBase + "_sorted_inputdepgraph",
-//	//									MyOptions.graphPath, origDepGraph.getUninitNodes(), this.dci);
+
 //
 //    NodesList sortedNodes = inputDepGraph.getSortedNodes();
 //		 bwAnalysisResult = doBackwardAnalysis(origDepGraph, inputDepGraph, /*sccNodes,*/ sortedNodes, intersectionAuto, fwAnalysisResult);
@@ -1814,18 +1778,10 @@ void ImageComputer::doNodeComputation(
 //			DepGraph origDepGraph, Map<DepGraphNode, StrangerAutomaton> forwardDeco,
 //			DepGraphSccNode sccNode,
 //			Map<DepGraphSccNode, List<DepGraphNode>> sccNodes, boolean multiTrack) {
-//		debug("========================================================================", 2);
-//
+
 //		int pw = MyOptions.precise_widening;
 //		int cw = MyOptions.coarse_widening;
-//
-//		debug("doFixPointComputaion for scc: " + sccNode.getSccID()
-//				+ " -- start", 2);
-//		debug("widening values: precise=" + pw + ",  coarse=" + cw, 2);
-//		debug("========================================================================", 2);
-//
-//		StrangerAutomaton::debugToFile("//doFixPointComputaion for scc: " + sccNode.getSccID() + " -- start" << endl;
-//
+
 //		List<DepGraphNode> currentSccNodes = sccNodes.get(sccNode);
 //		int currentSccId = sccNode.getSccID();
 //
@@ -1849,8 +1805,7 @@ void ImageComputer::doNodeComputation(
 //		int iteration = 0;
 //		do {
 //			DepGraphNode currentNode = workList.removeFirst();
-//			debug("*******  iteration "+ (iteration) +"*****************", 2);
-//			// current value has changed sol
+
 //			// we calculate the value for successors
 //			for (DepGraphNode pred: origDepGraph.getPredecessors(currentNode)){
 //				// if succ node is not part of the scc then do not
@@ -2648,9 +2603,12 @@ void ImageComputer::doForwardAnalysis_GeneralCase(DepGraph& depGraph, DepGraphNo
 				}
 			}
 		} else {
-//			cout << " " << curr->getID();
-//			analysisResult[curr->getID()] = StrangerAutomaton::makePhi();
-			doPostImageComputation_GeneralCase(depGraph, curr, analysisResult);
+
+			if (depGraph.isSCCElement(curr)) { // handle cycles
+				doPostImageComputationForSCC_GeneralCase(depGraph, curr, analysisResult);
+			} else {
+				doPostImageComputation_GeneralCase(depGraph, curr, analysisResult);
+			}
 			process_stack.pop();
 		}
 	  }
@@ -2926,6 +2884,87 @@ StrangerAutomaton* ImageComputer::makePostImageForOp_GeneralCase(DepGraph& depGr
 		retMe = StrangerAutomaton::makeAnyString(opNode->getID());
 	}
 	return retMe;
+}
+
+void ImageComputer::doPostImageComputationForSCC_GeneralCase(DepGraph& depGraph, DepGraphNode* node, AnalysisResult& analysisResult) {
+
+	int precise_widening_limit = 5;
+	int coarse_widening_limit = 20;
+
+	int scc_id = depGraph.getSCCID(node);
+
+	map<int, int> visit_count;
+	NodesList current_scc_nodes = depGraph.getSCCNodes(scc_id);
+
+	queue<DepGraphNode*> worklist;
+	set<DepGraphNode*> visited;
+
+	// initialize all scc_nodes to phi
+	for (auto& scc_node : current_scc_nodes) {
+		analysisResult[scc_node->getID()] = StrangerAutomaton::makePhi(scc_node->getID());
+		visit_count[scc_node->getID()] = 0;
+	}
+
+	// add the successors to the worklist (in a depgraph successors are parents during forward analysis)
+	NodesList successors = depGraph.getSuccessors(node);
+	for ( auto succ_node : successors) {
+		worklist.push(succ_node);
+		visited.insert(succ_node);
+	}
+
+	int iteration = 0;
+
+	do {
+		DepGraphNode* curr_node = worklist.front();
+		worklist.pop();
+		// calculate the values for predecessors (in a depgraph predecessors are children during forward analysis)
+		for (auto pred_node : depGraph.getPredecessors(curr_node)) {
+			// ignore nodes that are not part of the current scc
+			if (!depGraph.isSCCElement(pred_node) || depGraph.getSCCID(pred_node) != scc_id)
+				continue;
+
+			StrangerAutomaton* prev_auto = analysisResult[pred_node->getID()]; // may need clone
+			StrangerAutomaton* tmp_auto = nullptr;
+			StrangerAutomaton* new_auto = nullptr;
+
+			if (dynamic_cast<DepGraphNormalNode*>(pred_node) != nullptr) {
+				tmp_auto = analysisResult[curr_node->getID()]; // may need clone
+			} else if (dynamic_cast<DepGraphOpNode*>(pred_node) != nullptr) {
+				tmp_auto = makePostImageForOp_GeneralCase(depGraph, dynamic_cast<DepGraphOpNode*>(pred_node), analysisResult);
+			} else {
+				throw StrangerStringAnalysisException(stringbuilder() << "Node cannot be an element of SCC component!, node id: " << node->getID());
+			}
+
+			if (tmp_auto == nullptr) {
+				throw StrangerStringAnalysisException(stringbuilder() << "Could not calculate the corresponding automaton!, node id: " << node->getID());
+			}
+
+			new_auto = tmp_auto->union_(prev_auto, pred_node->getID());
+
+			int new_visit_count = visit_count[pred_node->getID()] + 1;
+			if (new_visit_count > iteration)
+				iteration = new_visit_count;
+
+			// decide whether to do widening operations
+			if (new_visit_count > coarse_widening_limit) {
+				new_auto = prev_auto->coarseWiden(new_auto, pred_node->getID());
+			} else if (new_visit_count > precise_widening_limit) {
+				new_auto = prev_auto->preciseWiden(new_auto, pred_node->getID());
+			}
+
+			if (!new_auto->checkInclusion(prev_auto, new_auto->getID(), prev_auto->getID())) {
+				auto isVisited = visited.insert(pred_node);
+				if (isVisited.second) {
+					worklist.push(pred_node);
+				}
+				analysisResult[pred_node->getID()] = new_auto;
+				visit_count[pred_node->getID()] = new_visit_count;
+
+			}
+		}
+
+	} while( !worklist.empty() && iteration < 30000 );
+
 }
 
 
