@@ -43,7 +43,7 @@ bool ImageComputer::initialized = false;
  */
 
 
-StrangerAutomaton* ImageComputer::uninit_node_default_initialization = NULL;
+StrangerAutomaton* ImageComputer::uninit_node_default_initialization = nullptr;
 
 PerfInfo* ImageComputer::perfInfo;
 //static
@@ -128,8 +128,8 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 
 	NodesList predecessors = origDepGraph.getPredecessors(node);
 	NodesList successors = origDepGraph.getSuccessors(node);
-	DepGraphNormalNode* normalNode = NULL;
-	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
+	DepGraphNormalNode* normalNode = nullptr;
+	StrangerAutomaton *newAuto = nullptr, *tempAuto = nullptr;
 
 	if (dynamic_cast< DepGraphNormalNode*>(node) || dynamic_cast< DepGraphUninitNode*>(node) || dynamic_cast< DepGraphOpNode*>(node)) {
 		if (predecessors.empty()) {
@@ -141,7 +141,7 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 
 			for (NodesListIterator it = predecessors.begin(); it != predecessors.end(); ++it) {
 				DepGraphNode* pred = *it;
-				StrangerAutomaton* predAuto = NULL;
+				StrangerAutomaton* predAuto = nullptr;
 				if (pred == node) {
 					// ignore simple self loop (check correctness)
 					continue;
@@ -151,11 +151,11 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 					predAuto = this->makePreImageForOpChild_ValidationCase(origDepGraph, dynamic_cast< DepGraphOpNode*>(pred), node, bwAnalysisResult);
 				}
 
-				if (predAuto == NULL) {
+				if (predAuto == nullptr) {
 					continue;
 				}
 
-				if (newAuto == NULL) {
+				if (newAuto == nullptr) {
 					newAuto = predAuto->clone(node->getID());
 				} else {
 					tempAuto = newAuto;
@@ -171,7 +171,7 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 		throw new StrangerStringAnalysisException("SNH: cannot handle node type: doBackwardNodeComputation_ValidationPhase()");
 	}
 
-	if (newAuto == NULL) {
+	if (newAuto == nullptr) {
 		throw new StrangerStringAnalysisException("SNH: pre-image is NULL: doBackwardNodeComputation_ValidationPhase()");
 	}
 	bwAnalysisResult[node->getID()] = newAuto;
@@ -185,7 +185,7 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 StrangerAutomaton* ImageComputer::makePreImageForOpChild_ValidationCase(DepGraph& depGraph, DepGraphOpNode* opNode,
 			 DepGraphNode* childNode, AnalysisResult& bwAnalysisResult) {
 
-	StrangerAutomaton* retMe = NULL;
+	StrangerAutomaton* retMe = nullptr;
 	NodesList successors = depGraph.getSuccessors(opNode);
 	StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
 	string opName = opNode->getName();
@@ -474,11 +474,11 @@ void ImageComputer::doPostImageComputation_SingleInput(
 
 	NodesList successors = origDepGraph.getSuccessors(node);
 
-	StrangerAutomaton* newAuto = NULL;
+	StrangerAutomaton* newAuto = nullptr;
     DepGraphNormalNode* normalnode;
     DepGraphOpNode* opNode;
     DepGraphUninitNode* uninitNode;
-    if ((normalnode = dynamic_cast<DepGraphNormalNode*>(node)) != NULL) {
+    if ((normalnode = dynamic_cast<DepGraphNormalNode*>(node)) != nullptr) {
     	if (successors.empty()) {
 			newAuto = getLiteralorConstantNodeAuto(normalnode, false);
     	} else {
@@ -495,7 +495,7 @@ void ImageComputer::doPostImageComputation_SingleInput(
 				}
 
 				StrangerAutomaton *succAuto = analysisResult[succNode->getID()];
-    			if (newAuto == NULL) {
+    			if (newAuto == nullptr) {
     				newAuto = succAuto->clone(node->getID());
     			} else {
     				StrangerAutomaton* temp = newAuto;
@@ -505,9 +505,9 @@ void ImageComputer::doPostImageComputation_SingleInput(
     		}
     	}
 
-    } else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != NULL) {
+    } else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != nullptr) {
 		newAuto = makePostImageForOp_GeneralCase(origDepGraph, opNode, analysisResult);
-    } else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != NULL) {
+    } else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != nullptr) {
     	// input node that we are interested in should have been initialized already
     	if (analysisResult.find(node->getID()) == analysisResult.end()){
     		throw StrangerStringAnalysisException(stringbuilder() << "input node id(" << uninitNode->getID() << ") automaton must be initizalized before analysis begins!");
@@ -517,7 +517,7 @@ void ImageComputer::doPostImageComputation_SingleInput(
     	throw StrangerStringAnalysisException(stringbuilder() << "Cannot figure out node type!, node id: " << node->getID());
     }
 
-    if (newAuto == NULL) {
+    if (newAuto == nullptr) {
     	throw StrangerStringAnalysisException(stringbuilder() << "Forward automaton cannot be computed!, node id: " << node->getID());
     }
     analysisResult[node->getID()] = newAuto;
@@ -573,8 +573,8 @@ void ImageComputer::doPreImageComputation_GeneralCase(
 
 	NodesList predecessors = origDepGraph.getPredecessors(node);
 	NodesList successors = origDepGraph.getSuccessors(node);
-	DepGraphNormalNode* normalNode = NULL;
-	StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
+	DepGraphNormalNode* normalNode = nullptr;
+	StrangerAutomaton *newAuto = nullptr, *tempAuto = nullptr;
 
 	if (dynamic_cast< DepGraphNormalNode*>(node) || dynamic_cast< DepGraphUninitNode*>(node) || dynamic_cast< DepGraphOpNode*>(node)) {
 		if (predecessors.empty()) {
@@ -587,7 +587,7 @@ void ImageComputer::doPreImageComputation_GeneralCase(
 			StrangerAutomaton* forwardAuto = fwAnalysisResult.find(node->getID())->second;
 			for (NodesListIterator it = predecessors.begin(); it != predecessors.end(); ++it) {
 				DepGraphNode* pred = *it;
-				StrangerAutomaton* predAuto = NULL;
+				StrangerAutomaton* predAuto = nullptr;
 				if (pred == node) {
 					// ignore simple self loop (check correctness)
 					continue;
@@ -598,11 +598,11 @@ void ImageComputer::doPreImageComputation_GeneralCase(
 													bwAnalysisResult, fwAnalysisResult);
 				}
 
-				if (predAuto == NULL) {
+				if (predAuto == nullptr) {
 					continue;
 				}
 
-				if (newAuto == NULL) {
+				if (newAuto == nullptr) {
 					newAuto = predAuto->clone(node->getID());
 				} else {
 					tempAuto = newAuto;
@@ -612,7 +612,7 @@ void ImageComputer::doPreImageComputation_GeneralCase(
 				}
 			}
 
-			if (newAuto == NULL) {
+			if (newAuto == nullptr) {
 				throw StrangerStringAnalysisException("Cannot calculate backward auto, fix me\nndoBackwardNodeComputation_RegularPhase()");
 			}
 
@@ -626,7 +626,7 @@ void ImageComputer::doPreImageComputation_GeneralCase(
 	}
 
 
-	if (newAuto == NULL) {
+	if (newAuto == nullptr) {
 		throw new StrangerStringAnalysisException("SNH: pre-image is NULL:\ndoBackwardNodeComputation_RegularPhase()");
 	}
 
@@ -640,7 +640,7 @@ StrangerAutomaton* ImageComputer::makePreImageForOpChild_GeneralCase(
 		DepGraph& depGraph, DepGraphOpNode* opNode, DepGraphNode* childNode,
 		AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult) {
 
-	StrangerAutomaton* retMe = NULL;
+	StrangerAutomaton* retMe = nullptr;
 	NodesList successors = depGraph.getSuccessors(opNode);
 	StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
 	string opName = opNode->getName();
@@ -1609,18 +1609,18 @@ void ImageComputer::doNodeComputation(
 		node->setNonprocessedParents((int)origDepGraph.getPredecessors(node).size());
 
 	NodesList successors = origDepGraph.getSuccessors(node);
-	StrangerAutomaton* newAuto = NULL;
+	StrangerAutomaton* newAuto = nullptr;
     DepGraphNormalNode* normalnode;
     DepGraphOpNode* opNode;
     DepGraphUninitNode* uninitNode;
     StrangerAutomaton* temp;
 		// Note that node can not be SCC as we deal with scc in fixed point
 		// computaion
-    if ((normalnode = dynamic_cast<DepGraphNormalNode*>(node)) != NULL) {
+    if ((normalnode = dynamic_cast<DepGraphNormalNode*>(node)) != nullptr) {
 			if (successors.empty()) {
 				// this should be a string leaf node
 				TacPlace* place = normalnode->getPlace();
-				if (dynamic_cast<Literal*>(place) != NULL) {
+				if (dynamic_cast<Literal*>(place) != nullptr) {
 					newAuto = StrangerAutomaton::makeString(place->toString(),
 							node->getID());
 //					if (multiTrack)
@@ -1653,7 +1653,7 @@ void ImageComputer::doNodeComputation(
 						throw StrangerStringAnalysisException("SNH");
 					}
                     succAuto = it->second;
-					if (newAuto == NULL) {
+					if (newAuto == nullptr) {
 						// clone necessary to be safe here
 						// if we want to optimize then we must check if succ
 						// node has only
@@ -1672,11 +1672,11 @@ void ImageComputer::doNodeComputation(
 				}
 			}
 
-		} else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != NULL) {
+		} else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != nullptr) {
 			newAuto = makeAutoForOp(opNode, analysisResult,
 					origDepGraph, multiTrack);
 
-		} else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != NULL) {
+		} else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != nullptr) {
 			// for input nodes we take the value from the input init values map.
 			// the first time the input values map will have Sigma*.
 			// after that it will contain the resutl of previous bw analysis
@@ -1693,7 +1693,7 @@ void ImageComputer::doNodeComputation(
 				// we should only have one predecessor for uninit node
 				 DepGraphNode* pre = *(preds.begin());
                  DepGraphNormalNode* preNormal;
-				if ((preNormal = dynamic_cast< DepGraphNormalNode*>(pre)) != NULL) {
+				if ((preNormal = dynamic_cast< DepGraphNormalNode*>(pre)) != nullptr) {
 					newAuto = StrangerAutomaton::makeAnyString(node->getID());
 					// if predecessor is an SCC
 				}
@@ -1751,7 +1751,7 @@ void ImageComputer::doNodeComputation(
 			throw StrangerStringAnalysisException("SNH");
 		}
 
-		if (newAuto == NULL) {
+		if (newAuto == nullptr) {
 			throw StrangerStringAnalysisException("SNH");
 		}
 
@@ -1879,7 +1879,7 @@ void ImageComputer::doNodeComputation(
 StrangerAutomaton* ImageComputer::makeAutoForOp(DepGraphOpNode* opNode, AnalysisResult& analysisResult, DepGraph& depGraph, bool multiTrack){
 
 		 NodesList successors = depGraph.getSuccessors(opNode);
-		StrangerAutomaton* retMe = NULL;
+		StrangerAutomaton* retMe = nullptr;
 
         string opName = opNode->getName();
 
@@ -1894,7 +1894,7 @@ StrangerAutomaton* ImageComputer::makeAutoForOp(DepGraphOpNode* opNode, Analysis
                 StrangerAutomaton* subjectAuto = analysisResult[successors[1]->getID()];
                 StrangerAutomaton* patternAuto = StrangerAutomaton::regExToAuto(analysisResult[successors[0]->getID()]->getStr(), true, -1);
                 string complement = analysisResult[successors[2]->getID()]->getStr();
-                StrangerAutomaton* restricted = NULL;
+                StrangerAutomaton* restricted = nullptr;
                 if (complement == "true") {
                     StrangerAutomaton* patternComplement = patternAuto->complement(-1);
                     delete patternAuto;
@@ -1918,7 +1918,7 @@ StrangerAutomaton* ImageComputer::makeAutoForOp(DepGraphOpNode* opNode, Analysis
                 for (NodesListIterator it = successors.begin(); it != successors.end(); ++it) {
                      DepGraphNode* succ = *it;
                     StrangerAutomaton* succAuto = analysisResult[succ->getID()];
-                    if (retMe == NULL) {
+                    if (retMe == nullptr) {
                         //clone necessary to be safe here
                         //if we want to optimize then we must check if succ node
                         //has only
@@ -2032,7 +2032,7 @@ StrangerAutomaton* ImageComputer::makeAutoForOp(DepGraphOpNode* opNode, Analysis
 			 //each is treated as a function and it does not do anything
 			StrangerAutomaton* paramAuto = analysisResult[successors[0]->getID()];
             
-			StrangerAutomaton* resultAuto = NULL;
+			StrangerAutomaton* resultAuto = nullptr;
             if (opName == "trim")
                 resultAuto = paramAuto->trimSpaces(opNode->getID());
             else if (opName == "strtoupper") {
@@ -2233,8 +2233,8 @@ void ImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph&
 		// be null for these nodes.
 		NodesList predecessos = origDepGraph.getPredecessors(node);
 		NodesList successors = origDepGraph.getSuccessors(node);
-		StrangerAutomaton *newAuto = NULL, *tempAuto = NULL;
-         DepGraphNormalNode* normalNode = NULL;
+		StrangerAutomaton *newAuto = nullptr, *tempAuto = nullptr;
+         DepGraphNormalNode* normalNode = nullptr;
 		// Note that node can not be SCC as we deal with scc in fixed point
 		// computaion
 		if (dynamic_cast< DepGraphNormalNode*>(node)
@@ -2271,7 +2271,7 @@ void ImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph&
 				StrangerAutomaton* forwardAuto = fwAnalysisResult.find(node->getID())->second;
 				for (NodesListIterator it = predecessos.begin(); it != predecessos.end(); ++it) {
                      DepGraphNode* pred = *it;
-					StrangerAutomaton* predAuto = NULL;
+					StrangerAutomaton* predAuto = nullptr;
 					if (pred == node) {
 						// TODO: check if this is true
 						// a simple loop, can be ignored
@@ -2288,12 +2288,12 @@ void ImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph&
 								origDepGraph, fixPoint);
 					}
 
-					if (predAuto == NULL)
+					if (predAuto == nullptr)
 						throw StrangerStringAnalysisException("SNH");
 
 //					if(check_emptiness(predAuto)) continue;
 
-					if (newAuto == NULL) {
+					if (newAuto == nullptr) {
 						// newAuto = succAuto; // cloning not necessary here
 						// debug(node.getID() + " = " + succAuto.getID());
 						// newAuto.setID(node.getID()); // for debugging only
@@ -2317,7 +2317,7 @@ void ImageComputer::doBackwardNodeComputation(DepGraph& inputDepGraph, DepGraph&
 			throw new StrangerStringAnalysisException("SNH");
 		}
 
-		if (newAuto == NULL) {
+		if (newAuto == nullptr) {
 			throw new StrangerStringAnalysisException("SNH");
 		}
 
@@ -2332,7 +2332,7 @@ StrangerAutomaton* ImageComputer::makeBackwardAutoForOpChild( DepGraphOpNode* op
 			 DepGraphNode* childNode,
 			AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult, DepGraph& depGraph, boolean fixPoint) {
 
-		StrangerAutomaton* retMe = NULL;
+		StrangerAutomaton* retMe = nullptr;
 
 		string opName = opNode->getName();
 
@@ -2439,7 +2439,7 @@ StrangerAutomaton* ImageComputer::makeBackwardAutoForOpChild( DepGraphOpNode* op
 			 DepGraphNode* patternNode = successors[0];
 
 			if (childNode->equals(subjectNode)){
-				StrangerAutomaton* patternAuto =  NULL;
+				StrangerAutomaton* patternAuto =  nullptr;
 				if (opName == "preg_replace")
 					patternAuto = StrangerAutomaton::regExToAuto(fwAnalysisResult.find(successors[0]->getID())->second->getStr(), true, childNode->getID());
 				else if (opName == "str_replace")
@@ -2510,10 +2510,10 @@ StrangerAutomaton* ImageComputer::makeBackwardAutoForOpChild( DepGraphOpNode* op
 string ImageComputer::getLiteralOrConstantValue( DepGraphNode* node) {
     string retMe = "";
     DepGraphNormalNode* normalNode = dynamic_cast< DepGraphNormalNode*>(node);
-    if (normalNode == NULL)
+    if (normalNode == nullptr)
         throw runtime_error("can not cast DepGraphNode into DepGraphNormalNode");
     TacPlace* place = normalNode->getPlace();
-    if (dynamic_cast<Literal*>(place) != NULL || dynamic_cast<Constant*>(place) != NULL) {
+    if (dynamic_cast<Literal*>(place) != nullptr || dynamic_cast<Constant*>(place) != nullptr) {
         retMe = place->toString();
     }
     else
@@ -2526,10 +2526,10 @@ string ImageComputer::getLiteralOrConstantValue( DepGraphNode* node) {
 //	// ********************************************************************************
 //
 bool ImageComputer::isLiteralOrConstant( DepGraphNode* node, NodesList successors) {
-    if ((dynamic_cast< DepGraphNormalNode*>(node) != NULL)  && (successors.empty())){
+    if ((dynamic_cast< DepGraphNormalNode*>(node) != nullptr)  && (successors.empty())){
          DepGraphNormalNode* normalNode = dynamic_cast< DepGraphNormalNode*>(node);
         TacPlace* place = normalNode->getPlace();
-        if (dynamic_cast<Literal*>(place) != NULL || dynamic_cast<Constant*>(place) )
+        if (dynamic_cast<Literal*>(place) != nullptr || dynamic_cast<Constant*>(place) )
             return true;
         else
             return false;
@@ -2538,12 +2538,12 @@ bool ImageComputer::isLiteralOrConstant( DepGraphNode* node, NodesList successor
 }
 
 StrangerAutomaton* ImageComputer::getLiteralorConstantNodeAuto(DepGraphNode* node, bool is_vlab_restrict) {
-	StrangerAutomaton* retMe = NULL;
+	StrangerAutomaton* retMe = nullptr;
     DepGraphNormalNode* normalNode = dynamic_cast< DepGraphNormalNode*>(node);
-    if (normalNode == NULL)
+    if (normalNode == nullptr)
         throw runtime_error("can not cast DepGraphNode into DepGraphNormalNode");
 	TacPlace* place = normalNode->getPlace();
-	if (dynamic_cast<Literal*>(place) != NULL || dynamic_cast<Constant*>(place)) {
+	if (dynamic_cast<Literal*>(place) != nullptr || dynamic_cast<Constant*>(place)) {
 		string value = place->toString();
 		// check if it is a regular expression
 		if (value.find_first_of('/') == 0 &&
@@ -2616,11 +2616,11 @@ void ImageComputer::doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGr
 
 	NodesList successors = depGraph.getSuccessors(node);
 
-	StrangerAutomaton* newAuto = NULL;
+	StrangerAutomaton* newAuto = nullptr;
 	DepGraphNormalNode* normalNode;
 	DepGraphOpNode* opNode;
 	DepGraphUninitNode* uninitNode;
-	if ((normalNode = dynamic_cast<DepGraphNormalNode*>(node)) != NULL) {
+	if ((normalNode = dynamic_cast<DepGraphNormalNode*>(node)) != nullptr) {
 		if (successors.empty()) {
 			newAuto = getLiteralorConstantNodeAuto(normalNode, false);
 		} else {
@@ -2633,7 +2633,7 @@ void ImageComputer::doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGr
 				}
 
 				StrangerAutomaton *succAuto = analysisResult[succNode->getID()];
-				if (newAuto == NULL) {
+				if (newAuto == nullptr) {
 					newAuto = succAuto->clone(node->getID());
 				} else {
 					StrangerAutomaton* temp = newAuto;
@@ -2642,15 +2642,15 @@ void ImageComputer::doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGr
 				}
 			}
 		}
-	} else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != NULL) {
+	} else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != nullptr) {
 		newAuto = makePostImageForOp_GeneralCase(depGraph, opNode, analysisResult);
-	} else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != NULL) {
+	} else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != nullptr) {
 		newAuto = ImageComputer::uninit_node_default_initialization->clone(node->getID());
 	} else {
 		throw StrangerStringAnalysisException(stringbuilder() << "Cannot figure out node type!, node id: " << node->getID());
 	}
 
-	if (newAuto == NULL) {
+	if (newAuto == nullptr) {
 		throw StrangerStringAnalysisException(stringbuilder() << "Forward automaton cannot be computed!, node id: " << node->getID());
 	}
 	analysisResult[node->getID()] = newAuto;
@@ -2662,7 +2662,7 @@ void ImageComputer::doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGr
  */
 StrangerAutomaton* ImageComputer::makePostImageForOp_GeneralCase(DepGraph& depGraph, DepGraphOpNode* opNode, AnalysisResult& analysisResult) {
 	NodesList successors = depGraph.getSuccessors(opNode);
-	StrangerAutomaton* retMe = NULL;
+	StrangerAutomaton* retMe = nullptr;
 	string opName = opNode->getName();
 	if (!opNode->isBuiltin()) {
 		// __vlab_restrict
@@ -2717,7 +2717,7 @@ StrangerAutomaton* ImageComputer::makePostImageForOp_GeneralCase(DepGraph& depGr
 				doForwardAnalysis_GeneralCase(depGraph, succNode, analysisResult);
 			}
 			StrangerAutomaton* succAuto = analysisResult[succNode->getID()];
-			if (retMe == NULL) {
+			if (retMe == nullptr) {
 				retMe = succAuto->clone(opNode->getID());
 			} else {
 				StrangerAutomaton* temp = retMe;
@@ -2725,7 +2725,7 @@ StrangerAutomaton* ImageComputer::makePostImageForOp_GeneralCase(DepGraph& depGr
 				delete temp;
 			}
 		}
-		if (retMe == NULL) {
+		if (retMe == nullptr) {
 			throw StrangerStringAnalysisException(stringbuilder() << "Check successors of concatenation: " << opNode->getID());
 		}
 
