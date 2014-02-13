@@ -70,7 +70,6 @@ AnalysisResult ImageComputer::doBackwardAnalysis_ValidationCase(DepGraph& origDe
 
 	queue<DepGraphNode*> process_queue;
 	set<DepGraphNode*> visited;
-	pair<set<DepGraphNode*>::iterator,bool> isNotVisited;
 
 	bool has_validation = false;
 
@@ -107,7 +106,7 @@ AnalysisResult ImageComputer::doBackwardAnalysis_ValidationCase(DepGraph& origDe
 		NodesList successors = depGraph.getSuccessors(curr);
 		if (!successors.empty()) {
 			for (NodesListConstIterator it = successors.begin(); it != successors.end(); it++) {
-				isNotVisited = visited.insert(*it);
+				auto isNotVisited = visited.insert(*it);
 				if (isNotVisited.second) {
 					bwValidationPatchResult[(*it)->getID()] = initialAuto;
 					process_queue.push(*it);
@@ -441,7 +440,6 @@ void ImageComputer::doForwardAnalysis_SingleInput(
 
 	stack<DepGraphNode*> process_stack;
 	set<DepGraphNode*> visited;
-	pair<set<DepGraphNode*>::iterator,bool> isNotVisited;
 
 	// TODO remove that from here for a general option
 	if (uninit_node_default_initialization)
@@ -452,7 +450,7 @@ void ImageComputer::doForwardAnalysis_SingleInput(
 	while (!process_stack.empty()) {
 
 		DepGraphNode *curr = process_stack.top();
-		isNotVisited = visited.insert(curr);
+		auto isNotVisited = visited.insert(curr);
 		NodesList successors = inputDepGraph.getSuccessors(curr);
 
 		if (!successors.empty() && isNotVisited.second) {
@@ -539,7 +537,6 @@ AnalysisResult ImageComputer::doBackwardAnalysis_GeneralCase(
 
 	queue<DepGraphNode*> process_queue;
 	set<DepGraphNode*> visited;
-	pair<set<DepGraphNode*>::iterator,bool> isNotVisited;
 
 	AnalysisResult bwAnalysisResult;
 
@@ -556,7 +553,7 @@ AnalysisResult ImageComputer::doBackwardAnalysis_GeneralCase(
 	NodesList successors = depGraph.getSuccessors(curr);
 		if (!successors.empty()) {
 			for (NodesListConstIterator it = successors.begin(); it != successors.end(); it++) {
-				isNotVisited = visited.insert(*it);
+				auto isNotVisited = visited.insert(*it);
 				if (isNotVisited.second) {
 					process_queue.push(*it);
 				}
@@ -2583,7 +2580,6 @@ void ImageComputer::doForwardAnalysis_GeneralCase(DepGraph& depGraph, DepGraphNo
 
 	stack<DepGraphNode*> process_stack;
 	set<DepGraphNode*> visited;
-	pair<set<DepGraphNode*>::iterator,bool> isNotVisited;
 
 	// TODO remove that from here for a general option
 	if (!uninit_node_default_initialization)
@@ -2593,7 +2589,7 @@ void ImageComputer::doForwardAnalysis_GeneralCase(DepGraph& depGraph, DepGraphNo
 	while (!process_stack.empty()) {
 
 		DepGraphNode *curr = process_stack.top();
-		isNotVisited = visited.insert(curr);
+		auto isNotVisited = visited.insert(curr);
 		NodesList successors = depGraph.getSuccessors(curr);
 
 		if (!successors.empty() && isNotVisited.second) {
