@@ -811,9 +811,9 @@ void ImageComputer::doPreImageComputationForSCC_GeneralCase(DepGraph& origDepGra
 					worklist.push(succ_node);
 				}
 
-//					tmp_auto = new_auto;
-//					new_auto = forward_auto->intersect(new_auto, node->getID());
-//					delete tmp_auto;
+				tmp_auto = new_auto;
+				new_auto = forward_auto->intersect(new_auto, node->getID());
+				delete tmp_auto;
 
 				bwAnalysisResult[succ_node->getID()] = new_auto;
 				visit_count[succ_node->getID()] = new_visit_count;
