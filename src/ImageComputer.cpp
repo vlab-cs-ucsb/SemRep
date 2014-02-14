@@ -70,6 +70,7 @@ AnalysisResult ImageComputer::doBackwardAnalysis_ValidationCase(DepGraph& origDe
 
 	queue<DepGraphNode*> process_queue;
 	set<DepGraphNode*> visited;
+	set<int> processed_SCCs;
 
 	bool has_validation = false;
 
@@ -98,7 +99,16 @@ AnalysisResult ImageComputer::doBackwardAnalysis_ValidationCase(DepGraph& origDe
 			} else { throw new StrangerStringAnalysisException("cannot handle node type"); }
 
 		} else {
-			doPreImageComputation_ValidationCase(origDepGraph, curr, bwValidationPatchResult);
+			if (depGraph.isSCCElement(curr)) { // handle cycles
+				// do not compute a scc more than once
+				auto isNotProcessed = processed_SCCs.insert(depGraph.getSCCID(curr));
+				if (isNotProcessed.second) {
+					doPreImageComputationForSCC_ValidationCase(origDepGraph, curr, bwValidationPatchResult);
+				}
+			} else {
+				doPreImageComputation_ValidationCase(origDepGraph, curr, bwValidationPatchResult);
+			}
+
 		}
 
 		process_queue.pop();
@@ -148,7 +158,7 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 				} else if (dynamic_cast< DepGraphNormalNode*>(pred)) {
 					predAuto = bwAnalysisResult[pred->getID()];
 				} else if (dynamic_cast< DepGraphOpNode*>(pred)) {
-					predAuto = this->makePreImageForOpChild_ValidationCase(origDepGraph, dynamic_cast< DepGraphOpNode*>(pred), node, bwAnalysisResult);
+					predAuto = makePreImageForOpChild_ValidationCase(origDepGraph, dynamic_cast< DepGraphOpNode*>(pred), node, bwAnalysisResult);
 				}
 
 				if (predAuto == nullptr) {
@@ -176,6 +186,88 @@ void ImageComputer::doPreImageComputation_ValidationCase(DepGraph& origDepGraph,
 	}
 	bwAnalysisResult[node->getID()] = newAuto;
 
+}
+
+/**
+ * Pre Image computation for cycles (loops) during validation phase
+ */
+void ImageComputer::doPreImageComputationForSCC_ValidationCase(DepGraph& origDepGraph, DepGraphNode* node, AnalysisResult& bwAnalysisResult) {
+	// TODO add to command line options as an optional parameter
+	int precise_widening_limit = 5;
+	int coarse_widening_limit = 20;
+
+	int scc_id = origDepGraph.getSCCID(node);
+
+	map<int, int> visit_count;
+	NodesList current_scc_nodes = origDepGraph.getSCCNodes(scc_id);
+
+	queue<DepGraphNode*> worklist;
+	set<DepGraphNode*> visited;
+
+	// initialize all scc_nodes to phi
+	for (auto& scc_node : current_scc_nodes) {
+		bwAnalysisResult[scc_node->getID()] = StrangerAutomaton::makePhi(scc_node->getID());
+		visit_count[scc_node->getID()] = 0;
+	}
+
+	// add the predecessors to the worklist
+	for ( auto pred_node : origDepGraph.getPredecessors(node)) {
+		worklist.push(pred_node);
+		visited.insert(pred_node);
+	}
+
+	int iteration = 0;
+
+	do {
+		DepGraphNode* curr_node = worklist.front();
+		worklist.pop();
+		// calculate the values for predecessors (in a depgraph predecessors are children during forward analysis)
+		for (auto succ_node : origDepGraph.getSuccessors(curr_node)) {
+			// ignore nodes that are not part of the current scc
+			if (!origDepGraph.isSCCElement(succ_node) || origDepGraph.getSCCID(succ_node) != scc_id)
+				continue;
+
+			StrangerAutomaton* prev_auto = bwAnalysisResult[succ_node->getID()]; // may need clone
+			StrangerAutomaton* tmp_auto = nullptr;
+			StrangerAutomaton* new_auto = nullptr;
+
+			if (dynamic_cast<DepGraphNormalNode*>(curr_node) != nullptr) {
+				tmp_auto = bwAnalysisResult[curr_node->getID()]; // may need clone
+			} else if (dynamic_cast<DepGraphOpNode*>(curr_node) != nullptr) {
+				tmp_auto = makePreImageForOpChild_ValidationCase(origDepGraph, dynamic_cast< DepGraphOpNode*>(curr_node), succ_node, bwAnalysisResult);
+			} else {
+				throw StrangerStringAnalysisException(stringbuilder() << "Node cannot be an element of SCC component!, node id: " << node->getID());
+			}
+
+			if (tmp_auto == nullptr) {
+				throw StrangerStringAnalysisException(stringbuilder() << "Could not calculate the corresponding automaton!, node id: " << node->getID());
+			}
+
+			new_auto = tmp_auto->union_(prev_auto, succ_node->getID());
+
+			int new_visit_count = visit_count[succ_node->getID()] + 1;
+			if (new_visit_count > iteration)
+				iteration = new_visit_count;
+
+			// decide whether to do widening operations
+			if (new_visit_count > coarse_widening_limit) {
+				new_auto = prev_auto->coarseWiden(new_auto, succ_node->getID());
+			} else if (new_visit_count > precise_widening_limit) {
+				new_auto = prev_auto->preciseWiden(new_auto, succ_node->getID());
+			}
+
+			if (!new_auto->checkInclusion(prev_auto, new_auto->getID(), prev_auto->getID())) {
+				auto isVisited = visited.insert(succ_node);
+				if (isVisited.second) {
+					worklist.push(succ_node);
+				}
+
+				bwAnalysisResult[succ_node->getID()] = new_auto;
+				visit_count[succ_node->getID()] = new_visit_count;
+			}
+		}
+
+	} while( !worklist.empty() && iteration < 30000 );
 }
 
 
@@ -648,87 +740,87 @@ void ImageComputer::doPreImageComputation_GeneralCase(
  */
 void ImageComputer::doPreImageComputationForSCC_GeneralCase(DepGraph& origDepGraph, DepGraphNode* node, AnalysisResult& bwAnalysisResult, const AnalysisResult& fwAnalysisResult) {
 	// TODO add to command line options as an optional parameter
-		int precise_widening_limit = 5;
-		int coarse_widening_limit = 20;
+	int precise_widening_limit = 5;
+	int coarse_widening_limit = 20;
 
-		int scc_id = origDepGraph.getSCCID(node);
+	int scc_id = origDepGraph.getSCCID(node);
 
-		map<int, int> visit_count;
-		NodesList current_scc_nodes = origDepGraph.getSCCNodes(scc_id);
+	map<int, int> visit_count;
+	NodesList current_scc_nodes = origDepGraph.getSCCNodes(scc_id);
 
-		queue<DepGraphNode*> worklist;
-		set<DepGraphNode*> visited;
+	queue<DepGraphNode*> worklist;
+	set<DepGraphNode*> visited;
 
-		// initialize all scc_nodes to phi
-		for (auto& scc_node : current_scc_nodes) {
-			bwAnalysisResult[scc_node->getID()] = StrangerAutomaton::makePhi(scc_node->getID());
-			visit_count[scc_node->getID()] = 0;
-		}
+	// initialize all scc_nodes to phi
+	for (auto& scc_node : current_scc_nodes) {
+		bwAnalysisResult[scc_node->getID()] = StrangerAutomaton::makePhi(scc_node->getID());
+		visit_count[scc_node->getID()] = 0;
+	}
 
-		// add the predecessors to the worklist
-		for ( auto pred_node : origDepGraph.getPredecessors(node)) {
-			worklist.push(pred_node);
-			visited.insert(pred_node);
-		}
+	// add the predecessors to the worklist
+	for ( auto pred_node : origDepGraph.getPredecessors(node)) {
+		worklist.push(pred_node);
+		visited.insert(pred_node);
+	}
 
-		int iteration = 0;
+	int iteration = 0;
 
-		do {
-			DepGraphNode* curr_node = worklist.front();
-			worklist.pop();
-			// calculate the values for predecessors (in a depgraph predecessors are children during forward analysis)
-			for (auto succ_node : origDepGraph.getSuccessors(curr_node)) {
-				// ignore nodes that are not part of the current scc
-				if (!origDepGraph.isSCCElement(succ_node) || origDepGraph.getSCCID(succ_node) != scc_id)
-					continue;
+	do {
+		DepGraphNode* curr_node = worklist.front();
+		worklist.pop();
+		// calculate the values for predecessors (in a depgraph predecessors are children during forward analysis)
+		for (auto succ_node : origDepGraph.getSuccessors(curr_node)) {
+			// ignore nodes that are not part of the current scc
+			if (!origDepGraph.isSCCElement(succ_node) || origDepGraph.getSCCID(succ_node) != scc_id)
+				continue;
 
-				StrangerAutomaton* forward_auto = fwAnalysisResult.find(succ_node->getID())->second;
-				StrangerAutomaton* prev_auto = bwAnalysisResult[succ_node->getID()]; // may need clone
-				StrangerAutomaton* tmp_auto = nullptr;
-				StrangerAutomaton* new_auto = nullptr;
+			StrangerAutomaton* forward_auto = fwAnalysisResult.find(succ_node->getID())->second;
+			StrangerAutomaton* prev_auto = bwAnalysisResult[succ_node->getID()]; // may need clone
+			StrangerAutomaton* tmp_auto = nullptr;
+			StrangerAutomaton* new_auto = nullptr;
 
-				if (dynamic_cast<DepGraphNormalNode*>(curr_node) != nullptr) {
-					tmp_auto = bwAnalysisResult[curr_node->getID()]; // may need clone
-				} else if (dynamic_cast<DepGraphOpNode*>(curr_node) != nullptr) {
-					tmp_auto = makePreImageForOpChild_GeneralCase(origDepGraph, dynamic_cast< DepGraphOpNode*>(curr_node), succ_node,
-							bwAnalysisResult, fwAnalysisResult);
-				} else {
-					throw StrangerStringAnalysisException(stringbuilder() << "Node cannot be an element of SCC component!, node id: " << node->getID());
+			if (dynamic_cast<DepGraphNormalNode*>(curr_node) != nullptr) {
+				tmp_auto = bwAnalysisResult[curr_node->getID()]; // may need clone
+			} else if (dynamic_cast<DepGraphOpNode*>(curr_node) != nullptr) {
+				tmp_auto = makePreImageForOpChild_GeneralCase(origDepGraph, dynamic_cast< DepGraphOpNode*>(curr_node), succ_node,
+						bwAnalysisResult, fwAnalysisResult);
+			} else {
+				throw StrangerStringAnalysisException(stringbuilder() << "Node cannot be an element of SCC component!, node id: " << node->getID());
+			}
+
+			if (tmp_auto == nullptr) {
+				throw StrangerStringAnalysisException(stringbuilder() << "Could not calculate the corresponding automaton!, node id: " << node->getID());
+			}
+
+			new_auto = tmp_auto->union_(prev_auto, succ_node->getID());
+
+			int new_visit_count = visit_count[succ_node->getID()] + 1;
+			if (new_visit_count > iteration)
+				iteration = new_visit_count;
+
+			// decide whether to do widening operations
+			if (new_visit_count > coarse_widening_limit) {
+				new_auto = prev_auto->coarseWiden(new_auto, succ_node->getID());
+			} else if (new_visit_count > precise_widening_limit) {
+				new_auto = prev_auto->preciseWiden(new_auto, succ_node->getID());
+			}
+
+			if (!new_auto->checkInclusion(prev_auto, new_auto->getID(), prev_auto->getID())) {
+				auto isVisited = visited.insert(succ_node);
+				if (isVisited.second) {
+					worklist.push(succ_node);
 				}
-
-				if (tmp_auto == nullptr) {
-					throw StrangerStringAnalysisException(stringbuilder() << "Could not calculate the corresponding automaton!, node id: " << node->getID());
-				}
-
-				new_auto = tmp_auto->union_(prev_auto, succ_node->getID());
-
-				int new_visit_count = visit_count[succ_node->getID()] + 1;
-				if (new_visit_count > iteration)
-					iteration = new_visit_count;
-
-				// decide whether to do widening operations
-				if (new_visit_count > coarse_widening_limit) {
-					new_auto = prev_auto->coarseWiden(new_auto, succ_node->getID());
-				} else if (new_visit_count > precise_widening_limit) {
-					new_auto = prev_auto->preciseWiden(new_auto, succ_node->getID());
-				}
-
-				if (!new_auto->checkInclusion(prev_auto, new_auto->getID(), prev_auto->getID())) {
-					auto isVisited = visited.insert(succ_node);
-					if (isVisited.second) {
-						worklist.push(succ_node);
-					}
 
 //					tmp_auto = new_auto;
 //					new_auto = forward_auto->intersect(new_auto, node->getID());
 //					delete tmp_auto;
 
-					bwAnalysisResult[succ_node->getID()] = new_auto;
-					visit_count[succ_node->getID()] = new_visit_count;
-				}
+				bwAnalysisResult[succ_node->getID()] = new_auto;
+				visit_count[succ_node->getID()] = new_visit_count;
 			}
+		}
 
-		} while( !worklist.empty() && iteration < 30000 );
+	} while( !worklist.empty() && iteration < 30000 );
 }
 
 /**
@@ -2712,6 +2804,50 @@ void ImageComputer::doForwardAnalysis_GeneralCase(DepGraph& depGraph, DepGraphNo
 	  }
 }
 
+void ImageComputer::doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGraphNode* node, AnalysisResult& analysisResult) {
+
+	NodesList successors = depGraph.getSuccessors(node);
+
+	StrangerAutomaton* newAuto = nullptr;
+	DepGraphNormalNode* normalNode;
+	DepGraphOpNode* opNode;
+	DepGraphUninitNode* uninitNode;
+	if ((normalNode = dynamic_cast<DepGraphNormalNode*>(node)) != nullptr) {
+		if (successors.empty()) {
+			newAuto = getLiteralorConstantNodeAuto(normalNode, false);
+		} else {
+			// an interior node, union of all its successors
+			for (NodesListIterator it = successors.begin(); it != successors.end(); it++) {
+				DepGraphNode* succNode = *it;
+				if (succNode->getID() == node->getID() ) {
+					// avoid simple loops
+					continue;
+				}
+
+				StrangerAutomaton *succAuto = analysisResult[succNode->getID()];
+				if (newAuto == nullptr) {
+					newAuto = succAuto->clone(node->getID());
+				} else {
+					StrangerAutomaton* temp = newAuto;
+					newAuto = newAuto->union_(succAuto, node->getID());
+					delete temp;
+				}
+			}
+		}
+	} else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != nullptr) {
+		newAuto = makePostImageForOp_GeneralCase(depGraph, opNode, analysisResult);
+	} else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != nullptr) {
+		newAuto = ImageComputer::uninit_node_default_initialization->clone(node->getID());
+	} else {
+		throw StrangerStringAnalysisException(stringbuilder() << "Cannot figure out node type!, node id: " << node->getID());
+	}
+
+	if (newAuto == nullptr) {
+		throw StrangerStringAnalysisException(stringbuilder() << "Forward automaton cannot be computed!, node id: " << node->getID());
+	}
+	analysisResult[node->getID()] = newAuto;
+}
+
 /**
  * Post Image computation for cycles (loops)
  */
@@ -2792,51 +2928,6 @@ void ImageComputer::doPostImageComputationForSCC_GeneralCase(DepGraph& depGraph,
 		}
 
 	} while( !worklist.empty() && iteration < 30000 );
-}
-
-
-void ImageComputer::doPostImageComputation_GeneralCase(DepGraph& depGraph, DepGraphNode* node, AnalysisResult& analysisResult) {
-
-	NodesList successors = depGraph.getSuccessors(node);
-
-	StrangerAutomaton* newAuto = nullptr;
-	DepGraphNormalNode* normalNode;
-	DepGraphOpNode* opNode;
-	DepGraphUninitNode* uninitNode;
-	if ((normalNode = dynamic_cast<DepGraphNormalNode*>(node)) != nullptr) {
-		if (successors.empty()) {
-			newAuto = getLiteralorConstantNodeAuto(normalNode, false);
-		} else {
-			// an interior node, union of all its successors
-			for (NodesListIterator it = successors.begin(); it != successors.end(); it++) {
-				DepGraphNode* succNode = *it;
-				if (succNode->getID() == node->getID() ) {
-					// avoid simple loops
-					continue;
-				}
-
-				StrangerAutomaton *succAuto = analysisResult[succNode->getID()];
-				if (newAuto == nullptr) {
-					newAuto = succAuto->clone(node->getID());
-				} else {
-					StrangerAutomaton* temp = newAuto;
-					newAuto = newAuto->union_(succAuto, node->getID());
-					delete temp;
-				}
-			}
-		}
-	} else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != nullptr) {
-		newAuto = makePostImageForOp_GeneralCase(depGraph, opNode, analysisResult);
-	} else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != nullptr) {
-		newAuto = ImageComputer::uninit_node_default_initialization->clone(node->getID());
-	} else {
-		throw StrangerStringAnalysisException(stringbuilder() << "Cannot figure out node type!, node id: " << node->getID());
-	}
-
-	if (newAuto == nullptr) {
-		throw StrangerStringAnalysisException(stringbuilder() << "Forward automaton cannot be computed!, node id: " << node->getID());
-	}
-	analysisResult[node->getID()] = newAuto;
 }
 
 /**

@@ -44,7 +44,7 @@ public:
     void doPreImageComputation_ValidationCase(DepGraph& origDepGraph, DepGraphNode* node, AnalysisResult& bwAnalysisResult);
     StrangerAutomaton* makePreImageForOpChild_ValidationCase(DepGraph& depGraph, DepGraphOpNode* opNode,
     			 DepGraphNode* childNode,AnalysisResult& bwAnalysisResult);
-
+    void doPreImageComputationForSCC_ValidationCase(DepGraph& origDepGraph, DepGraphNode* node, AnalysisResult& bwAnalysisResult);
 
     /****************************************************************************************************/
     /*********** SINGLE INPUT POST-IMAGE COMPUTATION METHODS **********************************************/
