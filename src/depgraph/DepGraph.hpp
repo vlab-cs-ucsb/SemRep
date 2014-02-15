@@ -73,6 +73,10 @@ typedef std::vector<DepGraphUninitNode*> UninitNodesList;
 typedef std::vector<DepGraphUninitNode*>::iterator UninitNodesListIterator;
 typedef std::vector<DepGraphUninitNode*>::const_iterator UninitNodesListConstIterator;
 
+typedef std::map<int, NodesList> SccNodes;
+typedef std::map<int, NodesList>::iterator SccNodesIterator;
+typedef std::map<int, NodesList>::const_iterator SccNodesConstIterator;
+
 
 
 class DepGraph {
@@ -165,7 +169,7 @@ private:
 	static int currentOrder;
 
 	// members for scc nodes (computed with tarjan's algorithm)
-	map<int, NodesList> scc_components;
+	SccNodes scc_components;
 	// contains an entry for a node if it is involved in a cycle that has more than one node
 	map<int, int> scc_map;
 

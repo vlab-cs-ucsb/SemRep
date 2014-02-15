@@ -175,8 +175,7 @@ void DepGraph::doGetInputRelevantGraph(DepGraphNode* node,
 	    			DepGraph& inputDepGraph)
 {
 	NodesList preds = this->getPredecessors(node);
-//	for (NodesConstSetConstIterator predIt = preds.begin(); predIt != preds.end(); ++predIt ) {
-//		const DepGraphNode* pred = *predIt;
+
     for (auto pred : preds) {
 	   // if this node has already been added to the inputDepGraph graph...
 	   if (inputDepGraph.containsNode(pred)) {
@@ -426,7 +425,7 @@ void DepGraph::calculateSCCs() {
       }
     }
 
-    printSCCInfo();
+//    printSCCInfo();
 
     return;
 }

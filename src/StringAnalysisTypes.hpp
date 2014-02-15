@@ -25,15 +25,10 @@
 #define STRINGANALYSISTYPES_HPP_
 
 #include "StrangerAutomaton.hpp"
-#include "depgraph/DepGraph.hpp"
 
 typedef std::map<const int, StrangerAutomaton*> AnalysisResult;
 typedef std::map<const int, StrangerAutomaton*>::iterator AnalysisResultIterator;
 typedef std::map<const int, StrangerAutomaton*>::const_iterator AnalysisResultConstIterator;
-
-typedef std::map<int, NodesList> SccNodes;
-typedef std::map<int, NodesList>::iterator SccNodesIterator;
-typedef std::map<int, NodesList>::const_iterator SccNodesConstIterator;
 
 
 #endif /* STRINGANALYSISTYPES_HPP_ */
