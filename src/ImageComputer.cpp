@@ -443,7 +443,6 @@ StrangerAutomaton* ImageComputer::makePreImageForOpChild_ValidationCase(DepGraph
 			StrangerAutomaton* intersection = subjectAuto->intersect(forward, childNode->getID());
 			string replaceStr = replaceAuto->getStr();
 
-			// TODO add general pre-replace where all parameters are automata
 			// checking for special case where a character is escaped by another character
 			if (patternAuto->isSingleton()) {
 				string patternStr = patternAuto->generateSatisfyingExample();
@@ -964,7 +963,6 @@ StrangerAutomaton* ImageComputer::makePreImageForOpChild_GeneralCase(
 		StrangerAutomaton* replaceAuto = fwAnalysisResult.find(replaceNode->getID())->second;
 		string replaceStr = replaceAuto->getStr();
 
-		// TODO add general pre-replace where all parameters are automata
 		// checking for special case where a character is escaped by another character
 		if (patternAuto->isSingleton()) {
 			string patternStr = patternAuto->generateSatisfyingExample();
