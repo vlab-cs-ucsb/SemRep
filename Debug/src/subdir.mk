@@ -10,7 +10,6 @@ CPP_SRCS += \
 ../src/SemRepair.cpp \
 ../src/SemRepairDebugger.cpp \
 ../src/StrangerAutomaton.cpp \
-../src/VulnerabilitySignatureGenerator.cpp \
 ../src/main.cpp 
 
 OBJS += \
@@ -20,7 +19,6 @@ OBJS += \
 ./src/SemRepair.o \
 ./src/SemRepairDebugger.o \
 ./src/StrangerAutomaton.o \
-./src/VulnerabilitySignatureGenerator.o \
 ./src/main.o 
 
 CPP_DEPS += \
@@ -30,7 +28,6 @@ CPP_DEPS += \
 ./src/SemRepair.d \
 ./src/SemRepairDebugger.d \
 ./src/StrangerAutomaton.d \
-./src/VulnerabilitySignatureGenerator.d \
 ./src/main.d 
 
 
