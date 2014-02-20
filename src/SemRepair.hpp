@@ -48,7 +48,6 @@ public:
 	StrangerAutomaton* getLengthPatchAuto() { return length_patch_auto; }
 	StrangerAutomaton* getSanitizationPatchAuto() { return sanitization_patch_auto; }
 
-//	StrangerAutomaton* testVulnerabilitySignature();
 	void testNewFunctions();
 
 	void printResults();

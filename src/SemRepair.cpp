@@ -85,17 +85,17 @@ void SemRepair::message(string msg) {
 
 void SemRepair::printAnalysisResults(AnalysisResult& result) {
 	cout << endl;
-	for (AnalysisResultConstIterator it = result.begin(); it != result.end(); it++ ) {
-		cout << "Printing automata for node ID: " << it->first << endl;
-		(it->second)->toDot();
+	for (auto& entry : result ) {
+		cout << "Printing automata for node ID: " << entry.first << endl;
+		(entry.second)->toDot();
 		cout << endl << endl;
 	}
 }
 
 void SemRepair::printNodeList(NodesList nodes) {
 	cout << endl;
-	for (NodesListConstIterator it = nodes.begin(); it != nodes.end(); it++ ) {
-		cout << (*it)->getID() << " ";
+	for (auto node : nodes ) {
+		cout << node->getID() << " ";
 	}
 	cout << endl;
 }
@@ -335,8 +335,8 @@ StrangerAutomaton* SemRepair::computeReferenceFWAnalysis() {
 
 	// initialize reference input nodes to bottom
 	message("initializing reference inputs with bottom");
-	for (UninitNodesListConstIterator it = referenceUninitNodes.begin(); it != referenceUninitNodes.end(); it++) {
-		referenceAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
+	for (auto uninit_node : referenceUninitNodes) {
+		referenceAnalysisResult[uninit_node->getID()] = StrangerAutomaton::makePhi(uninit_node->getID());
 	}
 	// initialize uninit node that we are interested in with sigma star
 	message(stringbuilder() << "initializing input node(" << reference_uninit_field_node->getID() << ") with sigma star");
@@ -368,8 +368,8 @@ AnalysisResult SemRepair::computeTargetFWAnalysis() {
 	UninitNodesList targetUninitNodes = target_dep_graph.getUninitNodes();
 
 	message("initializing target inputs with bottom");
-	for (UninitNodesListConstIterator it = targetUninitNodes.begin(); it != targetUninitNodes.end(); it++) {
-		targetAnalysisResult[(*it)->getID()] = StrangerAutomaton::makePhi((*it)->getID());
+	for (auto uninit_node : targetUninitNodes) {
+		targetAnalysisResult[uninit_node->getID()] = StrangerAutomaton::makePhi(uninit_node->getID());
 	}
 
 	// initialize uninit node that we are interested in with validation patch_auto
@@ -386,7 +386,7 @@ AnalysisResult SemRepair::computeTargetFWAnalysis() {
 
 	try {
 
-		message("starting forward analysis for target");
+		message("starting forward analysis for target...");
 		targetAnalyzer.doForwardAnalysis_SingleInput(target_dep_graph, target_field_relevant_graph, targetAnalysisResult);
 		message("...finished forward analysis for target.");
 
@@ -561,25 +561,8 @@ StrangerAutomaton* SemRepair::computeSanitizationPatch() {
 	return sanitization_patch_auto;
 }
 
-//StrangerAutomaton* SemRepair::testVulnerabilitySignature(){
-//
-//	validation_patch_auto = StrangerAutomaton::makeAnyString();
-//	AnalysisResult targetAnalysisResult = computeTargetFWAnalysis();
-//	StrangerAutomaton* sinkAuto = targetAnalysisResult[patchee_field_relevant_graph.getRoot()->getID()];
-//	StrangerAutomaton* attackPattern = StrangerAutomaton::regExToAuto("/.*<script.*>.*/");
-//	StrangerAutomaton* intersection = sinkAuto->intersect(attackPattern);
-//	StrangerAutomaton* signature = computeTargetSanitizationPatch(intersection, targetAnalysisResult);
-//
-//	cout << "********************************** signature **********************************" << endl;
-//	signature->toDotAscii(0);
-//	cout << endl << endl;
-//	return signature;
-//
-//}
-
 void SemRepair::testNewFunctions() {
 	this->reference_dep_graph.calculateSCCs();
-
 }
 
 
