@@ -22,5 +22,5 @@
 
 *.d
 *.launch
-output
+console_output
 StrangerWrapper
