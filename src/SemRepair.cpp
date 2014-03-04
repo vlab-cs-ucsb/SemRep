@@ -100,6 +100,7 @@ void SemRepair::printNodeList(NodesList nodes) {
 	cout << endl;
 }
 
+// TODO add output file option
 void SemRepair::printResults() {
 	if (is_validation_patch_required) {
 		cout << "\t    - validation patch is generated" << endl;
@@ -123,7 +124,7 @@ void SemRepair::printResults() {
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("length patch auto:");
 			DEBUG_AUTO(length_patch_auto);
-			DEBUG_AUTO_TO_FILE(length_patch_auto);
+//			DEBUG_AUTO_TO_FILE(length_patch_auto);
 		}
 	} else {
 		cout << "\t    - no length patch" << endl;
@@ -146,10 +147,11 @@ void SemRepair::printResults() {
 		cout << "\t size : states 0 : bddnodes 0" << endl;
 	}
 
-//	cout << endl << endl;
-	reference_sink_auto->toDotFile("/home/abaki/workspace/StrangerWrapper/output/reference_sink_auto.dot");
-//	cout << endl << endl;
-	sanitization_patch_auto->toDotFile("/home/abaki/workspace/StrangerWrapper/output/sanitization_patch_auto.dot");
+
+//	validation_patch_auto->toDotFile("../output/validation_patch_auto.dot");
+//	length_patch_auto->toDotFile("../output/length_patch_auto.dot");
+//	reference_sink_auto->toDotFile("../output/reference_sink_auto.dot");
+//	sanitization_patch_auto->toDotFile("../output/sanitization_patch_auto.dot");
 
 	perfInfo.print_validation_extraction_info();
 	perfInfo.print_sanitization_extraction_info();
