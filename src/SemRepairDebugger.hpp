@@ -32,8 +32,10 @@
 
 #if DEBUG_ASCII==1
 #define DEBUG_AUTO(p) p->toDotAscii(PRINT_SINK)
+#define DEBUG_AUTO_TO_FILE(p) p->toDotFileAscii("", PRINT_SINK)
 #else
 #define DEBUG_AUTO(p) p->toDot()
+#define DEBUG_AUTO_TO_FILE(p) p->->toDotFile("")
 #endif
 
 

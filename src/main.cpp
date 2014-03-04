@@ -45,7 +45,6 @@ void call_sem_repair(string reference_name, string target_name, string field_nam
 		cout << "\t    Target: " << target_name << endl;
 
 		semRepair.printResults();
-		semRepair.writeAutosforCodeGeneration(field_name, reference_name, target_name);
 
 		cout << endl << "\t------ END RESULT for: " << field_name << " ------" << endl;
 	} catch (StrangerStringAnalysisException const &e) {

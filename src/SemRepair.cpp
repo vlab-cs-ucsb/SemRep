@@ -141,43 +141,19 @@ void SemRepair::printResults() {
 		cout << "\t size : states 0 : bddnodes 0" << endl;
 	}
 
+//	cout << endl << endl;
+//	reference_sink_auto->toDot();
+//	cout << endl << endl;
+//	sanitization_patch_auto->toDotFileAscii()
+
 	perfInfo.print_validation_extraction_info();
 	perfInfo.print_sanitization_extraction_info();
 	perfInfo.print_operations_info();
 	perfInfo.reset();
 }
-// TODO parameterize paths
+// TODO implement for easy use
 void SemRepair::writeAutosforCodeGeneration(string field_name, string referenceName, string targetName) {
-	string reference_name = referenceName.substr( referenceName.find_last_of('/') + 1,referenceName.find_last_of('.') - referenceName.find_last_of('/') - 1 );
-	string target_name = targetName.substr( targetName.find_last_of('/') + 1,targetName.find_last_of('.') - targetName.find_last_of('/') - 1 );
-	string type = "accept";
-	if (calculate_rejected_set) {
-		type = "reject";
-	}
-	if (is_validation_patch_required) {
-		string v_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << field_name << "_" << reference_name << "_" << target_name <<
-				"_VP_" << type << "_auto.dot";
-		validation_patch_auto->toDotFile(v_patch_auto_path);
-		message(stringbuilder() << "Validation Patch auto is written... : " << v_patch_auto_path);
-	}
-	if (is_length_patch_required) {
-		string l_patch_auto_path = stringbuilder() << "/home/abaki/RA/PLDI/PLDI14/experiments/patches/" << reference_name << "_" << target_name <<
-						"_LP_" << type << "_auto.dot";
-		length_patch_auto->toDotFile(l_patch_auto_path);
-		message(stringbuilder() << "Length Patch auto is written... : " << l_patch_auto_path);
-	}
-	if (is_sanitization_patch_required) {
-		string path = "/home/abaki/RA/PLDI/PLDI14/experiments/mincutresults/";
 
-		string ref_auto_name = path + "references/" + field_name + "_" + reference_name + "_" + target_name + "_auto.dot";
-		string patch_auto_name = path + "patches/" + field_name + "_" + reference_name + "_" + target_name + "_auto.dot";
-		reference_sink_auto->toDotFile(ref_auto_name);
-		sanitization_patch_auto->toDotFile(patch_auto_name);
-		message(stringbuilder() << "Sanitization Patch autos are written for mincut... : " << "ref auto: " << ref_auto_name << ", patch auto: " << patch_auto_name);
-		cout << endl << "\t Automata for Mincut are written:" << endl;
-		cout << "\t Reference auto : " << ref_auto_name << endl;
-		cout << "\t Patch     auto : " << patch_auto_name << endl;
-	}
 }
 
 /**
