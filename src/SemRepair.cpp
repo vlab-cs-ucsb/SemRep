@@ -108,6 +108,7 @@ void SemRepair::printResults() {
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("validation patch auto:");
 			DEBUG_AUTO(validation_patch_auto);
+//			DEBUG_AUTO_TO_FILE(validation_patch_auto);
 		}
 	} else {
 		cout << "\t    - no validation patch" << endl;
@@ -122,6 +123,7 @@ void SemRepair::printResults() {
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("length patch auto:");
 			DEBUG_AUTO(length_patch_auto);
+			DEBUG_AUTO_TO_FILE(length_patch_auto);
 		}
 	} else {
 		cout << "\t    - no length patch" << endl;
@@ -135,6 +137,9 @@ void SemRepair::printResults() {
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("sanitization patch auto:");
 			DEBUG_AUTO(sanitization_patch_auto);
+//			DEBUG_AUTO_TO_FILE(sanitization_patch_auto);
+//			DEBUG_AUTO_TO_FILE(reference_sink_auto); // for mincut
+
 		}
 	} else {
 		cout << "\t    - no sanitization patch" << endl;
@@ -142,9 +147,9 @@ void SemRepair::printResults() {
 	}
 
 //	cout << endl << endl;
-//	reference_sink_auto->toDot();
+	reference_sink_auto->toDotFile("/home/abaki/workspace/StrangerWrapper/output/reference_sink_auto.dot");
 //	cout << endl << endl;
-//	sanitization_patch_auto->toDotFileAscii()
+	sanitization_patch_auto->toDotFile("/home/abaki/workspace/StrangerWrapper/output/sanitization_patch_auto.dot");
 
 	perfInfo.print_validation_extraction_info();
 	perfInfo.print_sanitization_extraction_info();
