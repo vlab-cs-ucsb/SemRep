@@ -13,18 +13,8 @@ can be find on [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) websit
 
 [SemRep](SemRep) is an Eclipse CDT project. You need to download 
 [Eclipse CDT](http://www.eclipse.org/cdt/downloads.php) IDE then import SemRep project from this git repository
-into your Eclipse CDT workspace. Here are screenshots on how to do that and for more info go to
-[here](http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories). 
-<img src="https://github.com/vlab-cs-ucsb/SemRep/tree/master/Docs/ScrShots/Screen Shot 2.png" height="42" width="42">
-![alt tag](Docs/ScrShots/Screen Shot 2.png)
-![alt tag](Docs/ScrShots/Screen Shot 3.png)
-![alt tag](Docs/ScrShots/Screen Shot 4.png)
-![alt tag](Docs/ScrShots/Screen Shot 5.png)
-![alt tag](Docs/ScrShots/Screen Shot 6.png)
-![alt tag](Docs/ScrShots/Screen Shot 7.png)
-![alt tag](Docs/ScrShots/Screen Shot 8.png)
-![alt tag](Docs/ScrShots/Screen Shot 9.png)
-
+into your Eclipse CDT workspace. You can refere to the [screenshots](Docs/SrcShots) in the documentation for more information on how to do that or go to
+[here](http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories).
 After that, use eclipse to build SemRep.
 
 [MinCut](MinCut) is an Eclipse Java project. You need to download 
