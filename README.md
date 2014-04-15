@@ -13,8 +13,11 @@ can be find on [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) websit
 
 [SemRep](SemRep) is an Eclipse CDT project. You need to download 
 [Eclipse CDT](http://www.eclipse.org/cdt/downloads.php) IDE then import SemRep project from this git repository
-into your Eclipse CDT workspace as described
-[here](http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories). After that, use eclipse to build SemRep.
+into your Eclipse CDT workspace. Here are screenshots on how to do that and for more info go to
+[here](http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories). 
+![alt tag](Docs/ScrShots/Screen Shot 1.png)
+
+After that, use eclipse to build SemRep.
 
 [MinCut](MinCut) is an Eclipse Java project. You need to download 
 [Eclipse](http://www.eclipse.org/downloads/) IDE then import MinCut project from this git repository
