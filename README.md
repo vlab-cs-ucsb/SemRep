@@ -15,7 +15,14 @@ can be find on [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) websit
 [Eclipse CDT](http://www.eclipse.org/cdt/downloads.php) IDE then import SemRep project from this git repository
 into your Eclipse CDT workspace. Here are screenshots on how to do that and for more info go to
 [here](http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories). 
-[alt tag](Docs/ScrShots/Screen Shot 2.png)
+![alt tag](Docs/ScrShots/Screen Shot 2.png)
+![alt tag](Docs/ScrShots/Screen Shot 3.png)
+![alt tag](Docs/ScrShots/Screen Shot 4.png)
+![alt tag](Docs/ScrShots/Screen Shot 5.png)
+![alt tag](Docs/ScrShots/Screen Shot 6.png)
+![alt tag](Docs/ScrShots/Screen Shot 7.png)
+![alt tag](Docs/ScrShots/Screen Shot 8.png)
+![alt tag](Docs/ScrShots/Screen Shot 9.png)
 
 After that, use eclipse to build SemRep.
 
