@@ -24,10 +24,8 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1344617249" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.1886739653" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.865905696" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/strangerlib}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/BDD}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/DFA}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/Mem}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/mona"/>
+									<listOptionValue builtIn="false" value="/usr/local/include/stranger"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.812916848" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1186439143" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -35,22 +33,14 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1261577201" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.1220457631" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.109713635" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.382406008" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/strangerlib}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/BDD}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/DFA}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/Mem}&quot;"/>
-								</option>
+								<option id="gnu.c.compiler.option.include.paths.382406008" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath"/>
 								<option id="gnu.c.compiler.option.misc.other.984378855" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1006420130" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1839227036" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.2114660299" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 								<option id="gnu.cpp.link.option.paths.440565963" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/BDD/.libs}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/DFA/.libs}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/Mem/.libs}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/strangerlib/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/lib"/>
 									<listOptionValue builtIn="false" value="/usr/lib"/>
 								</option>
 								<option id="gnu.cpp.link.option.libs.439633849" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
@@ -63,19 +53,14 @@
 									<listOptionValue builtIn="false" value="boost_filesystem"/>
 									<listOptionValue builtIn="false" value="boost_system"/>
 								</option>
-								<option id="gnu.cpp.link.option.flags.104580434" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="" valueType="string"/>
+								<option id="gnu.cpp.link.option.flags.104580434" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="-std=c++11" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.462254442" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.1483429547" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug">
-								<option id="gnu.both.asm.option.include.paths.1531772846" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/strangerlib}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/BDD}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/DFA}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MONA/Mem}&quot;"/>
-								</option>
+								<option id="gnu.both.asm.option.include.paths.1531772846" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.140853956" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
