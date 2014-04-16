@@ -4,6 +4,7 @@
 *.o
 *.obj
 *.class
+MinCut/bin/*
 
 # Compiled Dynamic libraries
 *.so
@@ -20,7 +21,7 @@
 *.exe
 *.out
 *.app
-SemRep
+SemRep/Debug/SemRep
 
 *.d
 *.launch
