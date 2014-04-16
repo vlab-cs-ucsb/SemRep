@@ -3,6 +3,7 @@
 *.lo
 *.o
 *.obj
+*.class
 
 # Compiled Dynamic libraries
 *.so
@@ -19,8 +20,8 @@
 *.exe
 *.out
 *.app
+SemRep
 
 *.d
 *.launch
 console_output
-StrangerWrapper
