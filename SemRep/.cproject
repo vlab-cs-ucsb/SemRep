@@ -47,7 +47,7 @@
 									<listOptionValue builtIn="false" value="monamem"/>
 									<listOptionValue builtIn="false" value="monadfa"/>
 									<listOptionValue builtIn="false" value="monabdd"/>
-									<listOptionValue builtIn="false" value="strangerlib"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="stranger"/>
 									<listOptionValue builtIn="false" value="boost_program_options"/>
 									<listOptionValue builtIn="false" value="boost_regex"/>
 									<listOptionValue builtIn="false" value="boost_filesystem"/>
