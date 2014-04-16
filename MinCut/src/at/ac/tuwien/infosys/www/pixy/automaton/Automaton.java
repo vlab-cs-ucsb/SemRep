@@ -1,4 +1,7 @@
 /*
+ * MinCut
+ * Copyright (C) 2013-2014 University of California Santa Barbara.
+ *
  * dk.brics.automaton
  * 
  * Copyright (c) 2001-2006 Anders Moeller
@@ -25,6 +28,8 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Authors: Anders Moeller, Abdulbaki Aydin, Muath Alkhalaf
  */
 
 package at.ac.tuwien.infosys.www.pixy.automaton;
