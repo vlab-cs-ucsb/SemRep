@@ -1,24 +1,3 @@
-/*
- * MinCut
- * Copyright (C) 2013-2014 University of California Santa Barbara.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the  Free Software
- * Foundation, Inc., 51 Franklin Street, Suite 500, Boston, MA 02110-1335,
- * USA.
- *
- * Authors: Abdulbaki Aydin, Muath Alkhalaf
- */
 package at.ac.tuwien.infosys.www.pixy.automaton;
 
 import java.io.BufferedWriter;
@@ -1026,7 +1005,7 @@ public class BuildAutomaton {
 		ConsoleMessage.body1("it ends here end");
 	}
 	
-	public static void runMinCutAlgorithm(String patchAutoPath, String referenceAutoPath) throws FileNotFoundException, ParseException {
+	public static void runMinCutAlgorithm(String patchAutoPath, String referenceAutoPath, String type) throws FileNotFoundException, ParseException {
 		DOTParser parser;
 		ConsoleMessage.body2("parsing patch auto : " + patchAutoPath);
 		parser = new DOTParser(new FileReader(patchAutoPath));
@@ -1045,26 +1024,52 @@ public class BuildAutomaton {
 		ConsoleMessage.body2("calculating mincut charset");
 		Performance.startTimer("mincut_time");
 		LinkedList<Character> minCharCut = patchAuto.minCharCut();  //This will get the characters in the mincut
-		ConsoleMessage.body3("result : size : " + minCharCut.size() + " : chars : " + minCharCut.toString() + "bakiends");
+		ConsoleMessage.body3("result : size : " + minCharCut.size() + " : chars : " + minCharCut.toString() + " ");
 		
 	
-		for (Character c : minCharCut ) {
-			String hex = String.format("%04x", (int) c.charValue());
-			System.out.println("----------    '"+hex+"'");
-		}
+//		for (Character c : minCharCut ) {
+//			String hex = String.format("%04x", (int) c.charValue());
+//			System.out.println("----------    '"+hex+"'");
+//		}
 		// only space char is considered during analysis
+		
+		StringBuilder code_builder = new StringBuilder();
+		if (type.equalsIgnoreCase("js")) {
+			code_builder.append("<!DOCTYPE html>\n<html>\n<head><script>\n");
+			code_builder.append("function sanitize_input(input) {\n");
+	
+		} 
+		else {
+			code_builder.append("<?php\n\tfunction sanitize_input($input) {\n");
+		}
+		
 		if ( minCharCut.contains(' ') ) {
 			Character[] chars = {' '};
 			for (Character c : chars) {
 				int isTrimmed = referenceAuto.isTrimmed(c);
 				if (isTrimmed == 2){
 					ConsoleMessage.body3("result : delete : preg_replace('/ /', '', $input); ");
+					if (type.equalsIgnoreCase("js")) {
+						code_builder.append("\tinput = input.replace(/ /g,'');\n");
+					} else {
+						code_builder.append("\t\t$input = preg_replace('/ /', '', $input);\n");
+					}
 				}
 				else if (isTrimmed == 1) {
 					ConsoleMessage.body3("result : trim : trim(); ");
+					if (type.equalsIgnoreCase("js")) {
+						code_builder.append("\tinput = input.trim();\n");
+					} else {
+						code_builder.append("\t\t$input = trim($input);\n");
+					}
 				}
 				else {
 					ConsoleMessage.body3("result : delete not precise : preg_replace('/ /', '', $input); ");
+					if (type.equalsIgnoreCase("js")) {
+						code_builder.append("\tinput = input.replace(/ /g,'');\n");
+					} else {
+						code_builder.append("\t\t$input = preg_replace('/ /', '', $input);\n");
+					}
 				}
 			}
 			
@@ -1088,18 +1093,47 @@ public class BuildAutomaton {
 			if (escape) {
 				for (Character c : minCharCut ) {
 					ConsoleMessage.body3( "result : escape : preg_raplace('/" + c + "/', '" + resultChar + c + "', $input); " ) ;
+					if (type.equalsIgnoreCase("js")) {
+						code_builder.append("\tinput = input.replace(/" + c + "/g,'" + resultChar + c + "');\n");
+					} else {
+						code_builder.append("\t\t$input = preg_raplace('/" + c + "/', '" + resultChar + c + "', $input);\n");
+					}
 				}
 			}	
 			else {
-				String preg_replace = "preg_raplace('/[";
 				String chars = "";
 				for (Character c : minCharCut ) {
 					chars += c;
 				}
-				preg_replace += Pattern.quote(chars) + "]/', '', $input);";
-				ConsoleMessage.body3( "result : delete : " + preg_replace + " ") ;
+				String subject_chars = Pattern.quote(chars).replace("\\Q", "").replace("\\E", "");;
+				
+				ConsoleMessage.body3( "result : delete : preg_raplace('/[" + subject_chars + "]/', '', $input);") ;
+				
+				if (type.equalsIgnoreCase("js")) {
+					code_builder.append("\tinput = input.replace(/[" + subject_chars + "]/g,'');\n");
+				} else {
+					code_builder.append("\t\t$input = preg_raplace('/[" + subject_chars + "]/', '', $input);\n");
+				}
+				
 			}
 		}
+		
+		if (type.equalsIgnoreCase("js")) {
+			code_builder.append("\treturn input;\n}\n");
+			code_builder.append("function myFunction() {\n");
+			code_builder.append("\tvar x=document.getElementById(\"fname\");");
+			code_builder.append("\tx.value=sanitize_input(x.value);\n}\n");
+			code_builder.append("\twindow.onload = myFunction;\n");
+			code_builder.append("</script>\n</head>\n<body>\n");
+			code_builder.append("Enter your string: <input type=\"text\" id=\"fname\" onkeyup=\"myFunction()\">\n");
+			code_builder.append("<p>When you leave the input field, a function is triggered which transforms the input string.</p>\n");
+			code_builder.append("</body>\n</html>");
+			
+		} else {
+			code_builder.append("\treturn $input;\n}\n?>");
+		}
+		
+		System.out.println("code:\n" + code_builder.toString());
 		Performance.stopTimer("mincut_time");
 		Performance.printTimers();
 		ConsoleMessage.body1("it ends here end");
@@ -1121,7 +1155,10 @@ public class BuildAutomaton {
 			
 			comOptions.addOption("p", "patch-auto", true, "sanitization patch automaton/automata (file or folder)");
 			comOptions.addOption("r", "reference-auto", true, "reference automaton/automata (file or folder), only used for mincut");
-			comOptions.addOption("s", "simulate", true, "generate automaton simulator for patch automaton for the given language (C, JS, PHP), no mincut");
+			comOptions.addOption("s", "simulate", false, "generate automaton simulator for patch automaton, no mincut");
+			comOptions.addOption("l", "language", true, "output language (C, JS, PHP)");
+			comOptions.addOption("c", "boost-chars", true, "characters needs to be boosted by mincut algorithm, input as java regex");
+			comOptions.addOption("b", "boost-value", true, "boost value for the characters defined in boost-chars option");
 			comOptions.addOption("h", "help", false, "list available options");
 			
 			CommandLineParser comParser = new PosixParser();
@@ -1134,13 +1171,30 @@ public class BuildAutomaton {
 			     helpFormatter.printHelp( "check available options", comOptions);
 			     System.out.println(e.getMessage());
 			}
+			if (com.hasOption('h')) {
+				HelpFormatter helpFormatter = new HelpFormatter();
+				helpFormatter.printHelp( "check available options", comOptions);
+				System.exit(0);
+			}
+			
 			if (com.hasOption('s')) {
 				ComOptions.RUN_MINCUT = false;
-				ComOptions.SIMULATION_LANGUAGE = com.getOptionValue('s');
+			}
+			
+			if (com.hasOption('l')) {
+				ComOptions.SIMULATION_LANGUAGE = com.getOptionValue('l');
 			}
 			
 			if (com.hasOption('r')) {
 				ComOptions.REFERENCE_AUTO_PATH = com.getOptionValue('r');
+			}
+			
+			if (com.hasOption('c')) {
+				ComOptions.BOOST_CHARSET = com.getOptionValue('c');
+			}
+			
+			if (com.hasOption('b')) {
+				ComOptions.BOOST_VALUE = com.getOptionValue('b');
 			}
 			
 			// read patch automaton/automata
@@ -1175,7 +1229,7 @@ public class BuildAutomaton {
 						String name = fileName.substring(fileName.lastIndexOf('/')+1);
 						ConsoleMessage.body1("mincut for : " + name);
 						if (ComOptions.RUN_MINCUT) {
-							runMinCutAlgorithm(fileName, ComOptions.REFERENCE_AUTO_PATH + name);
+							runMinCutAlgorithm(fileName, ComOptions.REFERENCE_AUTO_PATH + name, ComOptions.SIMULATION_LANGUAGE);
 						} else {
 							runSimulationAlgorithm(fileName,ComOptions.SIMULATION_LANGUAGE);
 						}
@@ -1185,12 +1239,15 @@ public class BuildAutomaton {
 					fileNames.add(inputs.getAbsolutePath());
 					ConsoleMessage.body1("mincut for : " + inputs.getName());
 					if (ComOptions.RUN_MINCUT) {
-						runMinCutAlgorithm(inputs.getAbsolutePath(), ComOptions.REFERENCE_AUTO_PATH);
+						runMinCutAlgorithm(inputs.getAbsolutePath(), ComOptions.REFERENCE_AUTO_PATH, ComOptions.SIMULATION_LANGUAGE);
 					}
 					else {
 						runSimulationAlgorithm(inputs.getAbsolutePath(),ComOptions.SIMULATION_LANGUAGE);
 					}
 				}
+			} else {
+				 HelpFormatter helpFormatter = new HelpFormatter();
+			     helpFormatter.printHelp( "check available options", comOptions);
 			}
 			
 		} catch (Exception e) {

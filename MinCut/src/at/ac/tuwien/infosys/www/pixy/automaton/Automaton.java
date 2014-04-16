@@ -1,7 +1,4 @@
 /*
- * MinCut
- * Copyright (C) 2013-2014 University of California Santa Barbara.
- *
  * dk.brics.automaton
  * 
  * Copyright (c) 2001-2006 Anders Moeller
@@ -28,8 +25,6 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * Authors: Anders Moeller, Abdulbaki Aydin, Muath Alkhalaf
  */
 
 package at.ac.tuwien.infosys.www.pixy.automaton;
@@ -37,8 +32,6 @@ package at.ac.tuwien.infosys.www.pixy.automaton;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-
-import org.w3c.dom.Element;
 
 import Debugger.Debugger;
 
@@ -3416,11 +3409,19 @@ implements Serializable, Cloneable {
 					double capacity = arc.getDouValue(capacitySymbol);
 					// we have to add one capacity unit for every character
 					//TODO parameterized boost chars and boost value
+
 					for (char c = tr.min; c <= tr.max; c++) {
-						if (Character.isLetterOrDigit(c) || (c == (char)0x40) || (c == (char)0x2E))//((c >= (char)48 && c <= (char) 57) || (c >= (char)65 && c <= (char)90) ||  )
-							capacity+=900000000;
-						else
+						String test_char = "" + c;
+						if (test_char.matches(ComOptions.BOOST_CHARSET)) {
+							capacity += Integer.parseInt(ComOptions.BOOST_VALUE);
+						}
+						else {
 							capacity++;
+						}
+//						if (Character.isLetterOrDigit(c) || (c == (char)0x40) || (c == (char)0x2E))//((c >= (char)48 && c <= (char) 57) || (c >= (char)65 && c <= (char)90) ||  )
+//							capacity+=9000000;
+//						else
+//							capacity++;
 						arc2char.get(arc).add(new Character(c));
 					}
 					arc.setDouValue(capacitySymbol, capacity);					
@@ -3731,6 +3732,7 @@ implements Serializable, Cloneable {
 
 			Set<State> states = this.getStates();
 			Set<State> acceptStates = this.getAcceptStates();
+			printCodeLine(numOfTabs, "<!DOCTYPE html>");
 			printCodeLine(numOfTabs, "<html>");
 			printCodeLine(numOfTabs, "<head>");
 			printCodeLine(numOfTabs, "<script>");
@@ -3741,7 +3743,7 @@ implements Serializable, Cloneable {
 			printCodeLine(numOfTabs, "var i = 0; var state = "+this.initial.id+";");
 //			printCodeLine(numOfTabs, "var char_buff = preg_split('//', str, -1);");
 			printCodeLine(numOfTabs, "var char_buff = str;");
-			printCodeLine(numOfTabs, "while (i < (char_buff.length - 1)){");
+			printCodeLine(numOfTabs, "while (i < (char_buff.length)){");
 			numOfTabs++;
 			if (debugPHP)
 				printCodeLine(numOfTabs, "echo \"in state  =  \".state.\"         char =  \".char_buff[i].\"<br>\";");
@@ -3794,20 +3796,28 @@ implements Serializable, Cloneable {
 			numOfTabs--;
 			// end of function
 			printCodeLine(numOfTabs, "}");
-			String result = "function myFunction(){\n"+
-			"document.write(\"starting ... <br>\");\n"+
-			"var start = new Date();\n"+
-			"document.write(stranger_match(\"helloyahoo.com\"));\n"+
-			"var time = new Date() - start;\n"+
-			"document.write(\"time is : \" + time + \"<br>\");\n"+
-			"}\n"+
-			"</script>\n"+
-			"</head>\n"+
-			"<body>\n"+
-			"<button onclick=\"myFunction()\">Try it</button>\n"+
-			"</body>\n"+
-			"</html>\n";
-			printCodeLine(numOfTabs, result);
+			StringBuilder result = new StringBuilder();
+			
+			result.append("function myFunction() {\n");
+			result.append("\tvar x=document.getElementById(\"fname\");\n");
+			result.append("\tvar r=document.getElementById(\"result\");\n");
+			result.append("\tif (!stranger_match(x.value)) {\n");
+			result.append("\t\tr.style.color = \"rgb(0,255,0)\";\n");
+			result.append("\t\tx.style.color = \"rgb(0,255,0)\";\n");
+			result.append("\t\tr.innerHTML = \"&#10004;\";\n");
+			result.append("\t} else {\n");
+			result.append("\t\tr.style.color = \"rgb(255,0,0)\";\n");
+			result.append("\t\tx.style.color = \"rgb(255,0,0)\";\n");
+			result.append("\t\tr.innerHTML = \"&#10008;\";\n");
+			result.append("\t}\n");
+			result.append("\t\n}\n");
+			result.append("\twindow.onload = myFunction;\n");
+			result.append("</script>\n</head>\n<body>\n");
+			result.append("Enter your string: <input type=\"text\" id=\"fname\" onkeyup=\"myFunction()\">&nbsp; <span id=\"result\" style=\"color:red\"></span>\n");
+			result.append("<p>When you leave the input field, a function is triggered which validates input string.</p>\n");
+			result.append("</body>\n</html>");
+			
+			printCodeLine(numOfTabs, result.toString());
 //			numOfTabs--;
 //			printCodeLine(numOfTabs, "?>");		
 	}
@@ -3822,9 +3832,9 @@ implements Serializable, Cloneable {
 			numOfTabs++;
 			printCodeLine(numOfTabs, "function stranger_match($str){");
 			numOfTabs++;
-			printCodeLine(numOfTabs, "$i = 1; $state = "+this.initial.id+";");
+			printCodeLine(numOfTabs, "$i = 0; $state = "+this.initial.id+";");
 			printCodeLine(numOfTabs, "$char_buff = preg_split('//', $str, -1);");
-			printCodeLine(numOfTabs, "while ($i < (sizeof($char_buff) - 1)){");
+			printCodeLine(numOfTabs, "while ($i < (sizeof($char_buff))){");
 			numOfTabs++;
 			if (debugPHP)
 				printCodeLine(numOfTabs, "echo \"in state  =  \".$state.\"         char =  \".$char_buff[$i].\"<br>\";");
