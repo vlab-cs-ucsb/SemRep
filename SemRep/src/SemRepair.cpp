@@ -28,7 +28,7 @@ PerfInfo SemRepair::perfInfo;
 SemRepair::SemRepair(string reference_dep_graph_file_name,string target_dep_graph_file_name, string input_field_name) {
 
 	this->reference_dep_graph_file_name = reference_dep_graph_file_name;
-	this->reference_dep_graph_file_name = target_dep_graph_file_name;
+	this->target_dep_graph_file_name = target_dep_graph_file_name;
 	this->input_field_name = input_field_name;
 
 	// read dep graphs
@@ -68,6 +68,7 @@ SemRepair::SemRepair(string reference_dep_graph_file_name,string target_dep_grap
 
 	}
 
+		DEBUG_AUTO_TO_FILE_MN(validation_patch_auto, "");
 	ImageComputer::perfInfo = &SemRepair::perfInfo;
 	ImageComputer::staticInit();
 }
@@ -81,7 +82,37 @@ void SemRepair::message(string msg) {
 	cout << endl << "~~~~~~~~~~~>>> SemRepair says: " << msg << endl;
 }
 
+string SemRepair::generateOutputFilePath() {
+	boost::filesystem::path curr_dir(boost::filesystem::current_path());
+	boost::filesystem::path output_dir(curr_dir / "outputs");
 
+	if (! boost::filesystem::exists(output_dir)) {
+		boost::filesystem::create_directory(output_dir);
+	}
+
+	size_t ref_ext_index = reference_dep_graph_file_name.find_last_of('.');
+	if (ref_ext_index == string::npos) {
+		ref_ext_index = reference_dep_graph_file_name.length() - 1;
+	}
+	size_t ref_index =  reference_dep_graph_file_name.find_last_of('/');
+	if (ref_index == string::npos) {
+		ref_index = 0;
+	}
+	string ref_file = reference_dep_graph_file_name.substr(ref_index + 1, ref_ext_index - ref_index - 1);
+
+	size_t tar_ext_index = target_dep_graph_file_name.find_last_of('.');
+	if (tar_ext_index == string::npos) {
+		tar_ext_index = target_dep_graph_file_name.length() - 1;
+	}
+	size_t tar_index = target_dep_graph_file_name.find_last_of('/');
+	if (tar_index == string::npos) {
+		tar_index = 0;
+	}
+
+	string tar_file = target_dep_graph_file_name.substr(tar_index + 1, tar_ext_index - tar_index - 1);
+
+	return stringbuilder() << output_dir.string() << "/" << ref_file << "_" << tar_file << "_" << input_field_name;
+}
 
 void SemRepair::printAnalysisResults(AnalysisResult& result) {
 	cout << endl;
@@ -102,15 +133,27 @@ void SemRepair::printNodeList(NodesList nodes) {
 
 // TODO add output file option
 void SemRepair::printResults() {
+	string file_path =  generateOutputFilePath();
+
 	if (is_validation_patch_required) {
 		cout << "\t    - validation patch is generated" << endl;
+		string vp_fname = stringbuilder() << file_path << "_vp_auto.dot";
+		string vp_mn_fname = stringbuilder() << file_path << "_vp_mn_auto.dot";
+		cout << "\t file : " << vp_fname << endl;
+		cout << "\t file : " << vp_mn_fname << endl;
+		DEBUG_AUTO_TO_FILE(validation_patch_auto, vp_fname);
+		DEBUG_AUTO_TO_FILE_MN(validation_patch_auto,vp_mn_fname);
+
 		cout << "\t size : states " << validation_patch_auto->get_num_of_states() << " : "
 				<< "bddnodes " << validation_patch_auto->get_num_of_bdd_nodes() << endl;
+
+		//cout << "\t    - validation patch is generated" << endl;
+
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("validation patch auto:");
 			DEBUG_AUTO(validation_patch_auto);
-//			DEBUG_AUTO_TO_FILE(validation_patch_auto);
 		}
+
 	} else {
 		cout << "\t    - no validation patch" << endl;
 		cout << "\t size : states 0 : bddnodes 0" << endl;
@@ -119,12 +162,22 @@ void SemRepair::printResults() {
 
 	if (is_length_patch_required) {
 		cout << "\t    - length patch is generated" << endl;
+
+		string lp_fname = stringbuilder() << file_path << "_lp_auto.dot";
+		string lp_mn_fname = stringbuilder() << file_path << "_lp_mn_auto.dot";
+		cout << "\t file : " << lp_fname << endl;
+		cout << "\t file : " << lp_mn_fname << endl;
+		DEBUG_AUTO_TO_FILE(length_patch_auto,lp_fname);
+		DEBUG_AUTO_TO_FILE_MN(length_patch_auto,lp_mn_fname);
+
 		cout << "\t size : states " << length_patch_auto->get_num_of_states() << " : "
 						<< "bddnodes " << length_patch_auto->get_num_of_bdd_nodes() << endl;
+
+
+
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("length patch auto:");
 			DEBUG_AUTO(length_patch_auto);
-//			DEBUG_AUTO_TO_FILE(length_patch_auto);
 		}
 	} else {
 		cout << "\t    - no length patch" << endl;
@@ -133,35 +186,36 @@ void SemRepair::printResults() {
 
 	if (is_sanitization_patch_required) {
 		cout << "\t    - sanitization patch is generated :" << endl;
+
+		string sp_fname = stringbuilder() << file_path << "_sp_auto.dot";
+		string sp_mn_fname = stringbuilder() << file_path << "_sp_mn_auto.dot";
+		string refsink_mn_fname = stringbuilder() << file_path << "_refsink_mn_auto.dot";
+		cout << "\t file : " << sp_fname << endl;
+		cout << "\t file : " << sp_mn_fname << endl;
+		cout << "\t file : " << refsink_mn_fname << endl;
+		DEBUG_AUTO_TO_FILE(sanitization_patch_auto,sp_fname);
+		DEBUG_AUTO_TO_FILE_MN(sanitization_patch_auto,sp_mn_fname);
+		DEBUG_AUTO_TO_FILE_MN(reference_sink_auto,refsink_mn_fname);
+
 		cout << "\t size : states " << sanitization_patch_auto->get_num_of_states() << " : "
 				<< "bddnodes " << sanitization_patch_auto->get_num_of_bdd_nodes() << endl;
+
+
 		if (DEBUG_ENABLED_RESULTS != 0) {
 			DEBUG_MESSAGE("sanitization patch auto:");
 			DEBUG_AUTO(sanitization_patch_auto);
-//			DEBUG_AUTO_TO_FILE(sanitization_patch_auto);
-//			DEBUG_AUTO_TO_FILE(reference_sink_auto); // for mincut
-
 		}
 	} else {
 		cout << "\t    - no sanitization patch" << endl;
 		cout << "\t size : states 0 : bddnodes 0" << endl;
 	}
 
-
-//	validation_patch_auto->toDotFile("../output/validation_patch_auto.dot");
-//	length_patch_auto->toDotFile("../output/length_patch_auto.dot");
-//	reference_sink_auto->toDotFile("../output/reference_sink_auto.dot");
-//	sanitization_patch_auto->toDotFile("../output/sanitization_patch_auto.dot");
-
 	perfInfo.print_validation_extraction_info();
 	perfInfo.print_sanitization_extraction_info();
 	perfInfo.print_operations_info();
 	perfInfo.reset();
 }
-// TODO implement for easy use
-void SemRepair::writeAutosforCodeGeneration(string field_name, string referenceName, string targetName) {
 
-}
 
 /**
  * checks if length has maximum restriction, or minimum restriction without a maximium restriction

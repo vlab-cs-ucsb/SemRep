@@ -28,14 +28,12 @@ using namespace boost;
 namespace po = boost::program_options;
 
 
-
 void call_sem_repair(string reference_name, string target_name, string field_name){
 	try {
 		cout << endl << "\t------ Starting Analysis for: " << field_name << " ------" << endl;
 		cout << endl << "\t       Reference: " << reference_name  << endl;
 		cout << endl << "\t       Target: " << target_name  << endl;
 		SemRepair semRepair(reference_name, target_name, field_name);
-//		semRepair.testNewFunctions();
 		semRepair.calculate_rejected_set = true;
 		semRepair.computeValidationPatch();
 		semRepair.computeSanitizationPatch();
@@ -54,52 +52,6 @@ void call_sem_repair(string reference_name, string target_name, string field_nam
 
 }
 
-void generate_repairs_for_client_server_pairs(vector<string>& clients, vector<string>& servers, vector<string>& field_names, bool reversed) {
-
-	if (reversed) {
-		for (unsigned i = 0; i < field_names.size(); i++) {
-			call_sem_repair(servers[i], clients[i], field_names[i]);
-		}
-	} else {
-		for (unsigned i = 0; i < field_names.size(); i++) {
-			call_sem_repair(clients[i], servers[i], field_names[i]);
-		}
-	}
-}
-
-void generate_repairs_for_client_server_pairs(map<string,string>& clients, string server, bool reversed ) {
-	if (reversed) {
-		for (map<string,string>::iterator it = clients.begin(); it != clients.end(); it++) {
-			call_sem_repair(server, it->second, it->first);
-		}
-	} else {
-		for (map<string,string>::iterator it = clients.begin(); it != clients.end(); it++) {
-			call_sem_repair(it->second, server, it->first);
-		}
-	}
-}
-
-
-void generate_repairs_for_client_server_pairs(map<string,string>& clients, vector<string>& servers, bool reversed) {
-	for (vector<string>::iterator it = servers.begin(); it != servers.end(); it++) {
-		generate_repairs_for_client_server_pairs(clients,*it, reversed);
-	}
-}
-
-void generate_repairs_for_ss_cc_pairs(vector<string>& targets, vector<string>& field_names, bool reversed) {
-	for (vector<string>::iterator name = field_names.begin(); name != field_names.end(); name++) {
-		for (vector<string>::iterator it = targets.begin(); it != targets.end() - 1; it++) {
-			for(vector<string>::iterator jit = it+1; jit != targets.end(); jit++) {
-				if (reversed) {
-					call_sem_repair(*jit, *it, *name);
-				} else {
-					call_sem_repair(*it, *jit, *name);
-				}
-			}
-
-		}
-	}
-}
 
 // A helper function to simplify the main part.
 template<class T>
@@ -118,8 +70,8 @@ int main(int argc, char *argv[]) {
             ("verbose", po::value<string>()->implicit_value("0"), "verbosity level")
             ("target,t", po::value<string>()->required(), "Path to dependency graph file for repair target function.")
             ("reference,r", po::value<string>()->required(), "Path to dependency graph file for repair reference function.")
-            ("fieldname,f", po::value<string>()->required(), "Name of the input field for which sanitization code needs to be repaired.")
-        ;
+            ("fieldname,f", po::value<string>()->required(), "Name of the input field for which sanitization code needs to be repaired.");
+
         po::positional_options_description p;
         p.add("target", 1);
         p.add("reference", 1);

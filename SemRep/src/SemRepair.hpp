@@ -24,6 +24,7 @@
 #ifndef SEMREPAIR_HPP_
 #define SEMREPAIR_HPP_
 
+#include <boost/filesystem.hpp>
 #include "StrangerAutomaton.hpp"
 #include "ImageComputer.hpp"
 #include "SemRepairDebugger.hpp"
@@ -51,7 +52,6 @@ public:
 	void testNewFunctions();
 
 	void printResults();
-	void writeAutosforCodeGeneration(string field_name, string referenceName, string patchName);
 
 	bool is_validation_patch_required = false;
 	bool is_length_patch_required = false;
@@ -80,6 +80,7 @@ private:
 	StrangerAutomaton* sanitization_patch_auto;
 
 	void message(string msg);
+	string generateOutputFilePath();
 	void printAnalysisResults(AnalysisResult& result);
 	void printNodeList(NodesList nodes);
 	int isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto);

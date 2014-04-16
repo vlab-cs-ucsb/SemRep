@@ -32,12 +32,13 @@
 
 #if DEBUG_ASCII==1
 #define DEBUG_AUTO(p) p->toDotAscii(PRINT_SINK)
-#define DEBUG_AUTO_TO_FILE(p) p->toDotFileAscii("", PRINT_SINK)
+#define DEBUG_AUTO_TO_FILE(p, file_name) p->toDotFileAscii(file_name, PRINT_SINK)
 #else
 #define DEBUG_AUTO(p) p->toDot()
-#define DEBUG_AUTO_TO_FILE(p) p->->toDotFile("")
+#define DEBUG_AUTO_TO_FILE(p, file_name) p->toDotFile(file_name)
 #endif
 
+#define DEBUG_AUTO_TO_FILE_MN(p, file_name) p->toDotFile(file_name)
 
 extern const unsigned char DEBUG_LEVEL_WRAPPER;
 extern const unsigned char DEBUG_MASK_VALIDATION_PATCH;

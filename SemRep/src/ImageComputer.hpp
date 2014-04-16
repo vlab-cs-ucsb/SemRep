@@ -75,7 +75,7 @@ public:
 
     static PerfInfo* perfInfo;
 
-
+    bool handle_concats = false;
 
 private:
     static bool initialized;

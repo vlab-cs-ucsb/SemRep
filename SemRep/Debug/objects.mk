@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lmonamem -lmonadfa -lmonabdd -lstrangerlib -lboost_regex -lboost_date_time -lboost_program_options
+LIBS := -lmonadfa -lmonabdd -lstrangerlib -lboost_regex -lboost_date_time -lboost_program_options -lboost_system -lboost_filesystem
 

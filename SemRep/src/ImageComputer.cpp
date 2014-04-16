@@ -536,6 +536,7 @@ void ImageComputer::doForwardAnalysis_SingleInput(
 		delete uninit_node_default_initialization;
 	uninit_node_default_initialization = StrangerAutomaton::makePhi();
 
+
 	process_stack.push( inputDepGraph.getRoot() );
 	while (!process_stack.empty()) {
 
@@ -580,6 +581,7 @@ void ImageComputer::doPostImageComputation_SingleInput(
     			}
     			// explore new paths
 				if (analysisResult.find(succ_node->getID()) == analysisResult.end()) {
+					cout << "exploring succ_node: " << succ_node->getID() << endl;
 					doForwardAnalysis_GeneralCase(origDepGraph, succ_node, analysisResult);
 				}
 
@@ -595,6 +597,7 @@ void ImageComputer::doPostImageComputation_SingleInput(
     	}
 
     } else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != nullptr) {
+    	cout << "handling op node: " << opNode->getID() << endl;
 		newAuto = makePostImageForOp_GeneralCase(origDepGraph, opNode, analysisResult);
     } else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != nullptr) {
     	// input node that we are interested in should have been initialized already
@@ -1298,7 +1301,11 @@ StrangerAutomaton* ImageComputer::makePostImageForOp_GeneralCase(DepGraph& depGr
 		// TODO add option to ignore concats (heuristic)
 		for (auto succ_node : successors){
 			if (analysisResult.find(succ_node->getID()) == analysisResult.end()) {
-				doForwardAnalysis_GeneralCase(depGraph, succ_node, analysisResult);
+				if (handle_concats) {
+					doForwardAnalysis_GeneralCase(depGraph, succ_node, analysisResult);
+				} else {
+					continue;
+				}
 			}
 			StrangerAutomaton* succAuto = analysisResult[succ_node->getID()];
 			if (retMe == nullptr) {
