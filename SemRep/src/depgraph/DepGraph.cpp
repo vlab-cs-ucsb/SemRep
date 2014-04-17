@@ -253,6 +253,7 @@ DepGraph DepGraph::parseDotFile(std::string fname) {
         boost::regex regxNodeVar("Var: (.+)");
         boost::regex regxNodeLit("Lit: (.*)");
         boost::regex regxNodeOp("(.+)");
+        boost::regex regxStrangerRegEx("/(.+)/");
         string nodeName;
         string nodeDescription;
         string edge;
@@ -295,13 +296,21 @@ DepGraph DepGraph::parseDotFile(std::string fname) {
                         node = new DepGraphNormalNode("noFile", -1, nodeID, -1, -1, place);
                         depGraph.addNode(node);
                     }else if (boost::regex_match(nodeLabel, sm, regxNodeLit)){
-                        litValue = sm[1];
-                        boost::regex bsDQuote("\\\"");//this will match \"
-                        string newStr = "\"";
-                        litValue = boost::regex_replace(litValue, bsDQuote, newStr);
-                        boost::regex bsBs("\\\\");//this will match \"
-                        newStr = "\\";
-                        litValue = boost::regex_replace(litValue, bsBs, newStr);
+						litValue = sm[1];
+						//cout << "litval original" << litValue << endl;
+						//if we are not parsing a regular expression then remove escaping
+						//surprisingly, dot special chars (\,") are also special to our
+						// regular expression engine
+						if (!(boost::regex_match(litValue, sm, regxStrangerRegEx))){
+							boost::regex bsDQuote("\\\\\"");//this will match \"
+							string newStr = "\"";
+							litValue = boost::regex_replace(litValue, bsDQuote, newStr);
+							//cout << "litval" << litValue << endl;
+							boost::regex bsBs("\\\\\\\\");//this will match \\ (do not remove this text. Really unless you remove the two backslashes)
+							newStr = "\\";
+							litValue = boost::regex_replace(litValue, bsBs, newStr);
+							//cout << "litval" << litValue << endl;
+                        }
                         TacPlace* place = new Literal(litValue);
                         node = new DepGraphNormalNode("noFile", -1, nodeID, -1, -1, place);
                         depGraph.addNode(node);

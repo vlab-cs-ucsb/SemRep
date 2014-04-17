@@ -28,6 +28,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/include/stranger"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.812916848" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.debugging.other.69465679" name="Other debugging flags" superClass="gnu.cpp.compiler.option.debugging.other" value="-gdwarf-2" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1186439143" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1261577201" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
@@ -44,10 +45,10 @@
 									<listOptionValue builtIn="false" value="/usr/lib"/>
 								</option>
 								<option id="gnu.cpp.link.option.libs.439633849" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" value="monamem"/>
 									<listOptionValue builtIn="false" value="monadfa"/>
 									<listOptionValue builtIn="false" value="monabdd"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="stranger"/>
+									<listOptionValue builtIn="false" value="monamem"/>
+									<listOptionValue builtIn="false" value="stranger"/>
 									<listOptionValue builtIn="false" value="boost_program_options"/>
 									<listOptionValue builtIn="false" value="boost_regex"/>
 									<listOptionValue builtIn="false" value="boost_filesystem"/>
