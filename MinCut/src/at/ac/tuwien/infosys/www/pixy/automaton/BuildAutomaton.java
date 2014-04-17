@@ -1035,7 +1035,7 @@ public class BuildAutomaton {
 		
 		StringBuilder code_builder = new StringBuilder();
 		if (type.equalsIgnoreCase("js")) {
-			code_builder.append("<!DOCTYPE html>\n<html>\n<head><script>\n");
+			code_builder.append("<!DOCTYPE html>\n<html>\n<head>\n<title>vlab@ucsb : www.cs.ucsb.edu/~vlab</title>\n<script>\n");
 			code_builder.append("function sanitize_input(str) {\n");
 	
 		} 
@@ -1092,11 +1092,11 @@ public class BuildAutomaton {
 			}
 			if (escape) {
 				for (Character c : minCharCut ) {
-					ConsoleMessage.body3( "result : escape : preg_raplace('/" + c + "/', '" + resultChar + c + "', $str); " ) ;
+					ConsoleMessage.body3( "result : escape : preg_replace('/" + c + "/', '" + resultChar + c + "', $str); " ) ;
 					if (type.equalsIgnoreCase("js")) {
 						code_builder.append("\tstr = str.replace(/" + c + "/g,'" + resultChar + c + "');\n");
 					} else {
-						code_builder.append("\t\t$str = preg_raplace('/" + c + "/', '" + resultChar + c + "', $str);\n");
+						code_builder.append("\t\t$str = preg_replace('/" + c + "/', '" + resultChar + c + "', $str);\n");
 					}
 				}
 			}	
@@ -1107,12 +1107,12 @@ public class BuildAutomaton {
 				}
 				String subject_chars = Pattern.quote(chars).replace("\\Q", "").replace("\\E", "");;
 				
-				ConsoleMessage.body3( "result : delete : preg_raplace('/[" + subject_chars + "]/', '', $str);") ;
+				ConsoleMessage.body3( "result : delete : preg_replace('/[" + subject_chars + "]/', '', $str);") ;
 				
 				if (type.equalsIgnoreCase("js")) {
 					code_builder.append("\tstr = str.replace(/[" + subject_chars + "]/g,'');\n");
 				} else {
-					code_builder.append("\t\t$str = preg_raplace('/[" + subject_chars + "]/', '', $str);\n");
+					code_builder.append("\t\t$str = preg_replace('/[" + subject_chars + "]/', '', $str);\n");
 				}
 				
 			}
@@ -1121,12 +1121,14 @@ public class BuildAutomaton {
 		if (type.equalsIgnoreCase("js")) {
 			code_builder.append("\treturn str;\n}\n");
 			code_builder.append("function myFunction() {\n");
-			code_builder.append("\tvar x=document.getElementById(\"fname\");");
-			code_builder.append("\tx.value=sanitize_input(x.value);\n}\n");
-			code_builder.append("\twindow.onload = myFunction;\n");
+			code_builder.append("\tvar x=document.getElementById(\"fname\");\n");
+			code_builder.append("\tvar r=document.getElementById(\"result\");\n");
+			code_builder.append("\tr.innerHTML=\"&#10004; \" + sanitize_input(x.value);\n");
+			code_builder.append("}\n");
+			code_builder.append("window.onload = myFunction;\n");
 			code_builder.append("</script>\n</head>\n<body>\n");
-			code_builder.append("Enter your string: <input type=\"text\" id=\"fname\" onkeyup=\"myFunction()\">\n");
-			code_builder.append("<p>When you leave the input field, a function is triggered which transforms the input string.</p>\n");
+			code_builder.append("Enter your string: <input type=\"text\" id=\"fname\" onkeydown=\"myFunction()\">&nbsp; <span id=\"result\" style=\"color:rgb(0,255,0)\"></span>\n");
+			code_builder.append("<p>As you type the characters, a function is triggered which transforms the input string.</p>\n");
 			code_builder.append("</body>\n</html>");
 			
 		} else {

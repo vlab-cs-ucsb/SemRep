@@ -3735,6 +3735,7 @@ implements Serializable, Cloneable {
 			printCodeLine(numOfTabs, "<!DOCTYPE html>");
 			printCodeLine(numOfTabs, "<html>");
 			printCodeLine(numOfTabs, "<head>");
+			printCodeLine(numOfTabs, "<title>vlab@ucsb : www.cs.ucsb.edu/~vlab</title>");
 			printCodeLine(numOfTabs, "<script>");
 //			printCodeLine(numOfTabs, "<?php");
 //			numOfTabs++;
@@ -3813,8 +3814,8 @@ implements Serializable, Cloneable {
 			result.append("\t\n}\n");
 			result.append("\twindow.onload = myFunction;\n");
 			result.append("</script>\n</head>\n<body>\n");
-			result.append("Enter your string: <input type=\"text\" id=\"fname\" onkeyup=\"myFunction()\">&nbsp; <span id=\"result\" style=\"color:red\"></span>\n");
-			result.append("<p>When you leave the input field, a function is triggered which validates input string.</p>\n");
+			result.append("Enter your string: <input type=\"text\" id=\"fname\" onkeydown=\"myFunction()\">&nbsp; <span id=\"result\" style=\"color:red\"></span>\n");
+			result.append("<p>As you type the characters, a function is triggered which validates input string.</p>\n");
 			result.append("</body>\n</html>");
 			
 			printCodeLine(numOfTabs, result.toString());
