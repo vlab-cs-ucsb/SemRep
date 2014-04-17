@@ -1036,11 +1036,11 @@ public class BuildAutomaton {
 		StringBuilder code_builder = new StringBuilder();
 		if (type.equalsIgnoreCase("js")) {
 			code_builder.append("<!DOCTYPE html>\n<html>\n<head><script>\n");
-			code_builder.append("function sanitize_input(input) {\n");
+			code_builder.append("function sanitize_input(str) {\n");
 	
 		} 
 		else {
-			code_builder.append("<?php\n\tfunction sanitize_input($input) {\n");
+			code_builder.append("<?php\n\tfunction sanitize_input($str) {\n");
 		}
 		
 		if ( minCharCut.contains(' ') ) {
@@ -1048,27 +1048,27 @@ public class BuildAutomaton {
 			for (Character c : chars) {
 				int isTrimmed = referenceAuto.isTrimmed(c);
 				if (isTrimmed == 2){
-					ConsoleMessage.body3("result : delete : preg_replace('/ /', '', $input); ");
+					ConsoleMessage.body3("result : delete : preg_replace('/ /', '', $str); ");
 					if (type.equalsIgnoreCase("js")) {
-						code_builder.append("\tinput = input.replace(/ /g,'');\n");
+						code_builder.append("\tstr = str.replace(/ /g,'');\n");
 					} else {
-						code_builder.append("\t\t$input = preg_replace('/ /', '', $input);\n");
+						code_builder.append("\t\t$str = preg_replace('/ /', '', $str);\n");
 					}
 				}
 				else if (isTrimmed == 1) {
 					ConsoleMessage.body3("result : trim : trim(); ");
 					if (type.equalsIgnoreCase("js")) {
-						code_builder.append("\tinput = input.trim();\n");
+						code_builder.append("\tstr = str.trim();\n");
 					} else {
-						code_builder.append("\t\t$input = trim($input);\n");
+						code_builder.append("\t\t$str = trim($str);\n");
 					}
 				}
 				else {
-					ConsoleMessage.body3("result : delete not precise : preg_replace('/ /', '', $input); ");
+					ConsoleMessage.body3("result : delete not precise : preg_replace('/ /', '', $str); ");
 					if (type.equalsIgnoreCase("js")) {
-						code_builder.append("\tinput = input.replace(/ /g,'');\n");
+						code_builder.append("\tstr = str.replace(/ /g,'');\n");
 					} else {
-						code_builder.append("\t\t$input = preg_replace('/ /', '', $input);\n");
+						code_builder.append("\t\t$str = preg_replace('/ /', '', $str);\n");
 					}
 				}
 			}
@@ -1092,11 +1092,11 @@ public class BuildAutomaton {
 			}
 			if (escape) {
 				for (Character c : minCharCut ) {
-					ConsoleMessage.body3( "result : escape : preg_raplace('/" + c + "/', '" + resultChar + c + "', $input); " ) ;
+					ConsoleMessage.body3( "result : escape : preg_raplace('/" + c + "/', '" + resultChar + c + "', $str); " ) ;
 					if (type.equalsIgnoreCase("js")) {
-						code_builder.append("\tinput = input.replace(/" + c + "/g,'" + resultChar + c + "');\n");
+						code_builder.append("\tstr = str.replace(/" + c + "/g,'" + resultChar + c + "');\n");
 					} else {
-						code_builder.append("\t\t$input = preg_raplace('/" + c + "/', '" + resultChar + c + "', $input);\n");
+						code_builder.append("\t\t$str = preg_raplace('/" + c + "/', '" + resultChar + c + "', $str);\n");
 					}
 				}
 			}	
@@ -1107,19 +1107,19 @@ public class BuildAutomaton {
 				}
 				String subject_chars = Pattern.quote(chars).replace("\\Q", "").replace("\\E", "");;
 				
-				ConsoleMessage.body3( "result : delete : preg_raplace('/[" + subject_chars + "]/', '', $input);") ;
+				ConsoleMessage.body3( "result : delete : preg_raplace('/[" + subject_chars + "]/', '', $str);") ;
 				
 				if (type.equalsIgnoreCase("js")) {
-					code_builder.append("\tinput = input.replace(/[" + subject_chars + "]/g,'');\n");
+					code_builder.append("\tstr = str.replace(/[" + subject_chars + "]/g,'');\n");
 				} else {
-					code_builder.append("\t\t$input = preg_raplace('/[" + subject_chars + "]/', '', $input);\n");
+					code_builder.append("\t\t$str = preg_raplace('/[" + subject_chars + "]/', '', $str);\n");
 				}
 				
 			}
 		}
 		
 		if (type.equalsIgnoreCase("js")) {
-			code_builder.append("\treturn input;\n}\n");
+			code_builder.append("\treturn str;\n}\n");
 			code_builder.append("function myFunction() {\n");
 			code_builder.append("\tvar x=document.getElementById(\"fname\");");
 			code_builder.append("\tx.value=sanitize_input(x.value);\n}\n");
@@ -1130,7 +1130,7 @@ public class BuildAutomaton {
 			code_builder.append("</body>\n</html>");
 			
 		} else {
-			code_builder.append("\treturn $input;\n}\n?>");
+			code_builder.append("\treturn $str;\n}\n?>");
 		}
 		
 		System.out.println("code:\n" + code_builder.toString());
