@@ -4,12 +4,17 @@ SemRepair is Semantic Differential Repair tool for input validation and sanitiza
 
 One application for the tool is to fix differences between a sanitizer function on the client-side and the correponding one on the server. The tool is language agnostic and can be used with Java, PHP or ASP.NET web applications. To achieve this agnosticism, the tool takes sanitizer functions in an intermediate representation that we call Dependency Graph which will be described in details below.
 
-Installation
-============
+Installation & Running Binary Files
+======================================
+The fastest way to try SemRep is to download the self-contained Ubuntu 12.04 64-bit binary files in the zip file [SemRepBinaries.tar.gz](SemRepBinaries.tar.gz). This compressed file contains: 
+1 binary file
+
+Installation from Source Code
+=============================
 Most of the tool ([SemRep](SemRep)) is written in C++ while the [MinCut](MinCut) algorithm is implemented in Java.
 SemRep depends on two c libraries: [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) and
 [MONA library](http://www.brics.dk/mona/index.html). Instructions for compiling and installing the two libraries
-can be find on [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) website.
+can be find on [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) website. SemRep also uses 4 C++ libraries: [boost-regex](http://www.boost.org/doc/libs/1_55_0/libs/regex/doc/html/index.html), [boost-filesystem], system and program options).
 
 [SemRep](SemRep) is an Eclipse CDT project. You need to download 
 [Eclipse CDT](http://www.eclipse.org/cdt/downloads.php) IDE then import SemRep project from this git repository
