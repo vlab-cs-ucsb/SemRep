@@ -232,6 +232,112 @@ DepGraph DepGraph::parseDotFile(std::string fname) {
         ifs.open(fname, std::ifstream::in);
 
         boost::smatch sm;
+        boost::regex regxNode("^\\s*n(\\d+)\\s\\[(.*)\\];$");
+        boost::regex regxEdge("^\\s*n(\\d+)\\s->\\sn(\\d+)(\\[(.*)\\])?;$");
+        //second group of regex node
+        boost::regex regxNodeDescription("shape=(.+), label=\"(.+)\"");
+        //second group of regex nodeDescription
+        boost::regex regxNodeUninit("Input: (.+)");
+        boost::regex regxNodeReturn("Return: (.+)");
+        boost::regex regxNodeVar("Var: (.+)");
+        boost::regex regxNodeLit("Lit: (.*)");
+        boost::regex regxNodeOp("(.+)");
+        string nodeName;
+        string nodeDescription;
+        string edge;
+        int nodeID;
+        int fromNodeID;
+        int toNodeID;
+        string nodeType;
+        string nodeLabel;
+        string nodeShape;
+        string varName;
+        string litValue;
+        string opName;
+
+        string inputLine;
+        while (ifs.good()) {
+            getline(ifs, inputLine);
+//            cout << "\t parsing : " << inputLine << endl;
+            if (boost::regex_match(inputLine, sm, regxNode)){
+
+                //process node
+                nodeID = std::stoi(sm[1]) - 1;
+                nodeDescription = sm[2];
+
+                if (boost::regex_match(nodeDescription, sm, regxNodeDescription)) {
+                    nodeShape = sm[1];
+                    nodeLabel = sm[2];
+                    DepGraphNode* node = NULL;
+                    if (boost::regex_match(nodeLabel, sm, regxNodeUninit)){
+                        node = new DepGraphUninitNode(nodeID, -1, -1);
+                        depGraph.addNode(node);
+                    }
+                    else if (boost::regex_match(nodeLabel, sm, regxNodeVar)){
+                        varName = sm[1];
+                        TacPlace* place = new Variable(varName, "noFunc");
+                        node = new DepGraphNormalNode("noFile", -1, nodeID, -1, -1, place);
+                        depGraph.addNode(node);
+                    }else if (boost::regex_match(nodeLabel, sm, regxNodeLit)){
+                        litValue = sm[1];
+                        boost::regex bsDQuote("\\\"");//this will match \"
+                        string newStr = "\"";
+                        litValue = boost::regex_replace(litValue, bsDQuote, newStr);
+                        boost::regex bsBs("\\\\");//this will match \"
+                        newStr = "\\";
+                        litValue = boost::regex_replace(litValue, bsBs, newStr);
+                        TacPlace* place = new Literal(litValue);
+                        node = new DepGraphNormalNode("noFile", -1, nodeID, -1, -1, place);
+                        depGraph.addNode(node);
+                    } else if (boost::regex_match(nodeLabel, sm, regxNodeOp)){
+                        opName = sm[1];
+                        node = new DepGraphOpNode("noFile", -1, nodeID, -1, -1, opName, false);
+                        depGraph.addNode(node);
+
+                    }
+                    else {
+                        throw invalid_argument("error parsing the dependency graph dot file. Can not parse node label (type)");
+                    }
+                    DepGraphNormalNode* root;
+                    if (nodeShape == "doubleoctagon" && (root = dynamic_cast<DepGraphNormalNode*>(node)) != NULL )
+                        depGraph.setRoot(root);
+                    node->setShape(nodeShape);
+                } else {
+                    throw invalid_argument("error parsing the dependency graph dot file. Can not parse node description");
+                }
+            } else if (boost::regex_match(inputLine, sm, regxEdge)) {
+                //process edge
+                fromNodeID = std::stoi(sm[1]) - 1;
+                toNodeID = std::stoi(sm[2]) - 1;
+                DepGraphNode* fromNode = depGraph.getNode(fromNodeID);
+                DepGraphNode* toNode = depGraph.getNode(toNodeID);
+                depGraph.addEdge(fromNode, toNode);
+            }
+        }
+        ifs.close();
+        
+    } catch (exception const &e) {
+        cerr << "Can not construct depGraph from file " << fname << ". Following exception happened:\n" << e.what();
+        if (ifs.is_open())
+            ifs.close();
+        exit(EXIT_FAILURE);
+    }
+
+    depGraph.calculateSCCs();
+
+    return depGraph;
+}
+
+DepGraph DepGraph::parsePixyDotFile(std::string fname) {
+    DepGraph depGraph;
+
+    std::ifstream ifs;
+    // This is how a node line looks like
+    //  n18 [shape=box, label="/home/muath/pixy_output/test/vuln01.php : 13\nVar: $www\nFunc: _main\nID: 17, SCCID: -1, order: -1\n\n"];
+    try {
+        ifs.open(fname, std::ifstream::in);
+
+        boost::smatch sm;
         boost::regex regxGraphLabel("^\\s*label=\"(.+)\";$");
         boost::regex regxGraphLabelloc("^\\s*labelloc=(.+);$");
         boost::regex regxNode("^\\s*n(\\d+)\\s\\[(.*)\\];$");
@@ -347,7 +453,7 @@ DepGraph DepGraph::parseDotFile(std::string fname) {
             }
         }
         ifs.close();
-        
+
     } catch (exception const &e) {
         cerr << "Can not construct depGraph from file " << fname << ". Following exception happened:\n" << e.what();
         if (ifs.is_open())

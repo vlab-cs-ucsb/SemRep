@@ -144,6 +144,7 @@ public:
 	DepGraphNode* addNode(DepGraphNode* node);
     DepGraphNode* getNode(const int id) ;
     static DepGraph parseDotFile(std::string fname);
+    static DepGraph parsePixyDotFile(std::string fname);
 
     std::string toDot();
     void dumpDot(string fname);
