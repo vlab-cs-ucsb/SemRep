@@ -125,8 +125,8 @@ public:
 
 	DepGraph getInputRelevantGraph(DepGraphNode* inputNode) ;
 
-
-    DepGraphUninitNode* findInputNode(string name);
+	DepGraphUninitNode* findInputNode(string name);
+    DepGraphUninitNode* findPixyInputNode(string name);
 
 	void calculateSCCs();
 

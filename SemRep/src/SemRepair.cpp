@@ -52,7 +52,6 @@ SemRepair::SemRepair(string reference_dep_graph_file_name,string target_dep_grap
 	this->reference_field_relevant_graph = reference_dep_graph.getInputRelevantGraph(reference_uninit_field_node);
 	this->target_field_relevant_graph = target_dep_graph.getInputRelevantGraph(target_uninit_field_node);
 
-
 	if (DEBUG_ENABLED_INIT != 0) {
 		DEBUG_MESSAGE("------------ Debugging Initalization ------------");
 

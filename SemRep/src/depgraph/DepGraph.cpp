@@ -131,8 +131,17 @@ UninitNodesList DepGraph::getUninitNodes() {
 	}
 	return retMe;
 }
-
 DepGraphUninitNode* DepGraph::findInputNode(string name){
+	    for (auto nodePair : nodes){
+	   		DepGraphUninitNode* uninitNode = dynamic_cast<DepGraphUninitNode*>(nodePair.second);
+			if (uninitNode != NULL) {
+				return uninitNode;
+			}
+		}
+		return NULL;
+}
+
+DepGraphUninitNode* DepGraph::findPixyInputNode(string name){
 	    for (auto nodePair : nodes){
 	   		DepGraphUninitNode* uninitNode = dynamic_cast<DepGraphUninitNode*>(nodePair.second);
 			if (uninitNode != NULL) {
@@ -164,7 +173,9 @@ DepGraphUninitNode* DepGraph::findInputNode(string name){
 
 
 DepGraph DepGraph::getInputRelevantGraph(DepGraphNode* inputNode) {
+	cout << " here" << endl;
 	DepGraph inputDepGraph(this->getRoot());
+	cout << " here2" << endl;
 	inputDepGraph.addNode(inputNode);
 	this->doGetInputRelevantGraph(inputNode, inputDepGraph);
 	inputDepGraph.setTopLeaf(this->root);
@@ -278,6 +289,11 @@ DepGraph DepGraph::parseDotFile(std::string fname) {
                         TacPlace* place = new Variable(varName, "noFunc");
                         node = new DepGraphNormalNode("noFile", -1, nodeID, -1, -1, place);
                         depGraph.addNode(node);
+                    }else if (boost::regex_match(nodeLabel, sm, regxNodeReturn)){
+                        varName = sm[1];
+                        TacPlace* place = new Variable(varName, "noFunc");
+                        node = new DepGraphNormalNode("noFile", -1, nodeID, -1, -1, place);
+                        depGraph.addNode(node);
                     }else if (boost::regex_match(nodeLabel, sm, regxNodeLit)){
                         litValue = sm[1];
                         boost::regex bsDQuote("\\\"");//this will match \"
@@ -299,8 +315,9 @@ DepGraph DepGraph::parseDotFile(std::string fname) {
                         throw invalid_argument("error parsing the dependency graph dot file. Can not parse node label (type)");
                     }
                     DepGraphNormalNode* root;
-                    if (nodeShape == "doubleoctagon" && (root = dynamic_cast<DepGraphNormalNode*>(node)) != NULL )
+                    if (nodeShape == "doubleoctagon" && (root = dynamic_cast<DepGraphNormalNode*>(node)) != NULL ) {
                         depGraph.setRoot(root);
+                    }
                     node->setShape(nodeShape);
                 } else {
                     throw invalid_argument("error parsing the dependency graph dot file. Can not parse node description");

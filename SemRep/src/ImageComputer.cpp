@@ -281,42 +281,37 @@ StrangerAutomaton* ImageComputer::makePreImageForOpChild_ValidationCase(DepGraph
 	StrangerAutomaton* opAuto = bwAnalysisResult[opNode->getID()];
 	string opName = opNode->getName();
 
-	if (!opNode->isBuiltin()) {
-		// __vlab_restrict
-        if (opName.find("__vlab_restrict") != string::npos) {
-        	boost::posix_time::ptime start_time = perfInfo->current_time();
-			if (successors.size() != 3) {
-				throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict invalid number of arguments");
-			}
+	// __vlab_restrict
+	if (opName.find("__vlab_restrict") != string::npos) {
+		boost::posix_time::ptime start_time = perfInfo->current_time();
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict invalid number of arguments");
+		}
 
-			DepGraphNode* subjectNode = successors[1];
-			DepGraphNode* patternNode = successors[0];
-			DepGraphNode* complementNode = successors[2];
+		DepGraphNode* subjectNode = successors[1];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* complementNode = successors[2];
 
-			if (childNode->equals(subjectNode)) {
-				//TODO handle general case for patternAuto and complementString
-				StrangerAutomaton* patternAuto = getLiteralorConstantNodeAuto(patternNode, true);
-				// Union __vlab_restricts considering complement parameter
-				string complementString = getLiteralOrConstantValue(complementNode);
-				if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
-					StrangerAutomaton* complementAuto = patternAuto->complement(patternNode->getID());
-					retMe = opAuto->union_(complementAuto, childNode->getID());
-					delete complementAuto;
-				} else {
-					retMe = opAuto->union_(patternAuto, childNode->getID());
-				}
-
-				perfInfo->pre_vlab_restrict_total_time += perfInfo->current_time() - start_time;
-				perfInfo->number_of_pre_vlab_restrict++;
-
+		if (childNode->equals(subjectNode)) {
+			//TODO handle general case for patternAuto and complementString
+			StrangerAutomaton* patternAuto = getLiteralorConstantNodeAuto(patternNode, true);
+			// Union __vlab_restricts considering complement parameter
+			string complementString = getLiteralOrConstantValue(complementNode);
+			if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
+				StrangerAutomaton* complementAuto = patternAuto->complement(patternNode->getID());
+				retMe = opAuto->union_(complementAuto, childNode->getID());
+				delete complementAuto;
 			} else {
-				throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path");
+				retMe = opAuto->union_(patternAuto, childNode->getID());
 			}
-        } else {
-        	throw StrangerStringAnalysisException(stringbuilder() << "function " << opName << " is not __vlab_restrict.");
-        }
 
-	} else if (opName == ".") {
+			perfInfo->pre_vlab_restrict_total_time += perfInfo->current_time() - start_time;
+			perfInfo->number_of_pre_vlab_restrict++;
+
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path");
+		}
+	}  else if (opName == ".") {
 		// CONCAT
 		throw StrangerStringAnalysisException( "concats are not handled here until we really need");
 	} else if (opName == "addslashes") {
@@ -597,7 +592,6 @@ void ImageComputer::doPostImageComputation_SingleInput(
     	}
 
     } else if ((opNode = dynamic_cast<DepGraphOpNode*>(node)) != nullptr) {
-    	cout << "handling op node: " << opNode->getID() << endl;
 		newAuto = makePostImageForOp_GeneralCase(origDepGraph, opNode, analysisResult);
     } else if ((uninitNode = dynamic_cast<DepGraphUninitNode*>(node)) != nullptr) {
     	// input node that we are interested in should have been initialized already
@@ -835,30 +829,27 @@ StrangerAutomaton* ImageComputer::makePreImageForOpChild_GeneralCase(
 	string opName = opNode->getName();
 
 
-	if (!opNode->isBuiltin()) {
-		// __vlab_restrict
-		if (opName.find("__vlab_restrict") != string::npos) {
-			boost::posix_time::ptime start_time = perfInfo->current_time();
-			if (successors.size() != 3) {
-				throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict invalid number of arguments");
-			}
 
-			DepGraphNode* subjectNode = successors[1];
-			DepGraphNode* patternNode = successors[0];
-			DepGraphNode* complementNode = successors[2];
-
-			if (childNode->equals(subjectNode)){
-				retMe = opAuto->clone(childNode->getID());
-			} else if (childNode->equals(patternNode) || childNode->equals(complementNode)) {
-				throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") should not be on the backward path");
-			} else {
-				throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path");
-			}
-			perfInfo->pre_vlab_restrict_total_time += perfInfo->current_time() - start_time;
-			perfInfo->number_of_pre_vlab_restrict++;
-		} else {
-			throw StrangerStringAnalysisException(stringbuilder() << "function " << opName << " is not __vlab_restrict");
+	// __vlab_restrict
+	if (opName.find("__vlab_restrict") != string::npos) {
+		boost::posix_time::ptime start_time = perfInfo->current_time();
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict invalid number of arguments");
 		}
+
+		DepGraphNode* subjectNode = successors[1];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* complementNode = successors[2];
+
+		if (childNode->equals(subjectNode)){
+			retMe = opAuto->clone(childNode->getID());
+		} else if (childNode->equals(patternNode) || childNode->equals(complementNode)) {
+			throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") should not be on the backward path");
+		} else {
+			throw StrangerStringAnalysisException(stringbuilder() << "child node (" << childNode->getID() << ") of __vlab_restrict (" << opNode->getID() << ") is not in backward path");
+		}
+		perfInfo->pre_vlab_restrict_total_time += perfInfo->current_time() - start_time;
+		perfInfo->number_of_pre_vlab_restrict++;
 
 	} else if (opName == ".") {
 		if (successors.size() < 2)
@@ -1252,51 +1243,48 @@ StrangerAutomaton* ImageComputer::makePostImageForOp_GeneralCase(DepGraph& depGr
 	NodesList successors = depGraph.getSuccessors(opNode);
 	StrangerAutomaton* retMe = nullptr;
 	string opName = opNode->getName();
-	if (!opNode->isBuiltin()) {
-		// __vlab_restrict
-		if (opName.find("__vlab_restrict") != string::npos) {
-			boost::posix_time::ptime start_time = perfInfo->current_time();
-			if (successors.size() != 3) {
-				throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict invalid number of arguments: " << opNode->getID());
-			}
 
-			DepGraphNode* subjectNode = successors[1];
-			DepGraphNode* patternNode = successors[0];
-			DepGraphNode* complementNode = successors[2];
+	// __vlab_restrict
+	if (opName.find("__vlab_restrict") != string::npos) {
+		boost::posix_time::ptime start_time = perfInfo->current_time();
+		if (successors.size() != 3) {
+			throw StrangerStringAnalysisException(stringbuilder() << "__vlab_restrict invalid number of arguments: " << opNode->getID());
+		}
 
-			// recursion happens only in single input mode when needed
-			if (analysisResult.find(subjectNode->getID()) == analysisResult.end()) {
-				doForwardAnalysis_GeneralCase(depGraph, subjectNode, analysisResult);
-			}
+		DepGraphNode* subjectNode = successors[1];
+		DepGraphNode* patternNode = successors[0];
+		DepGraphNode* complementNode = successors[2];
 
-			// TODO handle general case
-			if (analysisResult.find(patternNode->getID()) == analysisResult.end()) {
+		// recursion happens only in single input mode when needed
+		if (analysisResult.find(subjectNode->getID()) == analysisResult.end()) {
+			doForwardAnalysis_GeneralCase(depGraph, subjectNode, analysisResult);
+		}
+
+		// TODO handle general case
+		if (analysisResult.find(patternNode->getID()) == analysisResult.end()) {
 //				doForwardAnalysis_GeneralCase(depGraph, patternNode, analysisResult);
-				analysisResult[patternNode->getID()] = getLiteralorConstantNodeAuto(patternNode, true);
-			}
-			// TODO handle general case
-			if (analysisResult.find(complementNode->getID()) == analysisResult.end()) {
+			analysisResult[patternNode->getID()] = getLiteralorConstantNodeAuto(patternNode, true);
+		}
+		// TODO handle general case
+		if (analysisResult.find(complementNode->getID()) == analysisResult.end()) {
 //				doForwardAnalysis_GeneralCase(depGraph, complementNode, analysisResult);
 
-			}
-
-			StrangerAutomaton* subjectAuto = analysisResult[subjectNode->getID()];
-			StrangerAutomaton* patternAuto = analysisResult[patternNode->getID()];
-//			string complementString = analysisResult[complementNode->getID()]->getStr();
-			string complementString = getLiteralOrConstantValue(complementNode);
-			if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
-				retMe = subjectAuto->intersect(patternAuto, opNode->getID());
-			} else {
-				StrangerAutomaton* complementAuto = patternAuto->complement(patternNode->getID());
-				retMe = subjectAuto->intersect(complementAuto, opNode->getID());
-				delete complementAuto;
-			}
-			perfInfo->vlab_restrict_total_time += perfInfo->current_time() - start_time;
-			perfInfo->number_of_vlab_restrict++;
-
-		} else {
-			throw StrangerStringAnalysisException(stringbuilder() << "function " << opName << " is not __vlab_restrict.");
 		}
+
+		StrangerAutomaton* subjectAuto = analysisResult[subjectNode->getID()];
+		StrangerAutomaton* patternAuto = analysisResult[patternNode->getID()];
+//			string complementString = analysisResult[complementNode->getID()]->getStr();
+		string complementString = getLiteralOrConstantValue(complementNode);
+		if (complementString.find("false") != string::npos || complementString.find("FALSE") != string::npos) {
+			retMe = subjectAuto->intersect(patternAuto, opNode->getID());
+		} else {
+			StrangerAutomaton* complementAuto = patternAuto->complement(patternNode->getID());
+			retMe = subjectAuto->intersect(complementAuto, opNode->getID());
+			delete complementAuto;
+		}
+		perfInfo->vlab_restrict_total_time += perfInfo->current_time() - start_time;
+		perfInfo->number_of_vlab_restrict++;
+
 	} else if (opName == ".") {
 		// TODO add option to ignore concats (heuristic)
 		for (auto succ_node : successors){
