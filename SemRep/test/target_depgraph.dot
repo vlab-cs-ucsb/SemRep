@@ -3,7 +3,7 @@ digraph cfg {
   n2 [shape=box, label="Var: y"];
   n4 [shape=ellipse, label="preg_replace"];
   n5 [shape=box, label="Lit: /\"/"];
-  n6 [shape=box, label="Lit: \""];
+  n6 [shape=box, label="Lit: \\\""];
   n7 [shape=box, label="Var: y"];
   n9 [shape=house, label="Input: y"];
   n4 -> n5;

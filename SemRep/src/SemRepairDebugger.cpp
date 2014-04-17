@@ -22,8 +22,8 @@
  */
 
 #include "SemRepairDebugger.hpp"
-
-const unsigned char DEBUG_LEVEL_WRAPPER = 0x0;
+// see the mask below
+const unsigned char DEBUG_LEVEL_WRAPPER = 0x2;
 
 const unsigned char DEBUG_MASK_VALIDATION_PATCH = 0x1;
 const unsigned char DEBUG_MASK_SINK_COMPUTATION = 0x2;

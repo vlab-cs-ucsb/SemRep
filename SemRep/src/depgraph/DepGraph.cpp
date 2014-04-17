@@ -173,9 +173,7 @@ DepGraphUninitNode* DepGraph::findPixyInputNode(string name){
 
 
 DepGraph DepGraph::getInputRelevantGraph(DepGraphNode* inputNode) {
-	cout << " here" << endl;
 	DepGraph inputDepGraph(this->getRoot());
-	cout << " here2" << endl;
 	inputDepGraph.addNode(inputNode);
 	this->doGetInputRelevantGraph(inputNode, inputDepGraph);
 	inputDepGraph.setTopLeaf(this->root);
@@ -297,7 +295,7 @@ DepGraph DepGraph::parseDotFile(std::string fname) {
                         depGraph.addNode(node);
                     }else if (boost::regex_match(nodeLabel, sm, regxNodeLit)){
 						litValue = sm[1];
-						//cout << "litval original" << litValue << endl;
+//						cout << "litval original" << litValue << endl;
 						//if we are not parsing a regular expression then remove escaping
 						//surprisingly, dot special chars (\,") are also special to our
 						// regular expression engine
@@ -305,12 +303,13 @@ DepGraph DepGraph::parseDotFile(std::string fname) {
 							boost::regex bsDQuote("\\\\\"");//this will match \"
 							string newStr = "\"";
 							litValue = boost::regex_replace(litValue, bsDQuote, newStr);
-							//cout << "litval" << litValue << endl;
+//							cout << "litval" << litValue << endl;
 							boost::regex bsBs("\\\\\\\\");//this will match \\ (do not remove this text. Really unless you remove the two backslashes)
 							newStr = "\\";
 							litValue = boost::regex_replace(litValue, bsBs, newStr);
-							//cout << "litval" << litValue << endl;
+//							cout << "litval" << litValue << endl;
                         }
+//						cout << "result litval:  " << litValue << endl << endl;
                         TacPlace* place = new Literal(litValue);
                         node = new DepGraphNormalNode("noFile", -1, nodeID, -1, -1, place);
                         depGraph.addNode(node);
