@@ -76,14 +76,15 @@ It is a directed graph that has a finite number of nodes and directed edges.
 If there is an edge from node N1 to N2 this means that the value of N1 
 depends on the value of N2.
 There are five types of nodes:
+
 1. An **input** node identifies the data from untrusted parties, e.g., an input from web forms, that is received as input to the sanitizer.
-2. A **literal** node is associated with a constant string value, a regular expression value (which is delimited by the symbol \enquotetts{/**at the beginning and the end) or the special value **false}. Both nodes have no successors. In other words, defining a leaf node as *Leaf(G) = \{ n \ | \ Succ(n) = \emptyset \}*, each of these two types of nodes is always a leaf node.
+2. A **literal** node is associated with a constant string value, a regular expression value (which is delimited by the symbol **/** at the beginning and the end) or the special value **false**. Both nodes have no successors. In other words, each of these two types of nodes is always a leaf node.
 3. A **return** node which is the root. It represents the positive sink at which the sanitizer returns its output. For each sanitizer, only one **input** node and one **return** node is allowed.
 4. An **operation** node represents a string manipulation operation. This type of nodes has one or more successors which represent its parameters. There are three types of string operations: 
 
-..1. General string operations which are **concat** and **replace**. These operations can be used to model a wide range of string functions.
-..2. Specialized string operations such as **addslashes** and **htmlspecialchars** which allow for more precise and efficient modeling of some complex and common sanitization operations.
-..3. The special string operation **\_vlab\_restrict** which is used to represent control dependencies on branch conditions.
+  1. General string operations which are **concat** and **replace**. These operations can be used to model a wide range of string functions.
+  2. Specialized string operations such as **addslashes** and **htmlspecialchars** which allow for more precise and efficient modeling of some complex and common sanitization operations.
+  3. The special string operation **\_vlab\_restrict** which is used to represent control dependencies on branch conditions.
 
 A **concat** node *n* has two successors labeled as the prefix node (*n.p*) and the suffix node (*n.s*), and stores the concatenation of any value of the prefix node and any value of the suffix node in *n*. 
 
