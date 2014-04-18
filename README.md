@@ -63,6 +63,39 @@ So, what did SemRep do? SemRep is an automatic repair tool. It takes two functio
 
 The user can pass JS instead of PHP to get the patches generated in JavaSript. Generating patches in Javascript allows you to open the html file that contains that javascript patch code and immediately enters inputs to test).
 
+Input format: what is a dependency graph?
+-----------------------------------------
+SemRep is language agnostic i.e., it can fix different input validation 
+and sanitization functions from different programming languages against
+each other. To achieve this, SemRep takes an intermediate representation
+of a function as its input. We call this representation a Dependency Graph.
+
+The tool takes as input the dependency graphs of two sanitizer functions. 
+A dependency graph specifies the data and control flow in the program.
+It is a directed graph that has a finite number of nodes and directed edges. 
+If there is an edge from node N1 to N2 this means that the value of N1 
+depends on the value of N2.
+There are five types of nodes:
+1. An **input** node identifies the data from untrusted parties, e.g., an input from web forms, that is received as input to the sanitizer.
+2. A **literal** node is associated with a constant string value, a regular expression value (which is delimited by the symbol \enquotetts{/**at the beginning and the end) or the special value **false}. Both nodes have no successors. In other words, defining a leaf node as *Leaf(G) = \{ n \ | \ Succ(n) = \emptyset \}*, each of these two types of nodes is always a leaf node.
+3. A **return** node which is the root. It represents the positive sink at which the sanitizer returns its output. For each sanitizer, only one **input** node and one **return** node is allowed.
+4. An **operation** node represents a string manipulation operation. This type of nodes has one or more successors which represent its parameters. There are three types of string operations: 
+
+..1. General string operations which are **concat** and **replace**. These operations can be used to model a wide range of string functions.
+..2. Specialized string operations such as **addslashes** and **htmlspecialchars** which allow for more precise and efficient modeling of some complex and common sanitization operations.
+..3. The special string operation **\_vlab\_restrict** which is used to represent control dependencies on branch conditions.
+
+A **concat** node *n* has two successors labeled as the prefix node (*n.p*) and the suffix node (*n.s*), and stores the concatenation of any value of the prefix node and any value of the suffix node in *n*. 
+
+A **replace** node has three successors labeled as the target node (*n.t*), the match node (*n.m*), and the replacement node (*n.r*). For the example in Figure~\ref{fig:refdepgraph}, *n.m* has the regular expression **/</** as its value, *n.r* has the string value empty string and *n.t* represents the variable **x**.
+It performs the following operations for each value of *n.t*: 
+
+1. identifies all the matches, i.e., any value of *n.m*, that appear in *n.t*, 
+2. replaces all these matches in *n.t* with any value of *n.r*, and 
+3. stores the replaced result in *n*.     
+
+A **\_vlab\_restrict** node has three successors labeled as the condition node (*n.c*), the target node (*n.t*), and the negation node (*n.g*). The condition node *n.c* is a regular expression representing the constraint enforced by the branch condition. The user is responsible for converting the branch condition constraint into a regular expression. To facilitate this task, we allow for the intersection operator **&** in a regular expression (along with the standard union operator **|**) which returns the intersection of two regular languages encoded by two regular expressions. The intersection operator along with the union operator **|** allow to model the logical AND and OR operators in a branch condition. We also have a simple converter to convert some types of constraints such as length constraints into a regular expression (as shown in the example in Figure~\ref{fig:refdepgraph}). The negation node is used to decide if the dependency on the branch condition comes from the true branch or the false branch. A value **true** means that we should restrict with the negation of the language of the regular expression *n.c* while a value of **false** means that we should restrict with the language of the regular expression *n.c*.
+
 Installation from Source Code
 =============================
 Most of the tool ([SemRep](SemRep)) is written in C++ while the [MinCut](MinCut) algorithm is implemented in Java.
