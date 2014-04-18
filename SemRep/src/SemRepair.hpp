@@ -80,7 +80,7 @@ private:
 	StrangerAutomaton* sanitization_patch_auto;
 
 	void message(string msg);
-	string generateOutputFilePath();
+	string generateOutputFilePath(string folder_name, bool unique_name);
 	void printAnalysisResults(AnalysisResult& result);
 	void printNodeList(NodesList nodes);
 	int isLengthAnIssue(StrangerAutomaton* patcherAuto, StrangerAutomaton*patcheeAuto);

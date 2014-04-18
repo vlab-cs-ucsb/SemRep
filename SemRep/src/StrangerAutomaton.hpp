@@ -206,6 +206,7 @@ public:
     void toDotAscii(int printSink);
     void toDotFile(std::string file_name);
     void toDotFileAscii(std::string file_name, int printSink);
+    void toDotBDDFile(std::string file_name);
     static void openCtraceFile(std::string name);
     static void appendCtraceFile(std::string name);
     static void closeCtraceFile();

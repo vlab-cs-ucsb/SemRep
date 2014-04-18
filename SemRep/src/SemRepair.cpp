@@ -81,14 +81,16 @@ void SemRepair::message(string msg) {
 	cout << endl << "~~~~~~~~~~~>>> SemRepair says: " << msg << endl;
 }
 
-string SemRepair::generateOutputFilePath() {
+string SemRepair::generateOutputFilePath(string folder_name, bool unique_name) {
 	boost::filesystem::path curr_dir(boost::filesystem::current_path());
-	boost::filesystem::path output_dir(curr_dir / "outputs");
+	boost::filesystem::path output_dir(curr_dir / folder_name);
 
 	if (! boost::filesystem::exists(output_dir)) {
 		boost::filesystem::create_directory(output_dir);
 	}
-
+	if (!unique_name) {
+		return stringbuilder() << output_dir.string() << "/";
+	}
 	size_t ref_ext_index = reference_dep_graph_file_name.find_last_of('.');
 	if (ref_ext_index == string::npos) {
 		ref_ext_index = reference_dep_graph_file_name.length() - 1;
@@ -132,16 +134,19 @@ void SemRepair::printNodeList(NodesList nodes) {
 
 // TODO add output file option
 void SemRepair::printResults() {
-	string file_path =  generateOutputFilePath();
+	string file_path =  generateOutputFilePath("outputs/generated_patch_automata", false);
 
 	if (is_validation_patch_required) {
 		cout << "\t    - validation patch is generated" << endl;
-		string vp_fname = stringbuilder() << file_path << "_vp_auto.dot";
-		string vp_mn_fname = stringbuilder() << file_path << "_vp_mn_auto.dot";
+		string vp_fname = stringbuilder() << file_path << "validation_patch_dfa_with_ASCII_transitions.dot";
+		string vp_mn_fname = stringbuilder() << file_path << "validation_patch_dfa_with_MONA_transitions.dot";
+		string vp_bdd_fname = stringbuilder() << file_path << "validation_patch_BDD.dot";
 		cout << "\t file : " << vp_fname << endl;
 		cout << "\t file : " << vp_mn_fname << endl;
+		cout << "\t file : " << vp_bdd_fname << endl;
 		DEBUG_AUTO_TO_FILE(validation_patch_auto, vp_fname);
 		DEBUG_AUTO_TO_FILE_MN(validation_patch_auto,vp_mn_fname);
+		validation_patch_auto->toDotBDDFile(vp_bdd_fname);
 
 		cout << "\t size : states " << validation_patch_auto->get_num_of_states() << " : "
 				<< "bddnodes " << validation_patch_auto->get_num_of_bdd_nodes() << endl;
@@ -162,12 +167,15 @@ void SemRepair::printResults() {
 	if (is_length_patch_required) {
 		cout << "\t    - length patch is generated" << endl;
 
-		string lp_fname = stringbuilder() << file_path << "_lp_auto.dot";
-		string lp_mn_fname = stringbuilder() << file_path << "_lp_mn_auto.dot";
+		string lp_fname = stringbuilder() << file_path << "length_patch_dfa_with_ASCII_transitions.dot";
+		string lp_mn_fname = stringbuilder() << file_path << "length_patch_dfa_with_MONA_transitions.dot";
+		string lp_bdd_fname = stringbuilder() << file_path << "length_patch_BDD.dot";
 		cout << "\t file : " << lp_fname << endl;
 		cout << "\t file : " << lp_mn_fname << endl;
-		DEBUG_AUTO_TO_FILE(length_patch_auto,lp_fname);
+		cout << "\t file : " << lp_bdd_fname << endl;
+		DEBUG_AUTO_TO_FILE(length_patch_auto, lp_fname);
 		DEBUG_AUTO_TO_FILE_MN(length_patch_auto,lp_mn_fname);
+		length_patch_auto->toDotBDDFile(lp_bdd_fname);
 
 		cout << "\t size : states " << length_patch_auto->get_num_of_states() << " : "
 						<< "bddnodes " << length_patch_auto->get_num_of_bdd_nodes() << endl;
@@ -186,14 +194,17 @@ void SemRepair::printResults() {
 	if (is_sanitization_patch_required) {
 		cout << "\t    - sanitization patch is generated :" << endl;
 
-		string sp_fname = stringbuilder() << file_path << "_sp_auto.dot";
-		string sp_mn_fname = stringbuilder() << file_path << "_sp_mn_auto.dot";
-		string refsink_mn_fname = stringbuilder() << file_path << "_refsink_mn_auto.dot";
+		string sp_fname = stringbuilder() << file_path << "sanitization_patch_dfa_with_ASCII_transitions.dot";
+		string sp_mn_fname = stringbuilder() << file_path << "sanitization_patch_dfa_with_MONA_transitions.dot";
+		string sp_bdd_fname = stringbuilder() << file_path << "sanitization_patch_BDD.dot";
+		string refsink_mn_fname = stringbuilder() << file_path << "reference_dfa_with_MONA_transitions.dot";
 		cout << "\t file : " << sp_fname << endl;
 		cout << "\t file : " << sp_mn_fname << endl;
+		cout << "\t file : " << sp_bdd_fname << endl;
 		cout << "\t file : " << refsink_mn_fname << endl;
 		DEBUG_AUTO_TO_FILE(sanitization_patch_auto,sp_fname);
 		DEBUG_AUTO_TO_FILE_MN(sanitization_patch_auto,sp_mn_fname);
+		sanitization_patch_auto->toDotBDDFile(sp_bdd_fname);
 		DEBUG_AUTO_TO_FILE_MN(reference_sink_auto,refsink_mn_fname);
 
 		cout << "\t size : states " << sanitization_patch_auto->get_num_of_states() << " : "

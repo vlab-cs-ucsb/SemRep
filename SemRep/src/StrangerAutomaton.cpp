@@ -2887,6 +2887,13 @@ void StrangerAutomaton::toDotFile(std::string file_name) {
     delete indices_main_unsigned;
 }
 
+void StrangerAutomaton::toDotBDDFile(std::string file_name) {
+
+    debugToFile(stringbuilder() << "dfaPrintBDD(M[" << this->autoTraceID << "], NUM_ASCII_TRACKS);");
+    dfaPrintBDD(this->dfa, strToCharStar(file_name), num_ascii_track);
+
+}
+
 
 /**
  * Prints the current automaton to the out stream in a dot format (see Graphviz).
