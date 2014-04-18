@@ -32,17 +32,17 @@ SemRepair::SemRepair(string reference_dep_graph_file_name,string target_dep_grap
 	this->input_field_name = input_field_name;
 
 	// read dep graphs
-	this->reference_dep_graph = DepGraph::parseDotFile(reference_dep_graph_file_name);
-	this->target_dep_graph = DepGraph::parseDotFile(target_dep_graph_file_name);
+	this->reference_dep_graph = DepGraph::parsePixyDotFile(reference_dep_graph_file_name);
+	this->target_dep_graph = DepGraph::parsePixyDotFile(target_dep_graph_file_name);
 
 	// initialize input nodes
-	this->reference_uninit_field_node = reference_dep_graph.findInputNode(input_field_name);
+	this->reference_uninit_field_node = reference_dep_graph.findPixyInputNode(input_field_name);
 	if (reference_uninit_field_node == NULL) {
 		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in reference dep graph.");
 	}
 	message(stringbuilder() << "reference uninit node(" << reference_uninit_field_node->getID() << ") found for field " << input_field_name << ".");
 
-	this->target_uninit_field_node = target_dep_graph.findInputNode(input_field_name);
+	this->target_uninit_field_node = target_dep_graph.findPixyInputNode(input_field_name);
 	if (target_uninit_field_node == NULL) {
 		throw StrangerStringAnalysisException("Cannot find input node " + input_field_name + " in target dep graph.");
 	}
