@@ -12,11 +12,11 @@ The fastest way to try SemRep is to download the self-contained Ubuntu 12.04 64-
 
 1. **SemRep** which is a C++ Linux executable file generated with g++-4.8.1 on 64-bit ubuntu 12.04.
 2. **mincut_codegen.jar** which is a java jar file.
-3. Four C shared libraries (**libmonadfa**, **libmonabdd**, **libmonamem**, **libstranger**) that were generated with gcc-4.8.1 on 64-bit ubuntu 12.04.
+3. [MONA](http://www.brics.dk/mona/) and [LibStranger](http://github.com/vlab-cs-ucsb/LibStranger) C shared libraries (**libmonadfa**, **libmonabdd**, **libmonamem**, **libstranger**) that were generated with gcc-4.8.1 on 64-bit ubuntu 12.04.
 4. Three C++ shared libraries (**libboost\_regex-1.48**, **libboost\_system-1.48**, **libboost\_filesystem-1.48**, **libboost\_program\_options-1.48**) which are the same that are packaged with ubuntu 12.04.
 5. Two python script: **run\_semrep.py** which is used to run the tool and an auxillary one called **patch\_result\_checker.py** to parse the tool output.
 
-To run the tool and analyze the two example functions that come with it you need to: (1) clone the repository, (2) uncompress the binary files and (3) run the python script. Here is how to do this:
+To run the tool and analyze the two example PHP functions that come with it [reference](SemRep/test/php_version/reference.php) and [target](SemRep/test/php_version/target.php), you need to: (1) clone the repository, (2) uncompress the binary files and (3) run the python script. Here is how to do this:
 ```bash
 $> git clone https://github.com/vlab-cs-ucsb/SemRep.git
 $> mv ./SemRep/SemRepBinaries .
@@ -107,16 +107,33 @@ Installation from Source Code
 Most of the tool ([SemRep](SemRep)) is written in C++ while the [MinCut](MinCut) algorithm is implemented in Java.
 SemRep depends on two c libraries: [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) and
 [MONA library](http://www.brics.dk/mona/index.html). Instructions for compiling and installing the two libraries
-can be find on [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) website. SemRep also uses 4 C++ libraries: [boost-regex](http://www.boost.org/doc/libs/1_55_0/libs/regex/doc/html/index.html), [boost-filesystem], system and program options).
+can be find on [LibStranger](https://github.com/vlab-cs-ucsb/LibStranger) website. One important thing is 
+to avoid the following conflict: **export** is used as a function name by mona while it is a keyword in C++.
+To do this change mona header file BDD/bdd_external.h (in /usr/local/include/mona) and add 
+```c
+#define export _export_
+```
 
 [SemRep](SemRep) is an Eclipse CDT project. You need to download 
 [Eclipse CDT](http://www.eclipse.org/cdt/downloads.php) IDE then import SemRep project from this git repository
 into your Eclipse CDT workspace. You can refere to the [screenshots](Docs/SrcShots) in the documentation for more information on how to do that or go to
 [here](http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories).
 After that, use eclipse to build SemRep.
+SemRep need C++11 new features which are available from g++4.8 along with some [boost](www.boost.org) libraries (regex, system, filesystem, program options). To install this on Unbuntu 12.04 do the following:
+```bash
+$> sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+$> sudo apt-get update
+$> sudo apt-get install gcc-4.8 g++-4.8
+$> sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+$> sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+$> sudo apt-get install libboost-regex1.48-dev libboost-program-options1.48-dev libboost-filesystem1.48-dev
+# To debug you need to keep in mind that gcc-4.8 and g++-4.8 use dwarf-4 as debugging format by default.
+# So either download a gdb version which supports this new format or pass option -dwarf-2 along with -g to gcc.
+```
 
 [MinCut](MinCut) is an Eclipse Java project. You need to download 
 [Eclipse](http://www.eclipse.org/downloads/) IDE then import MinCut project from this git repository
 into your Eclipse workspace as described
 [here](http://wiki.eclipse.org/EGit/User_Guide#Starting_from_existing_Git_Repositories). After that, use eclipse to build MinCut.
+
 
