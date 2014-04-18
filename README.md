@@ -16,7 +16,7 @@ The fastest way to try SemRep is to download the self-contained Ubuntu 12.04 64-
 4. Three C++ shared libraries (**libboost\_regex-1.48**, **libboost\_system-1.48**, **libboost\_filesystem-1.48**, **libboost\_program\_options-1.48**) which are the same that are packaged with ubuntu 12.04.
 5. Two python script: **run\_semrep.py** which is used to run the tool and an auxillary one called **patch\_result\_checker.py** to parse the tool output.
 
-To run the tool and analyze the two example PHP functions that come with it [reference](SemRep/test/php_version/reference.php) and [target](SemRep/test/php+version/target.php), you need to: (1) clone the repository, (2) uncompress the binary files and (3) run the python script. Here is how to do this:
+To run the tool and analyze the two example PHP functions that come with it [reference](SemRep/test/php_version/reference.php) and [target](SemRep/test/php_version/target.php), you need to: (1) clone the repository, (2) uncompress the binary files and (3) run the python script. Here is how to do this:
 ```bash
 $> git clone https://github.com/vlab-cs-ucsb/SemRep.git
 $> mv ./SemRep/SemRepBinaries .
