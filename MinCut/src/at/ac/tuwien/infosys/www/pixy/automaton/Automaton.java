@@ -3814,7 +3814,7 @@ implements Serializable, Cloneable {
 			result.append("\t\n}\n");
 			result.append("\twindow.onload = myFunction;\n");
 			result.append("</script>\n</head>\n<body>\n");
-			result.append("Enter your string: <input type=\"text\" id=\"fname\" onkeydown=\"myFunction()\">&nbsp; <span id=\"result\" style=\"color:red\"></span>\n");
+			result.append("Enter your string: <input type=\"text\" id=\"fname\" oninput=\"myFunction()\">&nbsp; <span id=\"result\" style=\"color:red\"></span>\n");
 			result.append("<p>As you type the characters, a function is triggered which validates input string.</p>\n");
 			result.append("</body>\n</html>");
 			

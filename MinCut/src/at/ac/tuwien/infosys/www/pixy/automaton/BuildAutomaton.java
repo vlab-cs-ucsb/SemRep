@@ -1127,7 +1127,7 @@ public class BuildAutomaton {
 			code_builder.append("}\n");
 			code_builder.append("window.onload = myFunction;\n");
 			code_builder.append("</script>\n</head>\n<body>\n");
-			code_builder.append("Enter your string: <input type=\"text\" id=\"fname\" onkeydown=\"myFunction()\">&nbsp; <span id=\"result\" style=\"color:rgb(0,255,0)\"></span>\n");
+			code_builder.append("Enter your string: <input type=\"text\" id=\"fname\" oninput=\"myFunction()\">&nbsp; <span id=\"result\" style=\"color:rgb(0,255,0)\"></span>\n");
 			code_builder.append("<p>As you type the characters, a function is triggered which transforms the input string.</p>\n");
 			code_builder.append("</body>\n</html>");
 			
