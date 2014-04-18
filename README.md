@@ -4,10 +4,55 @@ SemRepair is Semantic Differential Repair tool for input validation and sanitiza
 
 One application for the tool is to fix differences between a sanitizer function on the client-side and the correponding one on the server. The tool is language agnostic and can be used with Java, PHP or ASP.NET web applications. To achieve this agnosticism, the tool takes sanitizer functions in an intermediate representation that we call Dependency Graph which will be described in details below.
 
-Installation & Running Binary Files
+Installing & Running Binary Files
 ======================================
 The fastest way to try SemRep is to download the self-contained Ubuntu 12.04 64-bit binary files in the zip file [SemRepBinaries.tar.gz](SemRepBinaries.tar.gz). This compressed file contains: 
-1 binary file
+1. SemRep which is a C++ Linux executable file generated with g++-4.8.1 on 64-bit ubuntu 12.04.
+2. mincut_codegen.jar which is a java jar file.
+3. Four C shared libraries (libmonadfa, libmonabdd, libmonamem, libstranger) that were generated with gcc-4.8.1 on 64-bit ubuntu 12.04.
+4. Three C++ shared libraries (libboost\_regex-1.48, libboost\_system-1.48, libboost\_filesystem-1.48, libboost\_program\_options-1.48) which are the same that are packaged with ubuntu 12.04.
+5. Two python script: run\_semrep.py which is used to run the tool and an auxillary one called patch\_result\_checker.py to parse the tool output.
+
+To run the tool and analyze the two example functions that come with it you need to: (1) clone the repository, (2) uncompress the binary files and (3) run the python script. Here is how to do this:
+```bash
+$> git clone https://github.com/vlab-cs-ucsb/SemRep.git
+$> mv ./SemRep/SemRepBinaries .
+$> tar -xzvf SemRepBinaries.tar.gz
+$> cd SemRepBinaries
+# Assuming that you have python and Java installed on your machine 
+# the following will analyze and generate patches for the two example
+# functions that come with the tool under directory name test
+$> python run_semrep.py -r ./test/reference_depgraph.dot -t ./test/target_depgraph.dot -l PHP -f x
+```
+Assuming that you had a successful (report a bug please if you did not) you should get the output patches
+(along with output deterministic finite automata from the string analysis carried out by SemRep) under
+directory output. Here is the structure of this directory:
+```
+|-- outputs
+|                :files generated if there is a patch
+|   |-- reference_depgraph_target_depgraph_x_lp_auto.dot
+|   |            : length patch automaton to view
+|   |-- reference_depgraph_target_depgraph_x_lp_mn_auto.dot
+|   |            : used to generate simulation code
+|   |-- reference_depgraph_target_depgraph_x_lp_simulation_code.php
+|   |            : generated lentgh patch simulation code (.php, .c, or .html(js))
+|   |-- reference_depgraph_target_depgraph_x_refsink_mn_auto.dot
+|   |            : post image of reference function. Used in mincut calculation only
+|   |-- reference_depgraph_target_depgraph_x_result_row.csv
+|   |            : performance results
+|   |-- reference_depgraph_target_depgraph_x_sp_auto.dot
+|   |            : sanitization patch automaton to view
+|   |-- reference_depgraph_target_depgraph_x_sp.mincut_summary
+|   |            : sanitization patch results (delete, trim, escape)
+|   |-- reference_depgraph_target_depgraph_x_sp_mn_auto.dot
+|   |            : intermediate result used to calculate mincut
+|   |-- reference_depgraph_target_depgraph_x_vp_auto.dot
+|   |            : validation patch automaton to view
+|   |-- reference_depgraph_target_depgraph_x_vp_mn_auto.dot
+|   |            : intermediate result used to generate simulation code
+|   |-- reference_depgraph_target_depgraph_x_vp_simulation_code.php
+|                : generated validation patch simulation code (.php, .c, .html(js))
+```
 
 Installation from Source Code
 =============================
