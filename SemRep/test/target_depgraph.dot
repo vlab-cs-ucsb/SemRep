@@ -6,7 +6,7 @@ digraph cfg {
   n3 [shape=box, label="/home/abaki/workspace/Pixy/testfiles/depgraph/test137.php : 71\nVar: _t0_0\nFunc: _main\nID: 2, SCCID: -1, order: -1\n\n"];
   n4 [shape=ellipse, label="/home/abaki/workspace/Pixy/testfiles/depgraph/test137.php : 71\nbuiltin function:\npreg_replace\nID: 3, SCCID: -1, order: -1\n\n"];
   n5 [shape=box, label="/home/abaki/workspace/Pixy/testfiles/depgraph/test137.php : 71\nLit: /\"/\nID: 4, SCCID: -1, order: -1\n\n"];
-  n6 [shape=box, label="/home/abaki/workspace/Pixy/testfiles/depgraph/test137.php : 71\nLit: \"\nID: 5, SCCID: -1, order: -1\n\n"];
+  n6 [shape=box, label="/home/abaki/workspace/Pixy/testfiles/depgraph/test137.php : 71\nLit: \\\"\nID: 5, SCCID: -1, order: -1\n\n"];
   n7 [shape=box, label="/home/abaki/workspace/Pixy/testfiles/depgraph/test137.php : 71\nVar: $x\nFunc: _main\nID: 6, SCCID: -1, order: -1\n\n"];
   n8 [shape=box, label="/home/abaki/workspace/Pixy/testfiles/depgraph/test137.php : 67\nVar: $_POST[x]\nFunc: _superglobals\nID: 7, SCCID: -1, order: -1\n\n"];
   n9 [shape=box, label="<uninit>ID: 8, SCCID: -1, order: -1\n\n",style=filled];
