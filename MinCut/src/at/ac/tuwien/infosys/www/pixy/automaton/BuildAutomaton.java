@@ -1092,7 +1092,7 @@ public class BuildAutomaton {
 			}
 						
 			if (escape) {
-				ConsoleMessage.body3("result : escape :");
+				ConsoleMessage.body3("result : escape : escape");
 				
 				if (type.equalsIgnoreCase("js")) {
 					code_builder.append("\tvar char_buff = str;\n");
@@ -1128,7 +1128,7 @@ public class BuildAutomaton {
 
 			}	
 			else {
-				ConsoleMessage.body3("result : delete :");
+				ConsoleMessage.body3("result : delete : delete");
 				if (type.equalsIgnoreCase("js")) {
 					code_builder.append("\tvar char_buff = str;\n");
 					code_builder.append("\tstr = \"\";\n");
