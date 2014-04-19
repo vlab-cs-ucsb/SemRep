@@ -1091,11 +1091,9 @@ public class BuildAutomaton {
 					
 			}
 						
-			String chars = "";
-			for (Character c : minCharCut ) {
-				chars += c;
-			}
 			if (escape) {
+				ConsoleMessage.body3("result : escape :");
+				
 				if (type.equalsIgnoreCase("js")) {
 					code_builder.append("\tvar char_buff = str;\n");
 					code_builder.append("\tstr = \"\";\n");
@@ -1130,7 +1128,7 @@ public class BuildAutomaton {
 
 			}	
 			else {
-			
+				ConsoleMessage.body3("result : delete :");
 				if (type.equalsIgnoreCase("js")) {
 					code_builder.append("\tvar char_buff = str;\n");
 					code_builder.append("\tstr = \"\";\n");
