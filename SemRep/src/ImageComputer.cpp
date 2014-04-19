@@ -576,7 +576,7 @@ void ImageComputer::doPostImageComputation_SingleInput(
     			}
     			// explore new paths
 				if (analysisResult.find(succ_node->getID()) == analysisResult.end()) {
-					cout << "exploring succ_node: " << succ_node->getID() << endl;
+//					cout << "exploring succ_node: " << succ_node->getID() << endl;
 					doForwardAnalysis_GeneralCase(origDepGraph, succ_node, analysisResult);
 				}
 

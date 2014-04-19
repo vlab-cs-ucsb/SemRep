@@ -3735,6 +3735,7 @@ implements Serializable, Cloneable {
 			printCodeLine(numOfTabs, "<!DOCTYPE html>");
 			printCodeLine(numOfTabs, "<html>");
 			printCodeLine(numOfTabs, "<head>");
+			printCodeLine(numOfTabs, "<meta charset=\"UTF-8\">");
 			printCodeLine(numOfTabs, "<title>vlab@ucsb : www.cs.ucsb.edu/~vlab</title>");
 			printCodeLine(numOfTabs, "<script>");
 //			printCodeLine(numOfTabs, "<?php");
