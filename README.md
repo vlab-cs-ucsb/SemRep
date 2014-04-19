@@ -16,7 +16,9 @@ The fastest way to try SemRep is to download the self-contained Ubuntu 12.04 64-
 4. Three C++ shared libraries (**libboost\_regex-1.48**, **libboost\_system-1.48**, **libboost\_filesystem-1.48**, **libboost\_program\_options-1.48**) which are the same that are packaged with ubuntu 12.04.
 5. Two python script: **run\_semrep.py** which is used to run the tool and an auxillary one called **patch\_result\_checker.py** to parse the tool output.
 
-To run the tool and analyze the two example PHP functions that come with it [reference](SemRep/test/php_version/reference.php) and [target](SemRep/test/php_version/target.php), you need to: (1) clone the repository, (2) uncompress the binary files and (3) run the python script. Here is how to do this:
+We will show how to run the tool to analyze and repair the [sample PHP target function here](SemRep/test/php_version/target.php) against [the sample PHP reference function here](SemRep/test/php_version/reference.php). Both PHP functions' files come with the binary bundle. We will work on a language-agnostic intermediate representation of the two functions that the tool takes as input which is called dependency graph. It is written in [dot](http://www.graphviz.org) format and will be explained later.
+
+To run the tool we need to: (1) clone the repository, (2) uncompress the binary files and (3) run the python script. Here is how to do this:
 ```bash
 $> git clone https://github.com/vlab-cs-ucsb/SemRep.git
 $> mv ./SemRep/SemRepBinaries .
