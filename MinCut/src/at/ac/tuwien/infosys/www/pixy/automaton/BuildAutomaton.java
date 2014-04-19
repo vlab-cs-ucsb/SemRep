@@ -1035,12 +1035,12 @@ public class BuildAutomaton {
 		
 		StringBuilder code_builder = new StringBuilder();
 		if (type.equalsIgnoreCase("js")) {
-			code_builder.append("<!DOCTYPE html>\n<html>\n<head>\n<title>vlab@ucsb : www.cs.ucsb.edu/~vlab</title>\n<script>\n");
+			code_builder.append("<!DOCTYPE html>\n<html>\n<head>\n\n<meta charset=\"UTF-8\">\n<title>vlab@ucsb : www.cs.ucsb.edu/~vlab</title>\n<script>\n");
 			code_builder.append("function sanitize_input(str) {\n");
 	
 		} 
 		else {
-			code_builder.append("<?php\n\tfunction sanitize_input($str) {\n");
+			code_builder.append("<?php\nfunction sanitize_input($str) {\n");
 		}
 		
 		if ( minCharCut.contains(' ') ) {
@@ -1090,36 +1090,82 @@ public class BuildAutomaton {
 				}
 					
 			}
+						
 			if (escape) {
-				for (Character c : minCharCut ) {
-					ConsoleMessage.body3( "result : escape : preg_replace('/" + c + "/', '" + resultChar + c + "', $str); " ) ;
-					if (type.equalsIgnoreCase("js")) {
-						code_builder.append("\tstr = str.replace(/" + c + "/g,'" + resultChar + c + "');\n");
-					} else {
-						code_builder.append("\t\t$str = preg_replace('/" + c + "/', '" + resultChar + c + "', $str);\n");
-					}
-				}
-			}	
-			else {
-				String chars = "";
-				for (Character c : minCharCut ) {
-					chars += c;
-				}
-				String subject_chars = Pattern.quote(chars).replace("\\Q", "").replace("\\E", "");;
-				
-				ConsoleMessage.body3( "result : delete : preg_replace('/[" + subject_chars + "]/', '', $str);") ;
+				ConsoleMessage.body3("result : escape : escape");
 				
 				if (type.equalsIgnoreCase("js")) {
-					code_builder.append("\tstr = str.replace(/[" + subject_chars + "]/g,'');\n");
+					code_builder.append("\tvar char_buff = str;\n");
+					code_builder.append("\tstr = \"\";\n");
+					code_builder.append("\tvar search = \"\" ");
+					for (Character c : minCharCut ) {
+						code_builder.append(" + String.fromCharCode(" + (int)c + ")");
+					}
+					code_builder.append(";\n");
+					code_builder.append("\tfor(i=0; i<char_buff.length; i++) {\n");
+					code_builder.append("\t\tif( search.indexOf(char_buff[i]) != -1) {\n");
+					code_builder.append("\t\t\tstr += String.fromCharCode(" + (int)resultChar + ") + iter_str[i];\n");
+					code_builder.append("\t\t} else {\n");
+					code_builder.append("\t\t\tstr += char_buff[i];\n");
+					code_builder.append("\t\t}\n");
+					code_builder.append("\t}\n");
 				} else {
-					code_builder.append("\t\t$str = preg_replace('/[" + subject_chars + "]/', '', $str);\n");
+					code_builder.append("\t$char_buff = preg_split('//', $str, -1);\n");
+					code_builder.append("\t$str = \"\";\n");
+					code_builder.append("\t$search = \"\"");
+					for (Character c : minCharCut ) {
+						code_builder.append(".chr(" + (int)c + ")");
+					}
+					code_builder.append(";\n");
+					code_builder.append("\tfor($i=0; $i < sizeof($char_buff); $i++) {\n");
+					code_builder.append("\t\tif( strpos($search,$char_buff[$i]) !== false) {\n");
+					code_builder.append("\t\t\t$str .= chr(" + (int)resultChar + ") . $char_buff[$i];\n");
+					code_builder.append("\t\t} else {\n");
+					code_builder.append("\t\t\t$str .= $char_buff[$i];\n");
+					code_builder.append("\t\t}\n");
+					code_builder.append("\t}\n");
+				}	
+
+			}	
+			else {
+				ConsoleMessage.body3("result : delete : delete");
+				if (type.equalsIgnoreCase("js")) {
+					code_builder.append("\tvar char_buff = str;\n");
+					code_builder.append("\tstr = \"\";\n");
+					code_builder.append("\tvar search = \"\" ");
+					for (Character c : minCharCut ) {
+						code_builder.append(" + String.fromCharCode(" + (int)c + ")");
+					}
+					code_builder.append(";\n");
+					code_builder.append("\tfor(i=0; i<char_buff.length; i++) {\n");
+					code_builder.append("\t\tif( search.indexOf(char_buff[i]) != -1) {\n");
+					code_builder.append("\t\t\tcontinue;\n");
+					code_builder.append("\t\t} else {\n");
+					code_builder.append("\t\t\tstr += char_buff[i];\n");
+					code_builder.append("\t\t}\n");
+					code_builder.append("\t}\n");
+				} else {
+					code_builder.append("\t$char_buff = preg_split('//', $str, -1);\n");
+					code_builder.append("\t$str = \"\";\n");
+					code_builder.append("\t$search = \"\"");
+					for (Character c : minCharCut ) {
+						code_builder.append(".chr(" + (int)c + ")");
+					}
+					code_builder.append(";\n");
+					code_builder.append("\tfor($i=0; $i < sizeof($char_buff); $i++) {\n");
+					code_builder.append("\t\tif( strpos($search,$char_buff[$i]) !== false) {\n");
+					code_builder.append("\t\t\tcontinue;\n");
+					code_builder.append("\t\t} else {\n");
+					code_builder.append("\t\t\t$str .= $char_buff[$i];\n");
+					code_builder.append("\t\t}\n");
+					code_builder.append("\t}\n");
 				}
 				
 			}
 		}
 		
 		if (type.equalsIgnoreCase("js")) {
-			code_builder.append("\treturn str;\n}\n");
+			code_builder.append("\treturn str;\n\t}\n");
 			code_builder.append("function myFunction() {\n");
 			code_builder.append("\tvar x=document.getElementById(\"fname\");\n");
 			code_builder.append("\tvar r=document.getElementById(\"result\");\n");

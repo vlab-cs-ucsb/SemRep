@@ -3306,25 +3306,25 @@ implements Serializable, Cloneable {
 				if (trans.to == sink)
 					continue;
 				if (ch >= trans.min && ch <= trans.max){
-					System.out.println("This char is going out from state: " + state.id);
+//					System.out.println("This char is going out from state: " + state.id);
 					List<Transition> inTransitions = statesInTransitions.get(state);
 					if (inTransitions.size() > 1){
-						System.out.print("In state " + state.id + " this char was preceded by more than one transition coming from states:");
+//						System.out.print("In state " + state.id + " this char was preceded by more than one transition coming from states:");
 						for (Transition inTrans : inTransitions){
-							System.out.print(getSource(inTrans).id + ", ");
+//							System.out.print(getSource(inTrans).id + ", ");
 						}
-						System.out.println();
+//						System.out.println();
 						return max;
 					}
 					Transition inTrans = inTransitions.iterator().next();
 					if (inTrans.min != inTrans.max){
-						System.out.println("In state " + state.id + " this char was preceded by a char range [" + inTrans.min + "-" + inTrans.max + "]");
+//						System.out.println("In state " + state.id + " this char was preceded by a char range [" + inTrans.min + "-" + inTrans.max + "]");
 						return max;//the char in one state is preceded by more than one char (so no escape
 					}
 					if (escape == max)
 						escape = inTrans.min;//first time to see the escape so initialize it with the value
 					else if (escape != inTrans.min){
-						System.out.println("In state " + state.id + " is preceded by escape " + inTrans.min + " which is different than prev escape " + escape);
+//						System.out.println("In state " + state.id + " is preceded by escape " + inTrans.min + " which is different than prev escape " + escape);
 						return max;//more than one escape char has been found
 					}
 				}
@@ -3735,6 +3735,7 @@ implements Serializable, Cloneable {
 			printCodeLine(numOfTabs, "<!DOCTYPE html>");
 			printCodeLine(numOfTabs, "<html>");
 			printCodeLine(numOfTabs, "<head>");
+			printCodeLine(numOfTabs, "<meta charset=\"UTF-8\">");
 			printCodeLine(numOfTabs, "<title>vlab@ucsb : www.cs.ucsb.edu/~vlab</title>");
 			printCodeLine(numOfTabs, "<script>");
 //			printCodeLine(numOfTabs, "<?php");
