@@ -16,7 +16,7 @@ The fastest way to try SemRep is to download the self-contained Ubuntu 12.04 64-
 4. Three C++ shared libraries (**libboost\_regex-1.48**, **libboost\_system-1.48**, **libboost\_filesystem-1.48**, **libboost\_program\_options-1.48**) which are the same that are packaged with ubuntu 12.04.
 5. Two python script: **run\_semrep.py** which is used to run the tool and an auxillary one called **patch\_result\_checker.py** to parse the tool output.
 
-We will show how to run the tool to analyze and repair the [sample PHP target function here](SemRep/test/php_version/target.php) against [the sample PHP reference function here](SemRep/test/php_version/reference.php). Both PHP functions' files come with the binary bundle. We will run the tool with a language-agnostic intermediate representation of the two functions that the tool takes as input which is called dependency graph. It is written in [dot](http://www.graphviz.org) format and will be explained later.
+We will show how to run the tool to analyze and repair the [sample JS target function here](SemRep/test/js_version/target.js) against [the sample JS reference function here](SemRep/test/js_version/reference.js). Both Javascript functions' files come with the binary bundle. We will run the tool with a language-agnostic intermediate representation of the two functions that the tool takes as input which is called dependency graph. It is written in [dot](http://www.graphviz.org) format and will be explained later.
 
 To run the tool we need to: (1) clone the repository, (2) uncompress the binary files and (3) run the python script. Here is how to do this:
 ```bash
@@ -24,11 +24,11 @@ $> git clone https://github.com/vlab-cs-ucsb/SemRep.git
 $> mv ./SemRep/SemRepBinaries .
 $> tar -xzvf SemRepBinaries.tar.gz
 $> cd SemRepBinaries
-# Assuming that you have python and Java installed on your machine 
+# if you DO NOT have Java installed on your machine 
+$> sudo apt-get install default-jre
 # the following will analyze and generate patches for the two example
 # functions that come with the tool under directory name test
-$> python run_semrep.py -r ./test/reference_depgraph.dot -t ./test/target_depgraph.dot -l PHP -f x
-...
+$> python run_semrep.py -r ./test/reference_depgraph.dot -t ./test/target_depgraph.dot -l JS -f x
 $> ls output
 # Here is the output tree with explanation
 outputs/
@@ -37,14 +37,14 @@ outputs/
 ├── mincut_result_row.csv
 ├			: mincut performance results  
 ├── generated_patch_codes
-│   ├── final_patch.php
-│   ├			: composition of patches generated (php or js)
-│   ├── length_patch.php
-│   ├			: simulation of length patch (php or js)
+│   ├── final_patch.html
+│   ├			: composition of patches generated (js)
+│   ├── length_patch.html
+│   ├			: simulation of length patch (js)
 │   ├── sanitization_patch.html
-│   ├			: generated code from mincut results. It can contain trim operation and/or escape operation and/or delete operation. (php or js)
+│   ├			: generated code from mincut results. It can contain trim operation and/or escape operation and/or delete operation. (js)
 │   ├── validation_patch.html
-│   └			: simulation of length patch (php or js)
+│   └			: simulation of length patch (js)
 ├── generated_patch_automata
 │   ├── length_patch_BDD.dot
 │   ├			: BDD that represents actual internal symbolic representation of length patch dfa
@@ -68,7 +68,7 @@ outputs/
 │   └			: validation patch dfa used to generate validation patch simulation code
 ```
 Hopefully, by now you had a successful run (report a bug please if you did not) and your SemRep output directory
-has the same tree shown above. The most important output is the final\_patch.php file. This file represents the output patch that SemRep generated to remove the difference between the target function and the reference one by strengthening the target against the reference. This patch is supposed to be "composed" with the target function i.e., it is supposed to be run along with (before) the target function as shown in the following picture:
+has the same tree shown above. The most important output is the final\_patch.html file. This file represents the output patch that SemRep generated to remove the difference between the target function and the reference one by strengthening the target against the reference. This patch is supposed to be "composed" with the target function i.e., it is supposed to be run along with (before) the target function as shown in the following picture:
 ![img alt](Docs/repair-figure.png)
 The new patched target function is stronger than the original one and the reference i.e., it does not return a string that is not returned by any of the two. If you chose javascript as patch language (-l JS), you can immediately see the behavior of the final patch (and intermediate ones) by opening (double click) the generated .html files in your browser and trying some input values.
 
@@ -77,9 +77,8 @@ So, what did SemRep do? SemRep is an automatic repair tool. It takes two functio
 
 1. SemRep took the two input-validation-and-sanitization functions (represented as [dependency graphs]()) that are in the [test](SemRep/test) directory.
 2. SemRep ran the differential repair algorithm described [here](Docs/issta14_paper.pdf) and generated a set of patch-automata under directory outputs/generated\_patch\_automata (see [here](http://en.wikipedia.org/wiki/Deterministic_finite_automaton) for more info on what an automata is). You can use xdot (sudo apt-get install xdot) to double click on any of these automata files and see it.
-3. Java Code in MinCut package **generated the patch in PHP language** (following input flag -l PHP) in directory outputs/generated\_patch\_codes. The patch is a composition of a number of auto-generated PHP patch-functions that either simulate the automata generated by SemRep or uses the MinCut algorithm.
+3. Java Code in MinCut package **generated the patch in Javascript language** (following input flag -l JS) in directory outputs/generated\_patch\_codes. The patch is a composition of a number of auto-generated Javascript patch-functions that either simulate the automata generated by SemRep or uses the MinCut algorithm.
 
-The user can pass JS instead of PHP to get the patches generated in JavaSript. Generating patches in Javascript allows you to open the html file that contains that javascript patch code and immediately enters inputs to test).
 
 Input format: what is a dependency graph?
 -----------------------------------------
